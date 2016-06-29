@@ -32,6 +32,10 @@ np.define('doc.List', function() {
     });
   };
 
+  DocList.prototype.at = function(index) {
+    return this._items(index);
+  };
+
   DocList.prototype.add = function(item) {
     var index = this._items.indexOf(item);
     this.removeAt(index);
@@ -52,6 +56,10 @@ np.define('doc.List', function() {
       this._items.splice(index, 1);
       this._onChanged(index, null, item);
     }
+  };
+
+  DocList.prototype.forEach = function(fn, ctx) {
+    this._items.forEach(fn, ctx);
   };
 
   DocList.prototype._dispose = function() {

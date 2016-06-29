@@ -1,0 +1,34 @@
+html, body { height: 100%; margin: 0; padding: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.app-toolbar {
+  display: flex;
+  flex: 0 0 auto;
+  background: lightgray
+}
+.app-toolbar li.btn {
+  border: none;
+}
+
+.app-project {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.app-scenes {
+  flex: 0 0 300px;
+
+  background: lightgray
+}
+.app-scene {
+
+}

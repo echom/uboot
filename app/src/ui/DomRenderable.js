@@ -1,12 +1,9 @@
 np.define('ui.DomRenderable', function() {
-  var error = np.require('np.error'),
-      abstractInvocationError = error.abstractInvocation;
-
-  var DomRenderable = function(type) {
+  var DomRenderable = function(type, classNames) {
     this._type = type;
     this._enabled = true;
     this._element = null;
-    this._classNames = [];
+    this.setClasses(classNames);
   };
 
   DomRenderable.prototype.render = function(doc) {
@@ -18,9 +15,7 @@ np.define('ui.DomRenderable', function() {
     this.setEnabled(this._enabled, true);
     return this._element;
   };
-  DomRenderable.prototype._render = function(doc, element) {
-    throw abstractInvocationError();
-  };
+  DomRenderable.prototype._render = function(doc, element) {}; // eslint-disable-line no-empty-function
 
   DomRenderable.prototype.getElement = function() {
     return this._element;
@@ -32,11 +27,8 @@ np.define('ui.DomRenderable', function() {
   DomRenderable.prototype.setEnabled = function(enabled, force) {
     if ((enabled !== this._enabled) || force) {
       this._enabled = enabled;
-      if (this._element) {
-        this._element.classList.toggle('disabled', !enabled);
-      }
+      this.toggleClass('disabled', !enabled);
     }
-
     return this;
   };
 
@@ -46,14 +38,26 @@ np.define('ui.DomRenderable', function() {
   DomRenderable.prototype.setVisible = function(visible, force) {
     if ((visible !== this._visible) || force) {
       this._visible = visible;
-      if (this._element) {
-        this._element.classList.toggle('hidden', !visible);
-      }
+      this.toggleClass('hidden', !visible);
     }
-
     return this;
   };
 
+  DomRenderable.prototype.getClasses = function() {
+    return this._classNames;
+  };
+  DomRenderable.prototype.setClasses = function(classNames) {
+    var classes = classNames || [];
+    if (np.isA(classes, 'string')) {
+      classes = classes.split(' ');
+    }
+    if (np.isA(classes, 'array')) {
+      this._classNames = classes;
+      this._syncClassNames();
+    } else {
+      throw new Error('DomRenderable.setClassNames: classNames must be a string or array');
+    }
+  };
   DomRenderable.prototype.addClass = function(className) {
     return this.toggleClass(className, true);
   };

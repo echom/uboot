@@ -3,16 +3,14 @@ np.define('ui.Button', function() {
       DomRenderable = np.require('ui.DomRenderable'),
       Button;
 
-  Button = np.inherits(function(type) {
-    DomRenderable.call(this, type);
+  Button = np.inherits(function(type, classNames) {
+    DomRenderable.call(this, type, classNames || 'btn');
     this._state = new Observable(Button.BUTTON_STATE_UP);
     this._content = null;
 
     this._hasListeners = false;
     this._onDown = this._onDown.bind(this);
     this._onUp = this._onUp.bind(this);
-
-    this.addClass('btn');
   }, DomRenderable);
 
   Button.BUTTON_STATE_DOWN = 'down';

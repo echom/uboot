@@ -3,8 +3,8 @@ np.define('ui.DomContainer', function() {
 
   var DomRenderable = np.require('ui.DomRenderable');
 
-  var DomContainer = np.inherits(function(type) {
-    DomRenderable.call(this, type || 'div');
+  var DomContainer = np.inherits(function(type, classNames) {
+    DomRenderable.call(this, type || 'div', classNames);
     this._children = [];
   }, DomRenderable);
 
@@ -13,7 +13,7 @@ np.define('ui.DomContainer', function() {
   };
 
   DomContainer.prototype.append = function(child) {
-    this._removeAt(this._children.indexOf(child));
+    this.remove(child);
     this._children.push(child);
     if (this._element) {
       this._element.appendChild(child.render(this._element.ownerDocument));
@@ -22,10 +22,10 @@ np.define('ui.DomContainer', function() {
   };
 
   DomContainer.prototype.remove = function(child) {
-    this._removeAt(this._children.indexOf(child));
+    this.removeAt(this._children.indexOf(child));
   };
 
-  DomContainer.prototype._removeAt = function(index) {
+  DomContainer.prototype.removeAt = function(index) {
     var child,
         childElement;
 
@@ -40,6 +40,20 @@ np.define('ui.DomContainer', function() {
     }
 
     return child;
+  };
+
+  DomContainer.prototype.insertAt = function(child, index) {
+    if (index >= 0 && index <= this._children.length) {
+      this._children.splice(index, 0, child);
+
+      if (this._element) {
+        if (index < this._children.length - 1) {
+          this._element.insertBefore(this._children[index + 1].getElement());
+        } else {
+          this._element.appendChild(child.render());
+        }
+      }
+    }
   };
 
   DomContainer.prototype._render = function(doc, el) {
