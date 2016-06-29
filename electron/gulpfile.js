@@ -16,24 +16,19 @@ var paths = {
   src: [
     'src/**/*.js'
   ],
-  min: 'dist/app.min.js',
-  max: 'dist/app.js',
+  min: 'dist/electron.min.js',
+  max: 'dist/electron.js',
   mocks: 'src/**/*.mock.js',
   specs: 'src/**/*.spec.js'
 };
 
 gulp.task('clean', () => del(['dist/*']));
 
-gulp.task('copy-assets', () => {
-  return gulp.src('assets/**/*.*')
-    .pipe(gulp.dest('dist/assets'));
-});
-
-gulp.task('build', ['clean', 'copy-assets'], () => {
+gulp.task('build', ['clean'], () => {
   return gulp.src(paths.src)
     .pipe(eslint({ useEslintrc: true }))
     .pipe(eslint.format())
-    .pipe(concat('app.js'))
+    .pipe(concat('electron.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
       mangle: true,
@@ -41,7 +36,7 @@ gulp.task('build', ['clean', 'copy-assets'], () => {
       compress: { hoist_vars: true }
     }))
     .on('error', gutil.log)
-    .pipe(rename('app.min.js'))
+    .pipe(rename('electron.min.js'))
     .pipe(gulp.dest('dist'));
 });
 

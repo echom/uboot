@@ -1,5 +1,5 @@
 np.define('env.WebEnv', function() {
-  var BaseEnv = np.require('env.BaseEnv'),
+  var BaseEnv = np.require('app.Env'),
       WebEnv;
 
   WebEnv = np.inherits(function(window, doc) {

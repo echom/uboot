@@ -91,7 +91,7 @@ np.define('app.Application', function() {
   };
 
   Application.prototype.restoreProject = function() {
-    return this._env.queryRestoreInfo()
+    return this._env.queryRestoreInfo(this._persistInfo)
       .then(this._restoreProject, np.noop);
   };
 

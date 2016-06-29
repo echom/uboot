@@ -1,0 +1,11 @@
+{
+  "extends": "../.eslintrc",
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "np": true,
+    "Promise": true,
+    "require": true
+  }
+}
