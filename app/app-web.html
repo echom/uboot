@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+  </head>
+  <body>
+    <script type="text/javascript" src="dist/nope.js"></script>
+    <script type="text/javascript" src="dist/app.js"></script>
+    <script type="text/javascript">
+      var WebEnv = np.require('env.WebEnv'),
+          Application = np.require('app.Application'),
+          ApplicationView = np.require('ui.ApplicationView');
+
+      var env = new WebEnv(window, document),
+          app = new Application(env),
+          view = new ApplicationView(app);
+
+      document.body.appendChild(view.render(document));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "presenter",
+  "version": "0.0.1",
+  "description": "a web based presentation editor",
+  "author": "Joerg Hoesel <echom@gmx.net>",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

@@ -1,0 +1,3 @@
+- rename event#on to event#add, etc...
+- refactor properties to functions (as far as possible and sensible)
+- implement Envs
