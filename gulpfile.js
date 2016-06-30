@@ -19,14 +19,21 @@ gulp.task('build:app', done => {
   });
 });
 gulp.task('build:electron', done => {
-  exec('gulp build --gulpfile electron/gulpfile.js', function(err, stdout, stderr) {
+  exec('gulp build --gulpfile app-electron/gulpfile.js', function(err, stdout, stderr) {
+    stdout && console.log(stdout); // eslint-disable-line no-unused-expressions, no-console
+    stderr && console.log(stderr); // eslint-disable-line no-unused-expressions, no-console
+    done(err);
+  });
+});
+gulp.task('build:web', done => {
+  exec('gulp build --gulpfile app-web/gulpfile.js', function(err, stdout, stderr) {
     stdout && console.log(stdout); // eslint-disable-line no-unused-expressions, no-console
     stderr && console.log(stderr); // eslint-disable-line no-unused-expressions, no-console
     done(err);
   });
 });
 
-gulp.task('build', ['build:nope', 'build:app', 'build:electron'], () => {
+gulp.task('build', ['build:nope', 'build:app', 'build:electron', 'build:web'], () => {
   gulp.src('nope/dist/*.js')
     .pipe(gulp.dest('app/dist'))
     .pipe(gulp.dest('electron/dist'));

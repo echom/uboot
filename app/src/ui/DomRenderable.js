@@ -17,6 +17,13 @@ np.define('ui.DomRenderable', function() {
   };
   DomRenderable.prototype._render = function(doc, element) {}; // eslint-disable-line no-empty-function
 
+  DomRenderable.prototype.detach = function() {
+    if (this._element && this._element.parentNode) {
+      this._element.parentNode.removeChild(this._element);
+    }
+    return this;
+  };
+
   DomRenderable.prototype.getElement = function() {
     return this._element;
   };

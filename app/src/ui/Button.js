@@ -17,12 +17,19 @@ np.define('ui.Button', function() {
   Button.BUTTON_STATE_UP = 'up';
 
   Button.prototype._render = function(doc, el) {
+    DomRenderable.prototype._render.call(this, doc, el);
     this.setContent(this._content, true);
     this._state.setValue(Button.BUTTON_STATE_UP);
   };
 
   Button.prototype.getState = function() {
-    return this._state.value;
+    return this._state.getValue();
+  };
+  Button.prototype.setState = function(state, force) {
+    if ((this._state.getValue != state) || force) {
+      this._state.setValue(state);
+    }
+    return this;
   };
   Button.prototype.onStateChanged = function() {
     return this._state.onChanged();
@@ -49,10 +56,10 @@ np.define('ui.Button', function() {
   };
 
   Button.prototype._onDown = function(evt) {
-    this._state.setValue(Button.BUTTON_STATE_DOWN);
+    this.setState(Button.BUTTON_STATE_DOWN);
   };
   Button.prototype._onUp = function(evt) {
-    this._state.setValue(Button.BUTTON_STATE_UP);
+    this.setState(Button.BUTTON_STATE_UP);
   };
 
   Button.prototype.setEnabled = function(enabled, force) {

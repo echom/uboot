@@ -1,4 +1,4 @@
-np.define('env.ElectronEnv', function() {
+np.define('app.ElectronEnv', function() {
   var Env = np.require('app.Env'),
       ElectronEnv,
       abstractInvocationError = np.require('np.error').abstractInvocationError,
