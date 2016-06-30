@@ -2,46 +2,40 @@ np.define('ui.Dialog', function() {
   var Event = np.require('np.Event'),
       DomContainer = np.require('ui.DomContainer'),
       Button = np.require('ui.Button'),
-      Dialog,
-      DialogFrame;
-  DialogFrame = np.inherits(function(buttons) {
-    DomContainer.call(this, 'div', 'dialog-frame');
-    this._content = null;
-    this._buttons = new DomContainer('div', 'dialog-buttons');
+      Dialog;
 
-    buttons.forEach(function(name) {
-      this._buttons.append(new Button('button', name));
-    }, this);
+  Dialog = np.inherits(function(buttons) {
+    DomContainer.call(this, 'div', 'dialog-bg');
+
+    this._closed = new Event(this);
+    this._content = null;
+    this._frame = this.append(new DomContainer('div', 'dialog-frame'));
+    this._buttons = this._frame.append(new DomContainer('div', 'dialog-buttons'));
+
+    this._makeButtons(buttons);
+
+    this._onConfirmButtonStateChanged = this._onConfirmButtonStateChanged.bind(this);
+    this._onCancelButtonStateChanged = this._onCancelButtonStateChanged.bind(this);
   }, DomContainer);
 
-  DialogFrame.prototype.getContent = function() {
+  Dialog.prototype.getContent = function() {
     return this._content;
   };
-  DialogFrame.prototype.setContent = function(content, force) {
+  Dialog.prototype.setContent = function(content, force) {
+    var element = this._frame.getElement();
     if ((content != this._content) || force) {
       this._content = content;
-
-      if (this._element) {
-        this._element.innerHTML = '';
+      if (element) {
+        element.innerHTML = '';
         if (np.isA(this._content, Node)) {
-          this._element.appendChild(this._content);
+          element.appendChild(this._content);
         } else if (np.isA(this._content, 'string')) {
-          this._element.innerHTML = this._content;
+          element.innerHTML = this._content;
         }
       }
     }
 
     return this;
-  };
-
-  Dialog = np.inherits(function(buttons) {
-    DomContainer.call(this, 'div', 'dialog-bg');
-    this._frame = this.append(new DialogFrame(buttons));
-    this._closed = new Event(this);
-  }, DomContainer);
-
-  Dialog.prototype.getFrame = function() {
-    return this._frame;
   };
 
   Dialog.prototype.onClosed = function() {
@@ -57,17 +51,43 @@ np.define('ui.Dialog', function() {
     this._closed.fire({ confirmed: false, result: result });
   };
 
-  Dialog.prototype._render = function() {
-    DomContainer.prototype._render.call(this);
+  Dialog.prototype._onConfirmButtonStateChanged = function(evt) {
+    if (evt.state === Button.BUTTON_STATE_UP) {
+      this._confirm(this._result);
+    }
+  };
+  Dialog.prototype._onCancelButtonStateChanged = function(evt) {
+    if (evt.state === Button.BUTTON_STATE_UP) {
+      this._cancel(this._result);
+    }
+  };
+  Dialog.prototype._makeButtons = function(buttons) {
+    var button;
+    if (!buttons || !buttons.length) {
+      button = new Button('button', 'OK');
+      button.onStateChanged().add(this._onConfirmButtonStateChanged);
+      this._buttons.append(button);
+    } else {
+      buttons.forEach(function(btn) {
+        button = new Button('button', btn.name);
+        button.onStateChanged().add(btn.confirm ?
+          this._onConfirmButtonStateChanged :
+          this._onCancelButtonStateChanged
+        );
+        this._buttons.append(button);
+      }, this);
+    }
   };
 
-
-
+  Dialog.prototype._render = function(doc, el) {
+    DomContainer.prototype._render.call(this, doc, el);
+    el.addEventListener('mouseup', function(evt) { this._cancel(this._result); });
+  };
 
   Dialog.showMessage = function(doc, opts) {
     return new Promise(function(resolve, reject) {
       var dialog = new Dialog(opts.buttons);
-      dialog.getFrame().setContent('<div class="dialog-message">' + opts.message + '</div>');
+      dialog.setContent('<div class="dialog-message">' + opts.message + '</div>');
       dialog.onClosed().add(function(evt) {
         if (evt.confirmed) {
           resolve(evt.result);

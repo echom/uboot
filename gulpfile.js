@@ -36,14 +36,21 @@ gulp.task('build:web', done => {
 gulp.task('build', ['build:nope', 'build:app', 'build:electron', 'build:web'], () => {
   gulp.src('nope/dist/*.js')
     .pipe(gulp.dest('app/dist'))
-    .pipe(gulp.dest('electron/dist'));
+    .pipe(gulp.dest('app-electron/dist'))
+    .pipe(gulp.dest('app-web/dist'));
 
   gulp.src('app/dist/**/*.*')
-    .pipe(gulp.dest('electron/dist'));
+    .pipe(gulp.dest('app-electron/dist'))
+    .pipe(gulp.dest('app-web/dist'));
 });
 
 gulp.task('watch', ['build'], () => {
-  gulp.watch(['nope/src/**/*.js', 'app/src/**/*.js', 'electron/src/**/*.js'], ['build']);
+  gulp.watch([
+    'nope/src/**/*.js',
+    'app/src/**/*.js',
+    'app-electron/src/**/*.js',
+    'app-web/src/**/*.js'
+  ], ['build']);
 });
 
 gulp.task('default', ['build']);

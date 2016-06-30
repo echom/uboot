@@ -1,5 +1,6 @@
 np.define('app.WebEnv', function() {
   var Env = np.require('app.Env'),
+      Dialog = np.require('ui.Dialog'),
       WebEnv;
 
   WebEnv = np.inherits(function(window, doc) {
@@ -8,24 +9,10 @@ np.define('app.WebEnv', function() {
   }, Env);
 
   WebEnv.prototype.queryOkCancel = function(message) {
-    throw abstractInvocationError();
-  };
-
-  WebEnv.prototype.queryPersistInfo = function() {
-    throw abstractInvocationError();
-  };
-  WebEnv.prototype.queryRestoreInfo = function() {
-    throw abstractInvocationError();
-  };
-  WebEnv.prototype.persist = function(persistInfo, toPersist) {
-    throw abstractInvocationError();
-  };
-  WebEnv.prototype.restore = function(persistInfo) {
-    throw abstractInvocationError();
-  };
-
-  WebEnv.prototype.setTitle = function(title) {
-    throw abstractInvocationError();
+    Dialog.showMessage(this._doc, {
+      message: message,
+      buttons: [{ confirm: true, name: 'OK' }, { name: 'Cancel' }]
+    });
   };
 
   WebEnv.prototype.setTitle = function(title) {
