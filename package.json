@@ -6,8 +6,8 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "start:app": "./node_modules/.bin/electron app-electron/",
-    "start:web": "open ./app-web/app.html",
+    "app": "./node_modules/.bin/electron app-electron/",
+    "web": "open ./app-web/app.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

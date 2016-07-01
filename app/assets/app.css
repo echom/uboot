@@ -1,4 +1,7 @@
 html, body { height: 100%; margin: 0; padding: 0; }
+html { font-size: 10px; font-family: Helvetica, Arial, sans-serif; font-weight: light; }
+body { font-size: 1.4rem; }
+
 ul { margin: 0; padding: 0; list-style: none; }
 
 .app {
@@ -31,4 +34,33 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .app-scene {
 
+}
+
+.dialog-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dialog-frame {
+  background: rgb(220, 220, 220);
+  border: 1px solid rgb(190, 190, 190);
+  border-radius: 1rem;
+  padding: 2rem;
+  flex: 0 1 auto;
+  min-width: 15rem;
+  max-width: 85%;
+}
+.dialog-message {
+  margin: 1rem;
+  text-align: center;
+}
+.dialog-buttons {
+  display: flex;
+  justify-content: center;
 }

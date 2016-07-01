@@ -9,7 +9,7 @@ np.define('app.WebEnv', function() {
   }, Env);
 
   WebEnv.prototype.queryOkCancel = function(message) {
-    Dialog.showMessage(this._doc, {
+    return Dialog.showMessage(this._doc, {
       message: message,
       buttons: [{ confirm: true, name: 'OK' }, { name: 'Cancel' }]
     });

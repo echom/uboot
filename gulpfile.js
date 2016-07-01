@@ -48,6 +48,7 @@ gulp.task('watch', ['build'], () => {
   gulp.watch([
     'nope/src/**/*.js',
     'app/src/**/*.js',
+    'app/assets/**/*.css',
     'app-electron/src/**/*.js',
     'app-web/src/**/*.js'
   ], ['build']);

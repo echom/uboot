@@ -9,7 +9,7 @@ np.define('app.Application', function() {
     this._persistInfo = null;
 
     this._recorder = {
-      hasChanges: false,
+      hasChanges: true,
       reset: function() {}
     };
 
@@ -58,9 +58,10 @@ np.define('app.Application', function() {
   };
 
   Application.prototype.newProject = function() {
-    var that = this;
-    if (this._project && this._recorder.hasChanges) {
-      this._env.queryOkCancel(this._project.name + ' has unsaved changes. Do you want to save it?')
+    var that = this,
+        project = this.getProject();
+    if (project && this._recorder.hasChanges) {
+      this._env.queryOkCancel(project.getName() + ' has unsaved changes. Do you want to save it?')
         .then(this.persistProject, np.noop)
         .then(function() {
           that._setProject(Project.new());

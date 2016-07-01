@@ -1,6 +1,7 @@
 np.define('ui.Dialog', function() {
   var Event = np.require('np.Event'),
       DomContainer = np.require('ui.DomContainer'),
+      DomRenderable = np.require('ui.DomRenderable'),
       Button = np.require('ui.Button'),
       Dialog;
 
@@ -10,6 +11,7 @@ np.define('ui.Dialog', function() {
     this._closed = new Event(this);
     this._content = null;
     this._frame = this.append(new DomContainer('div', 'dialog-frame'));
+    this._contents = this._frame.append(new DomRenderable('div', 'dialog-content'));
     this._buttons = this._frame.append(new DomContainer('div', 'dialog-buttons'));
 
     this._makeButtons(buttons);
@@ -22,7 +24,7 @@ np.define('ui.Dialog', function() {
     return this._content;
   };
   Dialog.prototype.setContent = function(content, force) {
-    var element = this._frame.getElement();
+    var element = this._contents.getElement();
     if ((content != this._content) || force) {
       this._content = content;
       if (element) {
@@ -52,12 +54,12 @@ np.define('ui.Dialog', function() {
   };
 
   Dialog.prototype._onConfirmButtonStateChanged = function(evt) {
-    if (evt.state === Button.BUTTON_STATE_UP) {
+    if (evt.newValue === Button.BUTTON_STATE_UP) {
       this._confirm(this._result);
     }
   };
   Dialog.prototype._onCancelButtonStateChanged = function(evt) {
-    if (evt.state === Button.BUTTON_STATE_UP) {
+    if (evt.newValue === Button.BUTTON_STATE_UP) {
       this._cancel(this._result);
     }
   };
@@ -69,7 +71,7 @@ np.define('ui.Dialog', function() {
       this._buttons.append(button);
     } else {
       buttons.forEach(function(btn) {
-        button = new Button('button', btn.name);
+        button = new Button('button').setContent(btn.name);
         button.onStateChanged().add(btn.confirm ?
           this._onConfirmButtonStateChanged :
           this._onCancelButtonStateChanged
@@ -81,7 +83,14 @@ np.define('ui.Dialog', function() {
 
   Dialog.prototype._render = function(doc, el) {
     DomContainer.prototype._render.call(this, doc, el);
-    el.addEventListener('mouseup', function(evt) { this._cancel(this._result); });
+    this.setContent(this._content, true);
+    el.addEventListener('mouseup', function(evt) {
+      this._cancel(this._result);
+    }.bind(this));
+    this._frame.getElement().addEventListener('mouseup', function(evt) {
+      evt.stopPropagation();
+      evt.preventDefault();
+    });
   };
 
   Dialog.showMessage = function(doc, opts) {
