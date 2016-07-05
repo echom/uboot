@@ -8,6 +8,25 @@ np.define('app.ElectronEnv', function() {
     this._win = win;
   }, Env);
 
+  ElectronEnv.prototype.queryYesNo = function(message) {
+    var that = this;
+    return new Promise(function(resolve, reject) {
+      var opts = {
+        type: 'none',
+        message: message,
+        buttons: ['Yes', 'No'],
+        defaultId: 0
+      };
+
+      electron.dialog.showMessageBox(that._win, opts, function(result) {
+        if (result === 0) {
+          resolve('ok');
+        } else {
+          reject('cancel');
+        }
+      });
+    });
+  };
   ElectronEnv.prototype.queryOkCancel = function(message) {
     var that = this;
     return new Promise(function(resolve, reject) {
@@ -62,6 +81,7 @@ np.define('app.ElectronEnv', function() {
       });
     });
   };
+
   ElectronEnv.prototype.persist = function(persistInfo, toPersist) {
     throw abstractInvocationError();
   };

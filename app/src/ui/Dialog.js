@@ -14,10 +14,10 @@ np.define('ui.Dialog', function() {
     this._contents = this._frame.append(new DomRenderable('div', 'dialog-content'));
     this._buttons = this._frame.append(new DomContainer('div', 'dialog-buttons'));
 
-    this._makeButtons(buttons);
-
     this._onConfirmButtonStateChanged = this._onConfirmButtonStateChanged.bind(this);
     this._onCancelButtonStateChanged = this._onCancelButtonStateChanged.bind(this);
+
+    this._makeButtons(buttons);
   }, DomContainer);
 
   Dialog.prototype.getContent = function() {

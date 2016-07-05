@@ -3,8 +3,8 @@ np.define('np.Observable', function() {
       Event = np.require('np.Event'),
       Observable;
 
-  Observable = np.inherits(function(value) {
-    this._changed = new Event(this);
+  Observable = np.inherits(function(value, owner) {
+    this._changed = new Event(owner || this);
     this._value = value;
   }, Disposable);
 

@@ -43,7 +43,7 @@ np.define('ui.DomContainer', function() {
   DomContainer.prototype.removeAt = function(index) {
     var child;
 
-    if (index >= 0 && index < this.children.length) {
+    if (index >= 0 && index < this._children.length) {
       child = this._children[index].detach();
       this._children.splice(index, 1);
     }

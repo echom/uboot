@@ -5,7 +5,7 @@ np.define('app.Application', function() {
 
   Application = function(env, project) {
     this._env = env;
-    this._project = new Observable();
+    this._project = new Observable(null, this);
     this._persistInfo = null;
 
     this._recorder = {
@@ -61,7 +61,7 @@ np.define('app.Application', function() {
     var that = this,
         project = this.getProject();
     if (project && this._recorder.hasChanges) {
-      this._env.queryOkCancel(project.getName() + ' has unsaved changes. Do you want to save it?')
+      this._env.queryYesNo(project.getName() + ' has unsaved changes. Do you want to save it?')
         .then(this.persistProject, np.noop)
         .then(function() {
           that._setProject(Project.new());

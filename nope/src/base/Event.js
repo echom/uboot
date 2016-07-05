@@ -60,14 +60,14 @@ np.define('np.Event', function() {
     var i = 2;
 
     if (this.listener0) {
-      this.listener0(event, this.owner);
+      this.listener0.call(null, event, this.owner);
     }
     if (this.listener1) {
-      this.listener1(event, this.owner);
+      this.listener1.call(null, event, this.owner);
     }
     if (this.length > 2) {
       for (; i < this.listenerCount; i++) {
-        this.listeners[i](event, this.owner);
+        this.listeners[i].call(null, event, this.owner);
       }
     }
   };

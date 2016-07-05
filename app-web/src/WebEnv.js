@@ -14,9 +14,15 @@ np.define('app.WebEnv', function() {
       buttons: [{ confirm: true, name: 'OK' }, { name: 'Cancel' }]
     });
   };
+  WebEnv.prototype.queryYesNo = function(message) {
+    return Dialog.showMessage(this._doc, {
+      message: message,
+      buttons: [{ confirm: true, name: 'Yes' }, { name: 'No' }]
+    });
+  };
 
   WebEnv.prototype.setTitle = function(title) {
-    this._doc.querySelector('title').innerHTML = title;
+    this._doc.querySelector('title').innerHTML = 'uboot - ' + title;
   };
   return WebEnv;
 });

@@ -32,6 +32,21 @@ ul { margin: 0; padding: 0; list-style: none; }
 
   background: lightgray
 }
+.app-right {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: 1 1 auto;
+}
+
+.app-render {
+  flex: 1 1 auto;
+  background: cyan;
+}
+.app-editor {
+  flex: 0 0 300px;
+}
+
 .app-scene {
 
 }
@@ -50,7 +65,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .dialog-frame {
   background: rgb(220, 220, 220);
   border: 1px solid rgb(190, 190, 190);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   padding: 2rem;
   flex: 0 1 auto;
   min-width: 15rem;
