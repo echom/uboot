@@ -1,11 +1,10 @@
 np.define('ui.DomResizeWatch', function() {
   var Disposable = np.require('np.Disposable'),
-      Event = np.require('np.Event'),
       DomResizeWatch;
 
-  DomResizeWatch = np.inherits(function(element) {
-    this._resize = new Event(this);
+  DomResizeWatch = np.inherits(function(element, callback) {
     this._element = element;
+    this._callback = callback;
 
     this._check = this._check.bind(this);
     this._width = undefined;
@@ -28,9 +27,6 @@ np.define('ui.DomResizeWatch', function() {
     this._running = false;
     return this;
   };
-  DomResizeWatch.prototype.onResize = function() {
-    return this._resize.getInterface();
-  };
 
   DomResizeWatch.prototype._check = function() {
     var width,
@@ -41,7 +37,7 @@ np.define('ui.DomResizeWatch', function() {
       height = this._element.clientHeight;
 
       if (width !== this._width || height !== this._height) {
-        this._onResize(width, height);
+        this._callback.call(null, width, height);
 
         this._unchanged = 0;
         this._width = width;
@@ -54,12 +50,6 @@ np.define('ui.DomResizeWatch', function() {
       }
 
       this._checkHandle = setTimeout(this._check, this._frequency);
-    }
-  };
-
-  DomResizeWatch.prototype._onResize = function(width, height) {
-    if (this._resize.length > 0) {
-      this._resize.fire({ width: width, height: height });
     }
   };
 
