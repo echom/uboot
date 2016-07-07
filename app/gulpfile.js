@@ -24,12 +24,12 @@ var paths = {
 
 gulp.task('clean', () => del(['dist/*']));
 
-gulp.task('copy-assets', () => {
+gulp.task('copy-assets', ['clean'], () => {
   return gulp.src('assets/**/*.*')
     .pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('build', ['clean', 'copy-assets'], () => {
+gulp.task('build', ['copy-assets'], () => {
   return gulp.src(paths.src)
     .pipe(eslint({ useEslintrc: true }))
     .pipe(eslint.format())

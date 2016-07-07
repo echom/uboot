@@ -37,7 +37,7 @@
    * @private
    */
   np.inherits = function(ctor, base) {
-    var f = function() {}; // eslint-disable-line no-empty-function
+    var f = function() {};
     f.prototype = base.prototype;
     ctor.prototype = new f(); // eslint-disable-line new-cap
     ctor.prototype.constructor = ctor;
@@ -68,5 +68,5 @@
       return new Date().getTime();
     };
 
-  np.noop = function() {}; // eslint-disable-line no-empty-function
+  np.noop = function() {};
 }(this.np || (this.np = {})));

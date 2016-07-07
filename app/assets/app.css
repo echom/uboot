@@ -27,11 +27,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   align-items: stretch;
 }
 
-.app-scenes {
-  flex: 0 0 300px;
-
-  background: lightgray
-}
 .app-right {
   display: flex;
   flex-direction: column;
@@ -46,11 +41,20 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .app-editor {
-  flex: 0 0 300px;
+  flex: 0 0 200px;
+}
+
+.app-scenes {
+  flex: 0 0 auto;
+  padding: 0.5rem;
+  background: lightgray
 }
 
 .app-scene {
-
+  margin: 0.5rem auto;
+  width: 19.2rem;
+  height: 10.8rem;
+  background: rgb(0, 0, 128);
 }
 
 .dialog-bg {

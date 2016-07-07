@@ -33,25 +33,25 @@ gulp.task('build:web', done => {
   });
 });
 
-gulp.task('build', ['build:nope', 'build:app', 'build:electron', 'build:web'], () => {
-  gulp.src('nope/dist/*.js')
-    .pipe(gulp.dest('app/dist'))
+gulp.task('pull:nope', ['build:nope'], () => {
+  gulp.src('nope/dist/**/*.*')
     .pipe(gulp.dest('app-electron/dist'))
     .pipe(gulp.dest('app-web/dist'));
-
+});
+gulp.task('pull:app', ['build:app'], () => {
   gulp.src('app/dist/**/*.*')
     .pipe(gulp.dest('app-electron/dist'))
     .pipe(gulp.dest('app-web/dist'));
 });
 
+gulp.task('build', ['pull:nope', 'pull:app', 'build:electron', 'build:web']);
+
 gulp.task('watch', ['build'], () => {
-  gulp.watch([
-    'nope/src/**/*.js',
-    'app/src/**/*.js',
-    'app/assets/**/*.css',
-    'app-electron/src/**/*.js',
-    'app-web/src/**/*.js'
-  ], ['build']);
+  gulp.watch('nope/src/**/*.js', ['pull:nope']);
+  gulp.watch('app/src/**/*.js', ['pull:app']);
+  gulp.watch('app/assets/**/*.*', ['pull:app']);
+  gulp.watch('app-electron/src/**/*.js', ['build:electron']);
+  gulp.watch('app-web/src/**/*.js', ['build:web']);
 });
 
 gulp.task('default', ['build']);

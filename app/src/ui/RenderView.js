@@ -12,7 +12,7 @@ np.define('ui.RenderView', function() {
   RenderView.prototype._render = function(doc, el) {
     var canvas = doc.createElement('canvas');
     el.appendChild(canvas);
-    
+
     this._resizeWatch = new DomResizeWatch(
       el,
       function() {

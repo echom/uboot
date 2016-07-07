@@ -71,7 +71,7 @@ np.define('ui.Dialog', function() {
       this._buttons.append(button);
     } else {
       buttons.forEach(function(btn) {
-        button = new Button('button').setContent(btn.name);
+        button = new Button().setContent(btn.name);
         button.onStateChanged().add(btn.confirm ?
           this._onConfirmButtonStateChanged :
           this._onCancelButtonStateChanged

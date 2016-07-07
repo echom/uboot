@@ -3,8 +3,7 @@ np.define('ui.SceneView', function() {
       SceneView;
 
   SceneView = np.inherits(function(scene) {
-    DomContainer.call(this, 'ul', 'app-scene');
-
+    DomContainer.call(this, 'li', 'app-scene');
     this._scene = scene;
   }, DomContainer);
 

@@ -30,7 +30,7 @@ np.define('ui.DomContainer', function() {
         if (index < this._children.length - 1) {
           this._element.insertBefore(this._children[index + 1].getElement());
         } else {
-          this._element.appendChild(child.render());
+          this._element.appendChild(child.render(this._element.ownerDocument));
         }
       }
     }

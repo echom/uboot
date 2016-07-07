@@ -15,7 +15,7 @@ np.define('ui.DomRenderable', function() {
     this.setEnabled(this._enabled, true);
     return this._element;
   };
-  DomRenderable.prototype._render = function(doc, element) {}; // eslint-disable-line no-empty-function
+  DomRenderable.prototype._render = function(doc, element) {};
 
   DomRenderable.prototype.detach = function() {
     if (this._element && this._element.parentNode) {

@@ -1,6 +1,6 @@
 np.define('app.Env', function() {
   var abstractInvocationError = np.require('np.error').abstractInvocation,
-      Env = function() {}; // eslint-disable-line no-empty-function
+      Env = function() {};
 
   Env.prototype.queryYesNo = function(message) {
     throw abstractInvocationError();

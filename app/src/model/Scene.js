@@ -20,5 +20,9 @@ np.define('model.Scene', function() {
     return this._members.states.onChanged();
   };
 
+  Scene.new = function() {
+    return new Scene();
+  };
+
   return Scene;
 });

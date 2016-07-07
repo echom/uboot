@@ -4,7 +4,7 @@ np.define('ui.Button', function() {
       Button;
 
   Button = np.inherits(function(type, classNames) {
-    DomRenderable.call(this, type, classNames || 'btn');
+    DomRenderable.call(this, type || 'button', classNames || 'btn');
     this._state = new Observable(Button.BUTTON_STATE_UP, this);
     this._content = null;
 

@@ -40,7 +40,7 @@ np.define('doc.List', function() {
     var index = this._items.indexOf(item);
     this.removeAt(index);
     this._items.push(item);
-    this._onChanged(index, item, null);
+    this._onChanged(this._items.length - 1, item, null);
 
     return item;
   };
