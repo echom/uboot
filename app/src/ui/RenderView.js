@@ -4,17 +4,20 @@ np.define('ui.RenderView', function() {
       RenderView;
 
   RenderView = np.inherits(function() {
-    DomRenderable.call(this, 'canvas', 'app-render');
+    DomRenderable.call(this, 'div', 'app-render');
 
     this._resizeWatch = null;
   }, DomRenderable);
 
   RenderView.prototype._render = function(doc, el) {
+    var canvas = doc.createElement('canvas');
+    el.appendChild(canvas);
+    
     this._resizeWatch = new DomResizeWatch(
       el,
       function() {
-        el.width = el.offsetWidth;
-        el.height = el.offsetHeight;
+        canvas.width = el.offsetWidth;
+        canvas.height = el.offsetHeight;
       }
     ).start();
   };
