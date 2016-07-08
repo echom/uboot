@@ -51,14 +51,14 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .app-scene {
-  margin: 0.5rem auto;
+  margin: 0 auto;
 }
 
 .app-scene .add-scene-before,
 .app-scene .add-scene-after {
-  transition: all 200ms ease-in;
+  transition: all 100ms ease-in;
   text-align: center;
-  font-size: 1rem;
+  font-size: 0.5rem;
   color: transparent;
 }
 
@@ -67,6 +67,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-size: 2rem;
   color: black;
 }
+
+.app-scene .add-scene-before { display: none; }
+li.app-scene:first-child .add-scene-before { display: block; }
+
 
 .app-scene-preview {
   width: 19.2rem;

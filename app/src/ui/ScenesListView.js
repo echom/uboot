@@ -1,8 +1,8 @@
 np.define('ui.ScenesListView', function() {
   var DomRenderable = np.require('ui.DomRenderable'),
       DomContainer = np.require('ui.DomContainer'),
-      Button = np.require('ui.Button'),
-      Scene = np.require('model.Scene'),
+      // Button = np.require('ui.Button'),
+      // Scene = np.require('model.Scene'),
       SceneView = np.require('ui.SceneView'),
       ScenesListView;
 
@@ -28,7 +28,6 @@ np.define('ui.ScenesListView', function() {
   ScenesListView.prototype._render = function(doc, el) {
     DomRenderable.prototype._render.call(this, doc, el);
     el.appendChild(this._list.render(doc));
-    el.appendChild(this._newButton.render(doc));
   };
 
   return ScenesListView;

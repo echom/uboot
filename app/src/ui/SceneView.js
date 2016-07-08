@@ -15,9 +15,9 @@ np.define('ui.SceneView', function() {
       this.toggleClass('selected', evt.newValue === 'selected');
     }.bind(this));
 
-    this.append(new Button('div', 'add-scene').setContent('+'));
+    this.append(new Button('div', 'add-scene-before').setContent('+'));
     this.append(new DomRenderable('div', 'app-scene-preview'));
-    this.append(new Button('div', 'add-scene').setContent('+'));
+    this.append(new Button('div', 'add-scene-after').setContent('+'));
   }, DomContainer);
 
 
