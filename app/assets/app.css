@@ -35,7 +35,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .app-render {
-  flex: 1 1 auto;
+  flex: 1 1 100px;
   background: cyan;
   overflow: hidden;
 }
@@ -52,9 +52,26 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .app-scene {
   margin: 0.5rem auto;
+}
+
+.app-scene .add-scene-before,
+.app-scene .add-scene-after {
+  transition: all 200ms ease-in;
+  text-align: center;
+  font-size: 1rem;
+  color: transparent;
+}
+
+.app-scene .add-scene-before:hover,
+.app-scene .add-scene-after:hover {
+  font-size: 2rem;
+  color: black;
+}
+
+.app-scene-preview {
   width: 19.2rem;
   height: 10.8rem;
-  background: rgb(0, 0, 128);
+  background: darkblue;
 }
 
 .dialog-bg {

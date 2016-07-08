@@ -7,7 +7,7 @@ np.define('ui.Toolbar', function() {
   ToolbarButton = np.inherits(function(content, activate) {
     Button.call(this, 'li');
     this.onStateChanged().add(function(evt) {
-      if (evt.newValue === Button.BUTTON_STATE_UP) {
+      if (evt.newValue === Button.STATE_UP) {
         activate();
       }
     });

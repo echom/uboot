@@ -2,6 +2,7 @@ np.define('ui.DomRenderable', function() {
   var DomRenderable = function(type, classNames) {
     this._type = type;
     this._enabled = true;
+    this._visible = true;
     this._element = null;
     this.setClasses(classNames);
   };

@@ -11,12 +11,6 @@ np.define('ui.ScenesListView', function() {
 
     this._scenes = scenes;
     this._list = new DomContainer('ul');
-    this._newButton = new Button().setContent('+');
-    this._newButton.onStateChanged().add(function(evt) {
-      if (evt.newValue === Button.BUTTON_STATE_UP) {
-        scenes.add(Scene.new());
-      }
-    });
 
     scenes.forEach(function(scene) {
       this._list.append(new SceneView(scene));

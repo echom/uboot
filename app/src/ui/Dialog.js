@@ -54,12 +54,12 @@ np.define('ui.Dialog', function() {
   };
 
   Dialog.prototype._onConfirmButtonStateChanged = function(evt) {
-    if (evt.newValue === Button.BUTTON_STATE_UP) {
+    if (evt.newValue === Button.STATE_UP) {
       this._confirm(this._result);
     }
   };
   Dialog.prototype._onCancelButtonStateChanged = function(evt) {
-    if (evt.newValue === Button.BUTTON_STATE_UP) {
+    if (evt.newValue === Button.STATE_UP) {
       this._cancel(this._result);
     }
   };
