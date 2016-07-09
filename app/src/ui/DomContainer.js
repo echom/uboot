@@ -13,27 +13,33 @@ np.define('ui.DomContainer', function() {
   };
 
   DomContainer.prototype.append = function(child) {
-    this.remove(child);
-    this._children.push(child);
-    if (this._element) {
-      this._element.appendChild(child.render(this._element.ownerDocument));
-    }
+    this.insertAt(child, this._children.length);
     return child;
   };
 
   DomContainer.prototype.insertAt = function(child, index) {
+    if (!(child instanceof DomRenderable)) {
+      throw new Error('Child must be DomRenderable');
+    }
+
     this.remove(child);
     if (index >= 0 && index <= this._children.length) {
       this._children.splice(index, 0, child);
 
       if (this._element) {
         if (index < this._children.length - 1) {
-          this._element.insertBefore(this._children[index + 1].getElement());
+          this._element.insertBefore(
+            child.render(this._element.ownerDocument),
+            this._children[index].getElement()
+          );
         } else {
-          this._element.appendChild(child.render(this._element.ownerDocument));
+          this._element.appendChild(
+            child.render(this._element.ownerDocument)
+          );
         }
       }
     }
+    return child;
   };
 
   DomContainer.prototype.remove = function(child) {

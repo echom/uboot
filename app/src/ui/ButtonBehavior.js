@@ -8,11 +8,13 @@ np.define('ui.ButtonBehavior', function() {
 
     this._state = new Observable('up', this);
 
-    this._onDown = function() {
+    this._onDown = function(evt) {
       this.setState('down');
+      evt.stopPropagation();
     }.bind(this);
-    this._onUp = function() {
+    this._onUp = function(evt) {
       this.setState('up');
+      evt.stopPropagation();
     }.bind(this);
   }, Behavior);
 

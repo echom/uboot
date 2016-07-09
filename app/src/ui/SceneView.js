@@ -3,6 +3,7 @@ np.define('ui.SceneView', function() {
       DomContainer = np.require('ui.DomContainer'),
       Button = np.require('ui.Button'),
       SelectionBehavior = np.require('ui.SelectionBehavior'),
+      Scene = np.require('model.Scene'),
       SceneView;
 
   SceneView = np.inherits(function(scene) {
@@ -15,9 +16,30 @@ np.define('ui.SceneView', function() {
       this.toggleClass('selected', evt.newValue === 'selected');
     }.bind(this));
 
-    this.append(new Button('div', 'add-scene-before').setContent('+'));
+    this._addBefore = new Button('div', 'add-scene-before').setContent('+');
+    this._addBefore.onStateChanged().add(function(evt) {
+      var scenes,
+          index;
+      if (evt.newValue === Button.STATE_UP) {
+        scenes = this._scene.getParent();
+        index = scenes.indexOf(this._scene);
+        scenes.insertAt(Scene.new(), index);
+      }
+    }.bind(this));
+    this._addAfter = new Button('div', 'add-scene-after').setContent('+');
+    this._addAfter.onStateChanged().add(function(evt) {
+      var scenes,
+          index;
+      if (evt.newValue === Button.STATE_UP) {
+        scenes = this._scene.getParent();
+        index = scenes.indexOf(this._scene);
+        scenes.insertAt(Scene.new(), index + 1);
+      }
+    }.bind(this));
+
+    this.append(this._addBefore);
     this.append(new DomRenderable('div', 'app-scene-preview'));
-    this.append(new Button('div', 'add-scene-after').setContent('+'));
+    this.append(this._addAfter);
   }, DomContainer);
 
 

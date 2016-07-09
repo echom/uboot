@@ -36,12 +36,21 @@ np.define('doc.List', function() {
     return this._items(index);
   };
 
-  DocList.prototype.add = function(item) {
-    var index = this._items.indexOf(item);
-    this.removeAt(index);
-    this._items.push(item);
-    this._onChanged(this._items.length - 1, item, null);
+  DocList.prototype.indexOf = function(item) {
+    return this._items.indexOf(item);
+  };
 
+  DocList.prototype.add = function(item) {
+    return this.insertAt(item, this._items.length);
+  };
+
+  DocList.prototype.insertAt = function(item, index) {
+    this.remove(item);
+    if (index >= 0 && index <= this._items.length) {
+      this._items.splice(index, 0, item);
+      item.setParent(this);
+      this._onChanged(index, item, null);
+    }
     return item;
   };
 
@@ -54,6 +63,7 @@ np.define('doc.List', function() {
     if (index >= 0 && index < this._items.length) {
       item = this._items[index];
       this._items.splice(index, 1);
+      item.setParent(null);
       this._onChanged(index, null, item);
     }
   };
