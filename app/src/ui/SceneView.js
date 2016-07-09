@@ -37,8 +37,23 @@ np.define('ui.SceneView', function() {
       }
     }.bind(this));
 
+    this._statesList = new DomContainer('ul', 'app-states');
+
+    this._scene.getStates().forEach(function(state) {
+      this._statesList.append(new DomRenderable('li', 'app-state'));
+    }.bind(this));
+    this._scene.onStatesChanged().add(function(evt) {
+      if (evt.removed) {
+        this._statesList.removeAt(evt.index);
+      }
+      if (evt.added) {
+        this._statesList.insertAt(new DomRenderable('li', 'app-state'), evt.index);
+      }
+    }.bind(this));
+
     this.append(this._addBefore);
     this.append(new DomRenderable('div', 'app-scene-preview'));
+    this.append(this._statesList);
     this.append(this._addAfter);
   }, DomContainer);
 
@@ -46,6 +61,8 @@ np.define('ui.SceneView', function() {
   SceneView.prototype._render = function(doc, el) {
     DomContainer.prototype._render.call(this, doc, el);
     this._selectionBehavior.enable(el);
+
+    setTimeout(function() { this.addClass('appear'); }.bind(this), 20);
   };
 
   SceneView.prototype.setEnabled = function(enabled, force) {

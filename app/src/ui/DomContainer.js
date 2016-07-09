@@ -24,8 +24,6 @@ np.define('ui.DomContainer', function() {
 
     this.remove(child);
     if (index >= 0 && index <= this._children.length) {
-      this._children.splice(index, 0, child);
-
       if (this._element) {
         if (index < this._children.length - 1) {
           this._element.insertBefore(
@@ -38,6 +36,7 @@ np.define('ui.DomContainer', function() {
           );
         }
       }
+      this._children.splice(index, 0, child);
     }
     return child;
   };

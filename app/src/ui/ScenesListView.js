@@ -7,7 +7,7 @@ np.define('ui.ScenesListView', function() {
       ScenesListView;
 
   ScenesListView = np.inherits(function(scenes) {
-    DomRenderable.call(this, 'div', 'app-scenes');
+    DomRenderable.call(this, 'div', 'ui app-scenes');
 
     this._scenes = scenes;
     this._list = new DomContainer('ul');

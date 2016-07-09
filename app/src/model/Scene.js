@@ -1,6 +1,7 @@
 np.define('model.Scene', function() {
-  var List = np.require('doc.List'),
-      Element = np.require('doc.Element'),
+  var Element = np.require('doc.Element'),
+      List = np.require('doc.List'),
+      State = np.require('model.State'),
       Scene;
 
   Scene = np.inherits(function(project) {
@@ -21,7 +22,11 @@ np.define('model.Scene', function() {
   };
 
   Scene.new = function() {
-    return new Scene();
+    var scene = new Scene();
+    scene.getStates().add(State.new());
+    scene.getStates().add(State.new());
+    scene.getStates().add(State.new());
+    return scene;
   };
 
   return Scene;

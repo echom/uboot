@@ -1,24 +1,30 @@
 html, body { height: 100%; margin: 0; padding: 0; }
 html { font-size: 10px; font-family: Helvetica, Arial, sans-serif; font-weight: light; }
-body { font-size: 1.4rem; }
+body { font-size: 1.4rem; overflow: hidden; }
 
 ul { margin: 0; padding: 0; list-style: none; }
+
+.ui {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: default;
+}
 
 .app {
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  user-select: none;
+  overflow: auto;
 }
 
 .app-toolbar {
   display: flex;
   flex: 0 0 auto;
-  background: lightgray
-}
-.app-toolbar li.btn {
-  border: none;
 }
 
 .app-project {
@@ -33,12 +39,15 @@ ul { margin: 0; padding: 0; list-style: none; }
   flex-direction: column;
   align-items: stretch;
   flex: 1 1 auto;
+  padding-top: 0.5rem;
 }
 
 .app-render {
   flex: 1 1 100px;
-  background: cyan;
   overflow: hidden;
+
+  border-radius: 0.2rem;
+  border: 0.1rem solid rgb(200, 200, 200);
 }
 
 .app-editor {
@@ -48,7 +57,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .app-scenes {
   flex: 0 0 auto;
   padding: 0 0.5rem;
-  background: lightgray
+  overflow-y: auto;
 }
 
 .app-scene {
@@ -67,8 +76,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .app-scene .add-scene-before:hover,
 .app-scene .add-scene-after:hover {
   font-size: 2rem;
-  color: black;
-  background: rgb(200, 200, 200)
+  color: lightblue;
 }
 
 .app-scene .add-scene-before { display: none; }
@@ -76,10 +84,60 @@ li.app-scene:first-child .add-scene-before { display: block; }
 
 
 .app-scene-preview {
+  transition: all 200ms ease-in;
   width: 19.2rem;
-  height: 10.8rem;
-  background: darkblue;
+  height: 0;
+  box-sizing: border-box;
+  border: 0.1rem solid rgb(200, 200, 200);
+  border-radius: 0.2rem;
 }
+
+.appear .app-scene-preview {
+  height: 10.8rem;
+}
+
+.app-states {
+  margin: 0 0.2rem;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom-left-radius: 0.2rem;
+  border-bottom-right-radius: 0.2rem;
+}
+.app-state {
+  height: 2rem;
+  border-bottom: 0.1rem solid rgb(220, 220, 220);
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.app-state:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+.app-state:last-child {
+  border-bottom: 0;
+}
+
+
+.btn {
+  border: 0.1rem solid rgb(200, 200, 200);
+  border-radius: 0.3rem;
+  padding: 0.5rem 0.8rem;
+}
+.btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+li.btn {
+  border-radius: 0;
+  border-right-width: 0;
+}
+li.btn:first-child {
+  border-top-left-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+li.btn:last-child {
+  border-right-width: 0.1rem;
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+
 
 .dialog-bg {
   position: absolute;

@@ -17,8 +17,8 @@ np.define('ui.RenderView', function() {
     this._resizeWatch = new DomResizeWatch(
       el,
       function() {
-        canvas.width = el.offsetWidth;
-        canvas.height = el.offsetHeight;
+        canvas.width = el.clientWidth;
+        canvas.height = el.clientHeight;
       }
     ).start();
   };

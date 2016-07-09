@@ -15,7 +15,7 @@ np.define('ui.Toolbar', function() {
   }, Button);
 
   Toolbar = np.inherits(function(application) {
-    DomContainer.call(this, 'ul', 'app-toolbar');
+    DomContainer.call(this, 'ul', 'ui app-toolbar');
 
     this._application = application;
 
