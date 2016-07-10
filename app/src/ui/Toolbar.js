@@ -5,7 +5,7 @@ np.define('ui.Toolbar', function() {
       ToolbarButton;
 
   ToolbarButton = np.inherits(function(content, activate) {
-    Button.call(this, 'li');
+    Button.call(this, 'li', 'toolbtn');
     this.onStateChanged().add(function(evt) {
       if (evt.newValue === Button.STATE_UP) {
         activate();
@@ -19,6 +19,14 @@ np.define('ui.Toolbar', function() {
 
     this._application = application;
 
+    this._hero = new Button('li', 'app-hero').setContent('uboot');
+    this._hero.onStateChanged().add(function(evt) {
+      if (evt.newValue === Button.STATE_UP) {
+        this.toggleClass('open');
+      }
+    }.bind(this));
+    this.append(this._hero);
+
     this._newProject = this.append(new ToolbarButton('new', function() {
       application.newProject();
     }));
@@ -28,6 +36,9 @@ np.define('ui.Toolbar', function() {
     this._loadProject = this.append(new ToolbarButton('load', function() {
       application.restoreProject();
     }));
+    this._close = this.append(new ToolbarButton('x', function() {
+      this.toggleClass('open', false);
+    }.bind(this)));
   }, DomContainer);
 
   return Toolbar;

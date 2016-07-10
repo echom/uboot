@@ -28,26 +28,6 @@ np.define('ui.Button', function() {
     return this._buttonBehavior.onStateChanged();
   };
 
-  Button.prototype.getContent = function() {
-    return this._content;
-  };
-  Button.prototype.setContent = function(content, force) {
-    if ((content != this._content) || force) {
-      this._content = content;
-
-      if (this._element) {
-        this._element.innerHTML = '';
-        if (np.isA(this._content, Node)) {
-          this._element.appendChild(this._content);
-        } else if (np.isA(this._content, 'string')) {
-          this._element.innerHTML = this._content;
-        }
-      }
-    }
-
-    return this;
-  };
-
   Button.prototype.setEnabled = function(enabled, force) {
     if (((enabled != this.isEnabled()) || force) && this._element) {
       if (enabled) {

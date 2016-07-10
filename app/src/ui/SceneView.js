@@ -1,13 +1,14 @@
 np.define('ui.SceneView', function() {
   var DomRenderable = np.require('ui.DomRenderable'),
       DomContainer = np.require('ui.DomContainer'),
-      Button = np.require('ui.Button'),
+      // Button = np.require('ui.Button'),
+      StateView = np.require('ui.StateView'),
       SelectionBehavior = np.require('ui.SelectionBehavior'),
-      Scene = np.require('model.Scene'),
+      // Scene = np.require('model.Scene'),
       SceneView;
 
   SceneView = np.inherits(function(scene) {
-    DomContainer.call(this, 'li', 'app-scene');
+    DomContainer.call(this, 'div', 'app-scene');
 
     this._scene = scene;
 
@@ -16,45 +17,22 @@ np.define('ui.SceneView', function() {
       this.toggleClass('selected', evt.newValue === 'selected');
     }.bind(this));
 
-    this._addBefore = new Button('div', 'add-scene-before').setContent('+');
-    this._addBefore.onStateChanged().add(function(evt) {
-      var scenes,
-          index;
-      if (evt.newValue === Button.STATE_UP) {
-        scenes = this._scene.getParent();
-        index = scenes.indexOf(this._scene);
-        scenes.insertAt(Scene.new(), index);
-      }
-    }.bind(this));
-    this._addAfter = new Button('div', 'add-scene-after').setContent('+');
-    this._addAfter.onStateChanged().add(function(evt) {
-      var scenes,
-          index;
-      if (evt.newValue === Button.STATE_UP) {
-        scenes = this._scene.getParent();
-        index = scenes.indexOf(this._scene);
-        scenes.insertAt(Scene.new(), index + 1);
-      }
-    }.bind(this));
-
     this._statesList = new DomContainer('ul', 'app-states');
 
     this._scene.getStates().forEach(function(state) {
-      this._statesList.append(new DomRenderable('li', 'app-state'));
+      this._statesList.append(new StateView(state));
     }.bind(this));
     this._scene.onStatesChanged().add(function(evt) {
       if (evt.removed) {
         this._statesList.removeAt(evt.index);
       }
       if (evt.added) {
-        this._statesList.insertAt(new DomRenderable('li', 'app-state'), evt.index);
+        this._statesList.insertAt(new StateView(evt.added), evt.index);
       }
     }.bind(this));
 
-    this.append(this._addBefore);
     this.append(new DomRenderable('div', 'app-scene-preview'));
     this.append(this._statesList);
-    this.append(this._addAfter);
   }, DomContainer);
 
 

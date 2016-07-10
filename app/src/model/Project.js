@@ -30,7 +30,7 @@ np.define('model.Project', function() {
 
   Project.new = function() {
     var project = new Project();
-    project.getScenes().add(Scene.new());
+    project.getScenes().add(Scene.new(project));
 
     return project;
   };

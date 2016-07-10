@@ -24,7 +24,7 @@ np.define('doc.Node', function() {
   };
 
   DocNode.prototype.getDocument = function() {
-    return this.parent ? this.parent.doc : this;
+    return this._parent ? this._parent.getDocument() : this;
   };
 
   DocNode.prototype.getParent = function() {

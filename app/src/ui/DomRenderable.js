@@ -4,6 +4,7 @@ np.define('ui.DomRenderable', function() {
     this._enabled = true;
     this._visible = true;
     this._element = null;
+    this._content = null;
     this.setClasses(classNames);
   };
 
@@ -13,7 +14,9 @@ np.define('ui.DomRenderable', function() {
       this._syncClassNames();
       this._render(doc, this._element);
     }
+    this.setVisible(this._visible, true);
     this.setEnabled(this._enabled, true);
+    this.setContent(this._content, true);
     return this._element;
   };
   DomRenderable.prototype._render = function(doc, element) {};
@@ -27,6 +30,26 @@ np.define('ui.DomRenderable', function() {
 
   DomRenderable.prototype.getElement = function() {
     return this._element;
+  };
+
+  DomRenderable.prototype.getContent = function() {
+    return this._content;
+  };
+  DomRenderable.prototype.setContent = function(content, force) {
+    if ((content != this._content) || force) {
+      this._content = content;
+
+      if (this._element && this._content) {
+        this._element.innerHTML = '';
+        if (np.isA(this._content, Node)) {
+          this._element.appendChild(this._content);
+        } else if (np.isA(this._content, 'string')) {
+          this._element.innerHTML = this._content;
+        }
+      }
+    }
+
+    return this;
   };
 
   DomRenderable.prototype.isEnabled = function() {
@@ -74,11 +97,13 @@ np.define('ui.DomRenderable', function() {
   };
   DomRenderable.prototype.toggleClass = function(className, enabled) {
     var index = this._classNames.indexOf(className),
-        sync = false;
-    if (enabled && index < 0) {
+        sync = false,
+        enable = enabled === undefined ? index < 0 : enabled;
+
+    if (enable && index < 0) {
       this._classNames.push(className);
       sync = true;
-    } else if (!enabled && index >= 0) {
+    } else if (!enable && index >= 0) {
       this._classNames.splice(index, 1);
       sync = true;
     }
