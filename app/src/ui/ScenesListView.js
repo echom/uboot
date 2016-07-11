@@ -1,14 +1,14 @@
 np.define('ui.ScenesListView', function() {
-  var DomRenderable = np.require('ui.DomRenderable'),
-      DomContainer = np.require('ui.DomContainer'),
+  var DomContainer = np.require('ui.DomContainer'),
+      View = np.require('ui.View'),
       Button = np.require('ui.Button'),
       Scene = np.require('model.Scene'),
       SceneView = np.require('ui.SceneView'),
       ScenesListView,
       ScenesListItem;
 
-  ScenesListItem = np.inherits(function(scene) {
-    DomContainer.call(this, 'li', 'app-scenes-item');
+  ScenesListItem = np.inherits(function(application, scene) {
+    View.call(this, application, 'li', 'app-scenes-item');
 
     this._scene = scene;
 
@@ -23,7 +23,7 @@ np.define('ui.ScenesListView', function() {
       }
     }.bind(this));
 
-    this._sceneView = this.append(new SceneView(scene));
+    this._sceneView = this.append(new SceneView(application, scene));
 
     this._addAfter = this.append(new Button('div', 'add-scene-after').setContent('+'));
     this._addAfter.onStateChanged().add(function(evt) {
@@ -35,31 +35,26 @@ np.define('ui.ScenesListView', function() {
         scenes.insertAt(Scene.new(this._scene.getProject()), index + 1);
       }
     }.bind(this));
-  }, DomContainer);
+  }, View);
 
-  ScenesListView = np.inherits(function(scenes) {
-    DomRenderable.call(this, 'div', 'ui app-scenes');
+  ScenesListView = np.inherits(function(application, scenes) {
+    View.call(this, application, 'div', 'ui app-scenes');
 
     this._scenes = scenes;
-    this._list = new DomContainer('ul');
+    this._list = this.append(new DomContainer('ul'));
 
     scenes.forEach(function(scene) {
-      this._list.append(new ScenesListItem(scene));
+      this._list.append(new ScenesListItem(application, scene));
     }, this);
     scenes.onChanged().add(function(evt) {
       if (evt.removed) {
         this._list.removeAt(evt.index);
       }
       if (evt.added) {
-        this._list.insertAt(new ScenesListItem(evt.added), evt.index);
+        this._list.insertAt(new ScenesListItem(application, evt.added), evt.index);
       }
     }.bind(this));
-  }, DomRenderable);
-
-  ScenesListView.prototype._render = function(doc, el) {
-    DomRenderable.prototype._render.call(this, doc, el);
-    el.appendChild(this._list.render(doc));
-  };
+  }, View);
 
   return ScenesListView;
 });

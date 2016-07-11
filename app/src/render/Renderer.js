@@ -4,7 +4,7 @@ np.define('render.Renderer', function() {
   };
 
   Renderer.prototype.getState = function() {
-    
+
   };
   Renderer.prototype.setState = function() {
 

@@ -14,6 +14,7 @@ np.define('ui.SelectionBehavior', function() {
           SelectionBehavior.STATE_SELECTED :
           SelectionBehavior.STATE_NONE
       );
+      evt.stopPropagation();
     }.bind(this);
   }, Behavior);
 
