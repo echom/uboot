@@ -16,6 +16,9 @@ np.define('app.Selection', function() {
 
   };
 
+  SelectionGroup.prototype.isEmpty = function() {
+
+  };
   SelectionGroup.prototype.isSingle = function() {
 
   };

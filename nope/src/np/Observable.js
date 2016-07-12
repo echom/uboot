@@ -20,7 +20,7 @@ np.define('np.Observable', function() {
     if ((oldValue !== newValue) || force) {
       this._value = newValue;
       if (this._changed.length) {
-        this._changed.fire({ newValue: newValue, oldValue: oldValue });
+        this._changed.raise({ newValue: newValue, oldValue: oldValue });
       }
     }
     return this;

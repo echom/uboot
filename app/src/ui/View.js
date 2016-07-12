@@ -1,11 +1,11 @@
 np.define('ui.View', function() {
-  var DomContainer = np.require('ui.DomContainer'),
+  var Container = np.require('ui.Container'),
       View;
 
   View = np.inherits(function(application, type, classNames) {
-    DomContainer.call(this, type, classNames);
+    Container.call(this, type, classNames);
     this._application = application;
-  }, DomContainer);
+  }, Container);
 
   View.prototype.getApplication = function() {
     return this._application;

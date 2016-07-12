@@ -1,11 +1,11 @@
 np.define('ui.DurationLabel', function() {
-  var DomRenderable = np.require('ui.DomRenderable'),
+  var Element = np.require('ui.Element'),
       DurationLabel;
 
   DurationLabel = np.inherits(function(duration, classNames) {
-    DomRenderable.call(this, 'span', classNames);
+    Element.call(this, 'span', classNames);
     this.setDuration(duration);
-  }, DomRenderable);
+  }, Element);
 
   DurationLabel.prototype.getDuration = function() {
     return this._duration;

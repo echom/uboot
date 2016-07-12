@@ -1,6 +1,6 @@
 np.define('ui.StateView', function() {
   var View = np.require('ui.View'),
-      DomRenderable = np.require('ui.DomRenderable'),
+      Element = np.require('ui.Element'),
       SelectionBehavior = np.require('ui.SelectionBehavior'),
       DurationLabel = np.require('ui.DurationLabel'),
       StateView;
@@ -18,8 +18,8 @@ np.define('ui.StateView', function() {
         .setState(this._state);
     }.bind(this));
 
-    this.append(new DomRenderable('i', 'app-state-indicator'));
-    this.append(new DurationLabel(state.getDuration(), 'app-state-duration'));
+    this.add(new Element('i', 'app-state-indicator'));
+    this.add(new DurationLabel(state.getDuration(), 'app-state-duration'));
   }, View);
 
   StateView.prototype._render = function(doc, el) {

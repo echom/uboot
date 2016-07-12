@@ -1,10 +1,9 @@
 np.define('ui.SceneView', function() {
-  var DomRenderable = np.require('ui.DomRenderable'),
-      DomContainer = np.require('ui.DomContainer'),
+  var Element = np.require('ui.Element'),
+      Container = np.require('ui.Container'),
       View = np.require('ui.View'),
       StateView = np.require('ui.StateView'),
       SelectionBehavior = np.require('ui.SelectionBehavior'),
-      // Scene = np.require('model.Scene'),
       SceneView;
 
   SceneView = np.inherits(function(application, scene) {
@@ -17,10 +16,11 @@ np.define('ui.SceneView', function() {
       this.toggleClass('selected');
     }.bind(this));
 
-    this._statesList = new DomContainer('ul', 'app-states');
+    this.add(new Element('div', 'app-scene-preview'));
+    this._statesList = this.add(new Container('ul', 'app-states'));
 
     this._scene.getStates().forEach(function(state) {
-      this._statesList.append(new StateView(application, state));
+      this._statesList.add(new StateView(application, state));
     }.bind(this));
     this._scene.onStatesChanged().add(function(evt) {
       if (evt.removed) {
@@ -30,9 +30,6 @@ np.define('ui.SceneView', function() {
         this._statesList.insertAt(new StateView(application, evt.added), evt.index);
       }
     }.bind(this));
-
-    this.append(new DomRenderable('div', 'app-scene-preview'));
-    this.append(this._statesList);
   }, View);
 
 
@@ -51,7 +48,7 @@ np.define('ui.SceneView', function() {
         this._selectionBehavior.disable();
       }
     }
-    DomContainer.prototype.setEnabled.call(this, enabled, force);
+    Container.prototype.setEnabled.call(this, enabled, force);
     return this;
   };
 

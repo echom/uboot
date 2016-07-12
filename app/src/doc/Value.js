@@ -27,7 +27,7 @@ np.define('doc.Value', function() {
 
   DocValue.prototype._onChanged = function(newValue, oldValue) {
     if (this._changed.length) {
-      this._changed.fire(new ValueChangedEvent(newValue, oldValue));
+      this._changed.raise(new ValueChangedEvent(newValue, oldValue));
     }
   };
 

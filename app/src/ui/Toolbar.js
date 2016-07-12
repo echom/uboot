@@ -1,45 +1,41 @@
 np.define('ui.Toolbar', function() {
-  var DomContainer = np.require('ui.DomContainer'),
+  var Container = np.require('ui.Container'),
       Button = np.require('ui.Button'),
       Toolbar,
       ToolbarButton;
 
-  ToolbarButton = np.inherits(function(content, activate) {
-    Button.call(this, 'li', 'toolbtn');
-    this.onStateChanged().add(function(evt) {
-      if (evt.newValue === Button.STATE_UP) {
-        activate();
-      }
-    });
-    this.setContent(content);
+  ToolbarButton = np.inherits(function(content, onActivate) {
+    Button.call(this, 'li', 'toolbtn', content, onActivate);
   }, Button);
 
   Toolbar = np.inherits(function(application) {
-    DomContainer.call(this, 'ul', 'ui app-toolbar');
+    Container.call(this, 'ul', 'ui app-toolbar');
 
     this._application = application;
 
-    this._hero = new Button('li', 'app-hero').setContent('uboot');
-    this._hero.onStateChanged().add(function(evt) {
-      if (evt.newValue === Button.STATE_UP) {
-        this.toggleClass('open');
-      }
-    }.bind(this));
-    this.append(this._hero);
+    this._hero = this.add(new Button(
+      'li',
+      'app-hero',
+      'uboot',
+      function(evt) { this.toggleClass('open'); }.bind(this)
+    ));
 
-    this._newProject = this.append(new ToolbarButton('new', function() {
-      application.newProject();
-    }));
-    this._saveProject = this.append(new ToolbarButton('save', function() {
-      application.persistProject();
-    }));
-    this._loadProject = this.append(new ToolbarButton('load', function() {
-      application.restoreProject();
-    }));
-    this._close = this.append(new ToolbarButton('x', function() {
-      this.toggleClass('open', false);
-    }.bind(this)));
-  }, DomContainer);
+    this._newProject = this.add(
+      new ToolbarButton('new', function() { application.newProject(); })
+    );
+
+    this._saveProject = this.add(
+      new ToolbarButton('save', function() { application.persistProject(); })
+    );
+
+    this._loadProject = this.add(
+      new ToolbarButton('load', function() { application.restoreProject(); })
+    );
+
+    this._close = this.add(
+      new ToolbarButton('x', function() { this.toggleClass('open', false); }.bind(this))
+    );
+  }, Container);
 
   return Toolbar;
 });

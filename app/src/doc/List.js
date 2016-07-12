@@ -22,7 +22,7 @@ np.define('doc.List', function() {
 
   DocList.prototype._onChanged = function(index, added, removed) {
     if (this._changed.length) {
-      this._changed.fire(new ListChangedEvent(index, added, removed));
+      this._changed.raise(new ListChangedEvent(index, added, removed));
     }
   };
 
