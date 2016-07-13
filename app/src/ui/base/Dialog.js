@@ -40,8 +40,8 @@ np.define('ui.Dialog', function() {
     return this;
   };
 
-  Dialog.prototype.onClosed = function() {
-    return this._closed.getInterface();
+  Dialog.prototype.onClosed = function(handler, ctx) {
+    return this._closed.on(handler, ctx);
   };
 
   Dialog.prototype._confirm = function(result) {
@@ -77,7 +77,7 @@ np.define('ui.Dialog', function() {
     return new Promise(function(resolve, reject) {
       var dialog = new Dialog(opts.buttons);
       dialog.setContent('<div class="dialog-message">' + opts.message + '</div>');
-      dialog.onClosed().add(function(evt) {
+      dialog.onClosed(function(evt) {
         if (evt.confirmed) {
           resolve(evt.result);
         } else {

@@ -104,6 +104,17 @@ ul { margin: 0; padding: 0; list-style: none; }
 .app-scenes-item .add-scene-before { display: none; }
 li.app-scenes-item:first-child .add-scene-before { display: block; }
 
+.app-scenes-item .rem-scene {
+  text-align: center;
+  font-size: 2rem;
+  color: lightblue;
+  border-radius: 100%;
+}
+.app-scenes-item:hover .rem-scene {
+  background: rgba(255, 255, 255, 0.5);
+  color: lightblue;
+}
+
 .app-scene {
   margin: 0 auto;
   padding: 0.5rem;
@@ -120,6 +131,7 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 }
 
 .app-scene-preview {
+  background: darkblue;
   transition: all 200ms ease-in;
   width: 19.2rem;
   height: 0;

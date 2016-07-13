@@ -12,7 +12,7 @@ np.define('ui.SceneView', function() {
     this._scene = scene;
 
     this._selectionBehavior = new SelectionBehavior();
-    this._selectionBehavior.onStateChanged().add(function() {
+    this._selectionBehavior.onStateChanged(function() {
       this.toggleClass('selected');
     }.bind(this));
 
@@ -22,7 +22,7 @@ np.define('ui.SceneView', function() {
     this._scene.getStates().forEach(function(state) {
       this._statesList.add(new StateView(application, state));
     }.bind(this));
-    this._scene.onStatesChanged().add(function(evt) {
+    this._scene.onStatesChanged(function(evt) {
       if (evt.removed) {
         this._statesList.removeAt(evt.index);
       }

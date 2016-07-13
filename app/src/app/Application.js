@@ -24,17 +24,16 @@ np.define('app.Application', function() {
     this._persistProject = this._persistProject.bind(this);
 
     this._onProjectNameChanged = this._onProjectNameChanged.bind(this);
-    this._onProjectChanged = this._onProjectChanged.bind(this);
 
-    this.onProjectChanged().add(this._onProjectChanged);
+    this.onProjectChanged(this._onProjectChanged, this);
     this._setProject(project || Project.new());
   };
 
   Application.prototype.getProject = function() {
     return this._project.getValue();
   };
-  Application.prototype.onProjectChanged = function() {
-    return this._project.onChanged();
+  Application.prototype.onProjectChanged = function(handler, ctx) {
+    return this._project.onChanged(handler, ctx);
   };
 
   Application.prototype.getPlayer = function() {
@@ -52,10 +51,10 @@ np.define('app.Application', function() {
   };
   Application.prototype._onProjectChanged = function(evt) {
     if (evt.oldValue) {
-      evt.oldValue.onNameChanged().remove(this._onProjectNameChanged);
+      evt.oldValue.onNameChanged(this._onProjectNameChanged, this);
     }
     if (evt.newValue) {
-      evt.newValue.onNameChanged().add(this._onProjectNameChanged);
+      evt.newValue.onNameChanged(this._onProjectNameChanged);
       this._setTitle(evt.newValue.getName());
     } else {
       this._setProject(Project.new());

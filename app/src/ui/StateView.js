@@ -10,7 +10,7 @@ np.define('ui.StateView', function() {
 
     this._state = state;
     this._selectionBehavior = new SelectionBehavior();
-    this._selectionBehavior.onStateChanged().add(function() {
+    this._selectionBehavior.onStateChanged(function() {
       this.toggleClass('selected');
 
       this.getApplication()

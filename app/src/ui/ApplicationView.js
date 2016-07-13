@@ -9,9 +9,9 @@ np.define('ui.ApplicationView', function() {
     this._toolbar = this.add(new Toolbar(application));
 
     this._projectView = this.add(new ProjectView(application, application.getProject()));
-    application.onProjectChanged().add(function(evt) {
+    application.onProjectChanged(function(evt) {
       this.remove(this._projectView);
-      this._projectView = this.append(new ProjectView(application, evt.newValue));
+      this._projectView = this.add(new ProjectView(application, evt.newValue));
     }.bind(this));
   }, View);
 

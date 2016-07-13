@@ -1,13 +1,7 @@
 np.define('np.Event', function() {
   'use strict';
   var Disposable = np.require('np.Disposable'),
-      Event,
-      EventInterface;
-
-  EventInterface = function(add, remove) {
-    this.add = add;
-    this.remove = remove;
-  };
+      Event;
 
   Event = np.inherits(function(owner) {
     Disposable.call(this);
@@ -19,14 +13,13 @@ np.define('np.Event', function() {
     this._interface = null;
   }, Disposable);
 
-  Event.prototype.getInterface = function() {
-    if (!this._interface) {
-      this._interface = new EventInterface(
-        this.addListener.bind(this),
-        this.removeListener.bind(this)
-      );
-    }
-    return this._interface;
+  Event.prototype.on = function(handler, ctx) {
+    var that = this,
+        _ctx = ctx || this,
+        _handler = handler.bind(_ctx),
+        unbind = function() { that.removeListener(_handler); };
+    that.addListener(_handler);
+    return unbind;
   };
 
   Event.prototype.addListener = function(listener) {
@@ -80,6 +73,10 @@ np.define('np.Event', function() {
     this.listener1 = null;
     this.owner = null;
     this.length = 0;
+  };
+
+  Event.define = function(target, name) {
+
   };
 
   return Event;

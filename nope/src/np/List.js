@@ -22,6 +22,12 @@ np.define('np.List', function() {
     this._items.forEach(fn, ctx);
   };
 
+  List.prototype.clear = function() {
+    while (this._items.length) {
+      this.removeAt(0);
+    }
+  };
+
   List.prototype.add = function(item) {
     return this.insertAt(item, this._items.length);
   };

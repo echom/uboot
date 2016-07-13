@@ -28,8 +28,8 @@ np.define('ui.SelectionBehavior', function() {
   SelectionBehavior.prototype.getState = function() {
     return this._state.getValue();
   };
-  SelectionBehavior.prototype.onStateChanged = function() {
-    return this._state.onChanged();
+  SelectionBehavior.prototype.onStateChanged = function(handler, ctx) {
+    return this._state.onChanged(handler, ctx);;
   };
 
   SelectionBehavior.prototype._enable = function(el) {

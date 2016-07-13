@@ -8,8 +8,8 @@ np.define('np.Observable', function() {
     this._value = value;
   }, Disposable);
 
-  Observable.prototype.onChanged = function() {
-    return this._changed.getInterface();
+  Observable.prototype.onChanged = function(handler, ctx) {
+    return this._changed.on(handler, ctx);
   };
 
   Observable.prototype.getValue = function() {

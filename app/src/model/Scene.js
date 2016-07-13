@@ -10,7 +10,7 @@ np.define('model.Scene', function() {
     this._define('states', new List(this));
 
     this._duration = -1;
-    this.onStatesChanged().add(function() {
+    this.onStatesChanged(function() {
       this._duration = -1;
     }.bind());
   }, Element);
@@ -22,8 +22,8 @@ np.define('model.Scene', function() {
   Scene.prototype.getStates = function() {
     return this._members.states;
   };
-  Scene.prototype.onStatesChanged = function() {
-    return this._members.states.onChanged();
+  Scene.prototype.onStatesChanged = function(handler, ctx) {
+    return this._members.states.onChanged(handler, ctx);;
   };
 
   Scene.prototype.getDuration = function() {

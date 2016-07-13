@@ -17,15 +17,15 @@ np.define('model.Project', function() {
   Project.prototype.setName = function(value) {
     return this._members.name.setValue(value);
   };
-  Project.prototype.onNameChanged = function() {
-    return this._members.name.onChanged();
+  Project.prototype.onNameChanged = function(handler, ctx) {
+    return this._members.name.onChanged(handler, ctx);
   };
 
   Project.prototype.getScenes = function() {
     return this._members.scenes;
   };
-  Project.prototype.onScenesChanged = function() {
-    return this._members.scenes.onChanged();
+  Project.prototype.onScenesChanged = function(handler, ctx) {
+    return this._members.scenes.onChanged(handler, ctx);
   };
 
   Project.new = function() {

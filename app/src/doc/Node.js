@@ -19,8 +19,8 @@ np.define('doc.Node', function() {
     return id;
   };
 
-  DocNode.prototype.onChanged = function() {
-    return this._changed.getInterface();
+  DocNode.prototype.onChanged = function(handler, ctx) {
+    return this._changed.on(handler, ctx);
   };
 
   DocNode.prototype.getDocument = function() {

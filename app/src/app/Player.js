@@ -14,8 +14,8 @@ np.define('app.Player', function() {
   Player.prototype.getScene = function() {
     return this._scene.getValue();
   };
-  Player.prototype.onSceneChanged = function() {
-    return this._scene.onChanged();
+  Player.prototype.onSceneChanged = function(handler, ctx) {
+    return this._scene.onChanged(handler, ctx);;
   };
 
   Player.prototype.getState = function() {
@@ -26,8 +26,8 @@ np.define('app.Player', function() {
     this._state.setValue(state);
     return this;
   };
-  Player.prototype.onStateChanged = function() {
-    return this._scene.onChanged();
+  Player.prototype.onStateChanged = function(handler, ctx) {
+    return this._scene.onChanged(handler, ctx);;
   };
 
   Player.prototype.isRunning = function() {

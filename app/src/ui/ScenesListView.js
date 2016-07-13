@@ -22,8 +22,13 @@ np.define('ui.ScenesListView', function() {
           index = scenes.indexOf(this._scene);
       scenes.insertAt(Scene.new(this._scene.getProject()), index + 1);
     }.bind(this);
+    this._remScene = function() {
+      var scenes = this._scene.getParent();
+      scenes.remove(this._scene);
+    }.bind(this);
 
     this._addBefore = this.add(new Button('div', 'add-scene-before', '+', this._addSceneBefore));
+    this._remove = this.add(new Button('div', 'rem-scene', 'x', this._remScene));
     this._sceneView = this.add(new SceneView(application, scene));
     this._addAfter = this.add(new Button('div', 'add-scene-after', '+', this._addSceneAfter));
   }, View);
@@ -37,7 +42,7 @@ np.define('ui.ScenesListView', function() {
     scenes.forEach(function(scene) {
       this._list.add(new ScenesListItem(application, scene));
     }, this);
-    scenes.onChanged().add(function(evt) {
+    scenes.onChanged(function(evt) {
       if (evt.removed) {
         this._list.removeAt(evt.index);
       }

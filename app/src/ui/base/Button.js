@@ -11,11 +11,13 @@ np.define('ui.Button', function() {
 
     this.setContent(content);
     if (onActivate) {
-      this.onActivate().add(onActivate);
+      this.onActivate(onActivate);
     }
   }, Element);
 
-  Button.prototype.onActivate = function() { return this._activate.getInterface(); };
+  Button.prototype.onActivate = function(handler, ctx) {
+    return this._activate.on(handler, ctx);
+  };
 
   Button.prototype._onUp = function(evt) {
     this._activate.raise();
