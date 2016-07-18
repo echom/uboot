@@ -46,7 +46,7 @@ np.define('app.Selection', function() {
   };
 
   Selection.prototype.clear = function(name) {
-
+    this._getGroup(name).length = 0;
   };
 
   return Selection;

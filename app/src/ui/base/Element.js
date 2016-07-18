@@ -3,12 +3,12 @@ np.define('ui.Element', function() {
       Element;
 
 
-  Element = np.inherits(function(type, classNames) {
+  Element = np.inherits(function(type, classNames, content) {
     this._type = type || 'div';
     this._enabled = true;
     this._visible = true;
     this._element = null;
-    this._content = null;
+    this._content = content;
     this.setClasses(classNames);
   }, Disposable);
 

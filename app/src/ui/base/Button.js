@@ -4,12 +4,11 @@ np.define('ui.Button', function() {
       Button;
 
   Button = np.inherits(function(type, classNames, content, onActivate) {
-    Element.call(this, type || 'button', classNames || 'btn');
+    Element.call(this, type || 'button', classNames || 'btn', content);
 
     this._activate = new Event(this);
     this._onUp = this._onUp.bind(this);
 
-    this.setContent(content);
     if (onActivate) {
       this.onActivate(onActivate);
     }

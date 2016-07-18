@@ -23,7 +23,7 @@ np.define('model.Scene', function() {
     return this._members.states;
   };
   Scene.prototype.onStatesChanged = function(handler, ctx) {
-    return this._members.states.onChanged(handler, ctx);;
+    return this._members.states.onChanged(handler, ctx);
   };
 
   Scene.prototype.getDuration = function() {

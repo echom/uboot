@@ -28,7 +28,7 @@ np.define('ui.ScenesListView', function() {
     }.bind(this);
 
     this._addBefore = this.add(new Button('div', 'add-scene-before', '+', this._addSceneBefore));
-    this._remove = this.add(new Button('div', 'rem-scene', 'x', this._remScene));
+    // this._remove = this.add(new Button('div', 'rem-scene', 'x', this._remScene));
     this._sceneView = this.add(new SceneView(application, scene));
     this._addAfter = this.add(new Button('div', 'add-scene-after', '+', this._addSceneAfter));
   }, View);
