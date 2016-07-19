@@ -1,52 +1,86 @@
 np.define('app.Selection', function() {
-  var Selection;
+  var List = np.require('np.List'),
+      Selection,
+      SelectionGroup;
+
+  SelectionGroup = np.inherits(function(name) {
+    List.call(this);
+    this._name = name;
+    this._mute = false;
+    this._changed = new Event();
+  });
+
+  SelectionGroup.prototype.onChanged = function(handler, ctx) {
+    return this._changed.on(handler, ctx);
+  };
+
+  SelectionGroup.prototype.isEmpty = function() {
+    return this.length === 0;
+  };
+  SelectionGroup.prototype.isSingle = function() {
+    return this.length === 1;
+  };
+  SelectionGroup.prototype.isMulti = function() {
+    return this.length > 1;
+  };
+
+  SelectionGroup.prototype.toggle = function(item) {
+    if (this.contains(item)) {
+      this.remove(item);
+    } else {
+      this.add(item);
+    }
+  };
+  SelectionGroup.prototype.clear = function() {
+    var length = this.length;
+    this._mute = true;
+    List.prototype.clear.call(this);
+    this._mute = false;
+    if (length !== this.length) {
+      this._onChanged();
+    }
+  };
+  SelectionGroup.prototype.insertAt = function(item, index) {
+    var length = this.length;
+    List.prototype.insertAt.call(this, item, index);
+    if (length !== this.length && !this._mute) {
+      this._onChanged();
+    }
+  };
+  SelectionGroup.prototype.removeAt = function(index) {
+    var length = this.length;
+    List.prototype.removeAt.call(this, index);
+    if (this.length !== length && !this._mute) {
+      this._onChanged();
+    }
+  };
+
+  SelectionGroup.prototype._onChanged = function() {
+    this._changed.raise();
+  };
 
   Selection = function() {
     this._groups = {};
+    this._current = null;
+    this._changed = new Event(this);
   };
 
-  Selection.prototype._getGroup = function(name) {
-    return this._groups[name] || (this._groups[name] = []);
+  Selection.prototype.getCurrent = function() {
+    return this._current;
   };
 
-  Selection.prototype.set = function(name, item) {
-    var group = this._getGroup(name);
-    group.length = 0;
-    group.push(item);
-  };
-  Selection.prototype.add = function(name, item) {
-    var group = this._getGroup(name),
-        index = group.indexOf(item);
-
-    if (index < 0) {
-      group.push(item);
+  Selection.prototype.getGroup = function(name) {
+    var group = this._groups[name];
+    if (!group) {
+      this._groups[name] = group = new SelectionGroup();
+      group.onChanged(function() {
+        if (this._current !== group) {
+          this._current = group;
+        }
+      }.bind(this));
     }
 
-    this._onSelectionChanged();
-  };
-  Selection.prototype.remove = function(name, item) {
-    var group = this._getGroup(name),
-        index = group.indexOf(item);
-
-    if (index >= 0) {
-      group.splice(index, 1);
-    }
-
-    this._onSelectionChanged();
-  };
-
-  Selection.prototype.isEmpty = function(name) {
-    return this._getGroup(name).length === 0;
-  };
-  Selection.prototype.isSingle = function(name) {
-    return this._getGroup(name).length === 1;
-  };
-  Selection.prototype.isMulti = function(name) {
-    return this._getGroup(name).length > 1;
-  };
-
-  Selection.prototype.clear = function(name) {
-    this._getGroup(name).length = 0;
+    return this._groups[name] || (this._groups[name] = new SelectionGroup());
   };
 
   return Selection;

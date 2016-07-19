@@ -21,6 +21,12 @@ np.define('np.List', function() {
   List.prototype.forEach = function(fn, ctx) {
     this._items.forEach(fn, ctx);
   };
+  List.prototype.find = function(fn, ctx) {
+    return this._items.find(fn, ctx);
+  };
+  List.prototype.contains = function(item) {
+    return this.indexOf(item) >= 0;
+  };
 
   List.prototype.clear = function() {
     while (this._items.length) {

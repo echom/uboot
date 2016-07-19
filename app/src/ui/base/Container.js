@@ -8,9 +8,11 @@ np.define('ui.Container', function() {
     this._children = new List();
   }, Element);
 
-  Container.prototype.getChildAt = function(index) {
-    this._children.get(index);
+
+  Container.prototype.getChildren = function() {
+    return this._children;
   };
+
   Container.prototype.add = function(child) {
     this.insertAt(child, this._children.length);
     return child;

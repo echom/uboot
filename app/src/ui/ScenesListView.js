@@ -39,6 +39,9 @@ np.define('ui.ScenesListView', function() {
     this._scenes = scenes;
     this._list = this.add(new Container('ul'));
 
+    this._onSelect = this._onSelect.bind(this);
+
+
     scenes.forEach(function(scene) {
       this._list.add(new ScenesListItem(application, scene));
     }, this);
@@ -51,6 +54,35 @@ np.define('ui.ScenesListView', function() {
       }
     }.bind(this));
   }, View);
+
+
+  ScenesListView.prototype._render = function(doc, el) {
+    View.prototype._render.call(this, doc, el);
+
+    this._list.getChildren().forEach(function(child) {
+      child.getElement().addEventListener('mouseup', this._onSelect);
+    }, this);
+  };
+
+  ScenesListView.prototype._onSelect = function(evt) {
+    var type = evt.shiftKey ? 'range' : evt.ctrlKey ? 'add' : 'single',
+        selection = this.getApplication().getSelection(),
+        group = selection.getGroup('scenes'),
+        item = this._list.getChildren().find(function(i) {
+          return i.getElement() === evt.currentTarget;
+        });
+
+    if (type === 'single') {
+      selection.set('', item._scene);
+    } else if (type === 'add') {
+      selection.toggle(item._scene);
+    } else if (type === 'range') {
+      console.log('oops');
+    }
+  };
+  ScenesListView.prototype._onSelectionChanged = function(evt) {
+    if(evt.name === 'scenes')
+  };
 
   return ScenesListView;
 });

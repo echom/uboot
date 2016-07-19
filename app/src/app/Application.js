@@ -2,12 +2,14 @@ np.define('app.Application', function() {
   var Observable = np.require('np.Observable'),
       Project = np.require('model.Project'),
       Player = np.require('app.Player'),
+      Selection = np.require('app.Selection'),
       Application;
 
   Application = function(env, project) {
     this._env = env;
     this._project = new Observable(null, this);
     this._player = new Player(this._project);
+    this._selection = new Selection();
 
     this._persistInfo = null;
 
@@ -40,6 +42,9 @@ np.define('app.Application', function() {
     return this._player;
   };
 
+  Application.prototype.getSelection = function() {
+    return this._selection;
+  };
 
   Application.prototype._setTitle = function(title) {
     this._env.setTitle(title);
