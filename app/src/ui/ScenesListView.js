@@ -39,7 +39,13 @@ np.define('ui.ScenesListView', function() {
     this._scenes = scenes;
     this._list = this.add(new Container('ul'));
 
+    this._selection = application.getSelection().getGroup('scenes');
     this._onSelect = this._onSelect.bind(this);
+    this._selection.onChanged(function(evt) {
+      this._list.getChildren().forEach(function(i) {
+        i.toggleClass('selected', this._selection.contains(i._scene));
+      }, this);
+    }, this);
 
 
     scenes.forEach(function(scene) {
@@ -65,23 +71,19 @@ np.define('ui.ScenesListView', function() {
   };
 
   ScenesListView.prototype._onSelect = function(evt) {
-    var type = evt.shiftKey ? 'range' : evt.ctrlKey ? 'add' : 'single',
-        selection = this.getApplication().getSelection(),
-        group = selection.getGroup('scenes'),
+    var type = evt.shiftKey ? 'range' : (evt.ctrlKey || evt.metaKey) ? 'add' : 'single',
+        selection = this._selection,
         item = this._list.getChildren().find(function(i) {
           return i.getElement() === evt.currentTarget;
         });
 
     if (type === 'single') {
-      selection.set('', item._scene);
+      selection.set(item._scene);
     } else if (type === 'add') {
       selection.toggle(item._scene);
     } else if (type === 'range') {
       console.log('oops');
     }
-  };
-  ScenesListView.prototype._onSelectionChanged = function(evt) {
-    if(evt.name === 'scenes')
   };
 
   return ScenesListView;

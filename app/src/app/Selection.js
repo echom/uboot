@@ -1,5 +1,6 @@
 np.define('app.Selection', function() {
   var List = np.require('np.List'),
+      Event = np.require('np.Event'),
       Selection,
       SelectionGroup;
 
@@ -8,7 +9,7 @@ np.define('app.Selection', function() {
     this._name = name;
     this._mute = false;
     this._changed = new Event();
-  });
+  }, List);
 
   SelectionGroup.prototype.onChanged = function(handler, ctx) {
     return this._changed.on(handler, ctx);
@@ -24,6 +25,10 @@ np.define('app.Selection', function() {
     return this.length > 1;
   };
 
+  SelectionGroup.prototype.set = function(item) {
+    this.clear();
+    this.add(item);
+  };
   SelectionGroup.prototype.toggle = function(item) {
     if (this.contains(item)) {
       this.remove(item);
