@@ -1,5 +1,5 @@
-(function(np) {
-  var typeOf = np.typeOf = function(obj) {
+(np => {
+  var typeOf = np.typeOf = obj => {
     var str = Object.prototype.toString.call(obj);
     return str.substring(8, str.length - 1).toLowerCase();
   };
@@ -7,13 +7,26 @@
   var registry = {},
       cache = {};
 
-  np.define = function(name, module) {
+  /**
+   * Defines a module with the given name.
+   * @param {string} name - the unique name of the module
+   * @param {function()} module - the module definition function
+   * @throws {Error} throws an error if a module with the same name is already
+   *    defined
+   */
+  np.define = (name, module) => {
     if (registry[name]) {
       throw new Error('np.define: Module "' + name + '" is already defined.');
     }
     registry[name] = module;
   };
-  np.require = function(name) {
+
+  /**
+   * Requires a module previously registered with the given name.
+   * @param {string} name - the unique name of the module
+   * @return {*} the evaluated module
+   */
+  np.require = (name) => {
     var module = cache[name];
     if (module) {
       return module;
@@ -35,8 +48,9 @@
    * @return {function} the constructor function now inheriting from the base
    *  constructor
    * @private
+   * @deprecated
    */
-  np.inherits = function(ctor, base) {
+  np.inherits = (ctor, base) => {
     var f = function() {};
     f.prototype = base.prototype;
     ctor.prototype = new f(); // eslint-disable-line new-cap
@@ -54,19 +68,13 @@
    * @return {boolean} true if the type check passes, false otherwise.
    * @private
    */
-  np.isA = function(obj, type) {
+  np.isA = (obj, type) => {
     return ((typeof type) == 'string') ?
         typeOf(obj) === type :
         (((typeof type) == 'function') ? (obj instanceof type) : false);
   };
 
-  np.now = Date.now ?
-    function() {
-      return Date.now();
-    } :
-    function() {
-      return new Date().getTime();
-    };
+  np.now = Date.now ? () => Date.now() : () => new Date().getTime();
 
-  np.noop = function() {};
-}(this.np || (this.np = {})));
+  np.noop = () => {};
+})(this.np || (this.np = {}));

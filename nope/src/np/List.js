@@ -1,72 +1,65 @@
-np.define('np.List', function() {
-  var List;
-
-  List = function() {
-    this._items = [];
-  };
-
-  Object.defineProperty(List.prototype, 'length', {
-    get: function() {
-      return this._items.length;
-    }
-  });
-
-  List.prototype.get = function(index) {
-    return this._items[index];
-  };
-
-  List.prototype.indexOf = function(item) {
-    return this._items.indexOf(item);
-  };
-  List.prototype.forEach = function(fn, ctx) {
-    this._items.forEach(fn, ctx);
-  };
-  List.prototype.find = function(fn, ctx) {
-    return this._items.find(fn, ctx);
-  };
-  List.prototype.contains = function(item) {
-    return this.indexOf(item) >= 0;
-  };
-
-  List.prototype.clear = function() {
-    while (this._items.length) {
-      this.removeAt(0);
-    }
-  };
-
-  List.prototype.add = function(item) {
-    return this.insertAt(item, this._items.length);
-  };
-  List.prototype.remove = function(item) {
-    return this.removeAt(this._items.indexOf(item));
-  };
-  List.prototype.replaceAt = function(item, index) {
-    var removed;
-    if (index >= 0 && index <= this._items.length) {
-      removed = this.removeAt(index);
-      this.insertAt(item, index);
-    }
-    return removed;
-  };
-  List.prototype.insertAt = function(item, index) {
-    if (!item) {
-      throw new Error('np.List#insertAt: item is undefined');
+np.define('np.List', () => {
+  class List {
+    constructor() {
+      this._items = [];
     }
 
-    this.remove(item);
-    if (index >= 0 && index <= this._items.length) {
-      this._items.splice(index, 0, item);
+    get length() { return this._items.length; }
+
+    get(index) { return this._items[index]; }
+
+    indexOf(item) { return this._items.indexOf(item); }
+
+    contains(item) { return this.indexOf(item) >= 0; }
+
+    forEach(fn, ctx) { this._items.forEach(fn, ctx); }
+
+    find(fn, ctx) { return this._items.find(fn, ctx); }
+
+    add(item) { return this.insertAt(item, this._items.length); }
+
+    remove(item) { return this.removeAt(this._items.indexOf(item)); }
+
+    insertAt(item, index) {
+      if (!item) {
+        throw new Error('np.List#insertAt: item is undefined');
+      }
+
+      this.remove(item);
+      if (index >= 0 && index <= this._items.length) {
+        this._items.splice(index, 0, item);
+      }
+      return item;
     }
-    return item;
-  };
-  List.prototype.removeAt = function(index) {
-    var item;
-    if (index >= 0 && index < this._items.length) {
-      item = this._items[index];
-      this._items.splice(index, 1);
+
+    removeAt(index) {
+      var item;
+      if (index >= 0 && index < this._items.length) {
+        item = this._items[index];
+        this._items.splice(index, 1);
+      }
+      return item;
     }
-    return item;
-  };
+
+    replaceAt(item, index) {
+      var removed;
+      if (index >= 0 && index <= this._items.length) {
+        removed = this.removeAt(index);
+        this.insertAt(item, index);
+      }
+      return removed;
+    }
+
+    clear() {
+      while (this._items.length) {
+        this.removeAt(0);
+      }
+    }
+
+    toArray(mapFn, ctx) {
+      return this._items.map(mapFn || (i => i), ctx);
+    }
+  }
 
   return List;
 });

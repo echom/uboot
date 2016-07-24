@@ -82,8 +82,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   flex: 0 0 auto;
   padding: 0 0.5rem;
   overflow-y: auto;
-}
-.app-scenes > * {
   min-height: 0;
 }
 
@@ -97,7 +95,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .app-scenes-item .add-scene-before:hover,
-.app-scenes-item .add-scene-after:hover {
+.app-scenes-item .add-scene-after:hover,
+.app-scenes-item:last-child .add-scene-after {
   font-size: 2rem;
   color: lightblue;
 }
@@ -120,7 +119,7 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   margin: 0 auto;
   padding: 0.5rem;
 }
-.app-scene.selected {
+.app-scenes-item.selected .app-scene {
   background: rgba(0, 77, 140, 0.05);
 }
 .app-scene:hover .app-scene-preview {
@@ -133,6 +132,7 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 
 .app-scene-preview {
   background: darkblue;
+  color: white;
   transition: all 200ms ease-in;
   width: 19.2rem;
   height: 0;

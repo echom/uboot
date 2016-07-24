@@ -1,83 +1,80 @@
-np.define('np.Event', function() {
+np.define('np.Event', () => {
   'use strict';
-  var Disposable = np.require('np.Disposable'),
-      Event;
+  var Disposable = np.require('np.Disposable');
 
-  Event = np.inherits(function(owner) {
-    Disposable.call(this);
-    this.owner = owner;
-    this.listener0 = null;
-    this.listener1 = null;
-    this.listeners = [];
-    this.length = 0;
-    this._interface = null;
-  }, Disposable);
+  class Event extends Disposable {
+    constructor(owner) {
+      super();
 
-  Event.prototype.on = function(handler, ctx) {
-    var that = this,
-        _ctx = ctx || this,
-        _handler = handler.bind(_ctx),
-        unbind = function() { that.removeListener(_handler); };
-    that.addListener(_handler);
-    return unbind;
-  };
-
-  Event.prototype.addListener = function(listener) {
-    if (this.length === 0) {
-      this.listener0 = listener;
-    } else if (this.length === 1) {
-      this.listener1 = listener;
+      this._owner = owner || null;
+      this._listener0 = null;
+      this._listener1 = null;
+      this._listeners = [];
+      this._length = 0;
     }
-    this.listeners.push(listener);
-    this.length = this.listeners.length;
 
-    return listener;
-  };
+    get length() { return this._length; }
 
-  Event.prototype.removeListener = function(listener) {
-    var index;
+    on(listener, ctx) {
+      var _listener = ctx ? listener.bind(ctx) : listener;
+      this._addListener(_listener);
+      return () => this._removeListener(_listener);
+    }
 
-    if (this.length === 1 && this.listener0 === listener) {
-      this.listener0 = null;
-      this.listeners.length = 0;
-    } else {
-      index = this.listeners.indexOf(listener);
-      if (index >= 0) {
-        this.listeners.splice(index, 1);
-        this.listener0 = this.listeners[0] || null;
-        this.listener1 = this.listeners[1] || null;
+    raise(evt) {
+      var i = 2;
+
+      if (this._listener0) {
+        this._listener0.call(null, evt, this._owner);
+      }
+      if (this._listener1) {
+        this._listener1.call(null, evt, this._owner);
+      }
+      if (this._length > 2) {
+        for (; i < this._length; i++) {
+          this._listeners[i].call(null, evt, this._owner);
+        }
       }
     }
-    this.length = this.listeners.length;
-  };
 
-  Event.prototype.raise = function(event) {
-    var i = 2;
-
-    if (this.listener0) {
-      this.listener0.call(null, event, this.owner);
-    }
-    if (this.listener1) {
-      this.listener1.call(null, event, this.owner);
-    }
-    if (this.length > 2) {
-      for (; i < this.listenerCount; i++) {
-        this.listeners[i].call(null, event, this.owner);
+    _addListener(listener) {
+      if (this._length === 0) {
+        this._listener0 = listener;
+      } else if (this._length === 1) {
+        this._listener1 = listener;
       }
+      this._listeners.push(listener);
+      this._length = this._listeners.length;
+
+      return listener;
     }
-  };
 
-  Event.prototype._dispose = function() {
-    this.listeners.length = 0;
-    this.listener0 = null;
-    this.listener1 = null;
-    this.owner = null;
-    this.length = 0;
-  };
+    _removeListener(listener) {
+      var index;
 
-  Event.define = function(target, name) {
+      if (this._length === 1 && this._listener0 === listener) {
+        this._listener0 = null;
+        this._listeners.length = 0;
+      } else {
+        index = this._listeners.indexOf(listener);
+        if (index >= 0) {
+          this._listeners.splice(index, 1);
+          this._listener0 = this._listeners[0] || null;
+          this._listener1 = this._listeners[1] || null;
+        }
+      }
+      this._length = this._listeners.length;
+    }
 
-  };
+    _dispose() {
+      super._dispose();
+      this._listeners.length = 0;
+      this._listener0 = null;
+      this._listener1 = null;
+      this._owner = null;
+      this._length = 0;
+    }
+  }
 
   return Event;
 });

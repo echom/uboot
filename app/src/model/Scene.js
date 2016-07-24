@@ -1,60 +1,57 @@
-np.define('model.Scene', function() {
+np.define('model.Scene', () => {
   var Element = np.require('doc.Element'),
       List = np.require('doc.List'),
-      State = np.require('model.State'),
-      Scene;
+      State = np.require('model.State');
 
-  Scene = np.inherits(function(project) {
-    Element.call(this, project.getScenes());
+  class Scene extends Element {
+    constructor(project) {
+      super(project.getScenes());
 
-    this._define('states', new List(this));
+      this._define('states', new List(this));
 
-    this._duration = -1;
-    this.onStatesChanged(function() {
       this._duration = -1;
-    }.bind());
-  }, Element);
-
-  Scene.prototype.getProject = function() {
-    return this.getDocument();
-  };
-
-  Scene.prototype.getStates = function() {
-    return this._members.states;
-  };
-  Scene.prototype.onStatesChanged = function(handler, ctx) {
-    return this._members.states.onChanged(handler, ctx);
-  };
-
-  Scene.prototype.getDuration = function() {
-    if (this._duration < 0) {
-      this._duration = 0;
-      this.getStates().forEach(function(state) {
-        this._duration += state.getDuration();
-      }, this);
+      this.onStatesChanged(() => { this._duration = -1; });
     }
-    return this._duration;
-  };
 
-  Scene.prototype.getStateStart = function(state) {
-    var offset = this.getProject().getSceneStart(this),
-        states = this.getStates(),
-        index = states.indexOf(state);
-    if (index >= 0) {
-      while (--index) {
-        offset += states.at(index).getDuration();
+    getProject() {
+      return this.getDocument();
+    }
+
+    getStates() {
+      return this._members.states;
+    }
+    onStatesChanged(handler, ctx) {
+      return this._members.states.onChanged(handler, ctx);
+    }
+
+    getDuration() {
+      if (this._duration < 0) {
+        this._duration = 0;
+        this.getStates().forEach(state => this._duration += state.getDuration());
       }
+      return this._duration;
     }
-    return offset;
-  };
 
-  Scene.new = function(project) {
-    var scene = new Scene(project);
-    scene.getStates().add(State.new(scene));
-    scene.getStates().add(State.new(scene));
-    scene.getStates().add(State.new(scene));
-    return scene;
-  };
+    getStateStart(state) {
+      var offset = this.getProject().getSceneStart(this),
+          states = this.getStates(),
+          index = states.indexOf(state);
+      if (index >= 0) {
+        while (--index) {
+          offset += states.get(index).getDuration();
+        }
+      }
+      return offset;
+    }
+
+    static create(project) {
+      var scene = new Scene(project);
+      scene.getStates().add(State.create(scene));
+      scene.getStates().add(State.create(scene));
+      scene.getStates().add(State.create(scene));
+      return scene;
+    }
+  }
 
   return Scene;
 });

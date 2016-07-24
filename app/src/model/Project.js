@@ -1,39 +1,36 @@
-np.define('model.Project', function() {
+np.define('model.Project', () => {
   var Document = np.require('doc.Document'),
       List = np.require('doc.List'),
       Value = np.require('doc.Value'),
-      Scene = np.require('model.Scene'),
-      Project;
+      Scene = np.require('model.Scene');
 
-  Project = np.inherits(function() {
-    Document.call(this);
-    this._define('name', new Value(this, 'untitled'));
-    this._define('scenes', new List(this));
-  }, Document);
+  class Project extends Document {
+    constructor() {
+      super();
+      this._define('name', new Value(this, 'untitled'));
+      this._define('scenes', new List(this));
+    }
 
-  Project.prototype.getName = function() {
-    return this._members.name.getValue();
-  };
-  Project.prototype.setName = function(value) {
-    return this._members.name.setValue(value);
-  };
-  Project.prototype.onNameChanged = function(handler, ctx) {
-    return this._members.name.onChanged(handler, ctx);
-  };
+    getName() { return this._members.name.getValue(); }
 
-  Project.prototype.getScenes = function() {
-    return this._members.scenes;
-  };
-  Project.prototype.onScenesChanged = function(handler, ctx) {
-    return this._members.scenes.onChanged(handler, ctx);
-  };
+    setName(value) { return this._members.name.setValue(value); }
 
-  Project.new = function() {
-    var project = new Project();
-    project.getScenes().add(Scene.new(project));
+    onNameChanged(handler, ctx) {
+      return this._members.name.onChanged(handler, ctx);
+    }
 
-    return project;
-  };
+    getScenes() { return this._members.scenes; }
+
+    onScenesChanged(handler, ctx) {
+      return this._members.scenes.onChanged(handler, ctx);
+    }
+
+    static create() {
+      var project = new Project();
+      project.getScenes().add(Scene.create(project));
+      return project;
+    }
+  }
 
   return Project;
 });

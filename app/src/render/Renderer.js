@@ -1,12 +1,12 @@
-np.define('render.Renderer', function() {
-  var Renderer = function(canvas) {
+np.define('render.Renderer', () => {
+  var Renderer = (canvas) => {
 
   };
 
-  Renderer.prototype.getState = function() {
+  Renderer.prototype.getState = () => {
 
   };
-  Renderer.prototype.setState = function() {
+  Renderer.prototype.setState = () => {
 
   };
 });

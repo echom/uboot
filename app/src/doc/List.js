@@ -1,83 +1,77 @@
-np.define('doc.List', function() {
-  var DocNode = np.require('doc.Node'),
-      DocList,
-      ListChangedEvent;
+np.define('doc.List', () => {
+  var List = np.require('np.List'),
+      DocNode = np.require('doc.Node');
 
-  ListChangedEvent = function(index, added, removed) {
-    this.index = index;
-    this.added = added;
-    this.removed = removed;
-  };
-
-  DocList = np.inherits(function(parent) {
-    DocNode.call(this, parent);
-    this._items = [];
-  }, DocNode);
-
-  Object.defineProperty(DocList.prototype, 'length', {
-    get: function() {
-      return this._items.length;
+  class DocList extends DocNode {
+    constructor(parent) {
+      super(parent);
+      this._items = new List();
     }
-  });
 
-  DocList.prototype._onChanged = function(index, added, removed) {
-    if (this._changed.length) {
-      this._changed.raise(new ListChangedEvent(index, added, removed));
+    get length() { return this._items.length; }
+
+    _onChanged(index, added, removed) {
+      if (this._changed.length) {
+        this._changed.raise({
+          index: index,
+          added: added,
+          removed: removed
+        });
+      }
     }
-  };
 
-  DocList.prototype.serialize = function() {
-    return this._items.map(function(item) {
-      return item.serialize();
-    });
-  };
-
-  DocList.prototype.at = function(index) {
-    return this._items(index);
-  };
-
-  DocList.prototype.indexOf = function(item) {
-    return this._items.indexOf(item);
-  };
-
-  DocList.prototype.add = function(item) {
-    return this.insertAt(item, this._items.length);
-  };
-
-  DocList.prototype.insertAt = function(item, index) {
-    this.remove(item);
-    if (index >= 0 && index <= this._items.length) {
-      this._items.splice(index, 0, item);
-      item.setParent(this);
-      this._onChanged(index, item, null);
+    serialize() {
+      return this._items.toArray(item => item.serialize());
     }
-    return item;
-  };
 
-  DocList.prototype.remove = function(item) {
-    this.removeAt(this._items.indexOf(item));
-  };
-
-  DocList.prototype.removeAt = function(index) {
-    var item;
-    if (index >= 0 && index < this._items.length) {
-      item = this._items[index];
-      this._items.splice(index, 1);
-      item.setParent(null);
-      this._onChanged(index, null, item);
+    get(index) {
+      return this._items.get(index);
     }
-  };
 
-  DocList.prototype.forEach = function(fn, ctx) {
-    this._items.forEach(fn, ctx);
-  };
+    indexOf(item) {
+      return this._items.indexOf(item);
+    }
 
-  DocList.prototype._dispose = function() {
-    DocNode.prototype._dispose.call(this);
-    this._items.forEach(function(item) {
-      item.dispose();
-    });
-  };
+    add(item) {
+      return this.insertAt(item, this.length);
+    }
+
+    insertAt(item, index) {
+      this._items.insertAt(item, index);
+      if (this._items.get(index) === item) {
+        item.setParent(this);
+        this._onChanged(index, item, null);
+      }
+      return item;
+    }
+
+    remove(item) {
+      return this.removeAt(this._items.indexOf(item));
+    }
+
+    removeAt(index) {
+      var item;
+      if (index >= 0 && index < this._items.length) {
+        item = this._items.removeAt(index);
+        item.setParent(null);
+        this._onChanged(index, null, item);
+      }
+      return item;
+    }
+
+    forEach(fn, ctx) {
+      this._items.forEach(fn, ctx);
+    }
+
+    toArray(mapFn, ctx) {
+      this._items.toArray(mapFn, ctx);
+    }
+
+    _dispose() {
+      DocNode.prototype._dispose.call(this);
+      this._items.forEach(item => item.dispose());
+    }
+  }
 
   return DocList;
 });

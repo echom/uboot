@@ -1,31 +1,19 @@
-np.define('app.Env', function() {
-  var abstractInvocationError = np.require('np.error').abstractInvocation,
-      Env = function() {};
+np.define('app.Env', () => {
+  class Env {
+    queryYesNo(message) { throw new Error('abstract invocation'); }
 
-  Env.prototype.queryYesNo = function(message) {
-    throw abstractInvocationError();
-  };
+    queryOkCancel(message) { throw new Error('abstract invocation'); }
 
-  Env.prototype.queryOkCancel = function(message) {
-    throw abstractInvocationError();
-  };
+    queryPersistInfo() { throw new Error('abstract invocation'); }
 
-  Env.prototype.queryPersistInfo = function() {
-    throw abstractInvocationError();
-  };
-  Env.prototype.queryRestoreInfo = function() {
-    throw abstractInvocationError();
-  };
-  Env.prototype.persist = function(persistInfo, toPersist) {
-    throw abstractInvocationError();
-  };
-  Env.prototype.restore = function(persistInfo) {
-    throw abstractInvocationError();
-  };
+    queryRestoreInfo() { throw new Error('abstract invocation'); }
 
-  Env.prototype.setTitle = function(title) {
-    throw abstractInvocationError();
-  };
+    persist(persistInfo, toPersist) { throw new Error('abstract invocation'); }
+
+    restore(persistInfo) { throw new Error('abstract invocation'); }
+
+    setTitle(title) { throw new Error('abstract invocation'); }
+  }
 
   return Env;
 });

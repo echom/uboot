@@ -1,39 +1,31 @@
-np.define('doc.Value', function() {
-  var DocNode = np.require('doc.Node'),
-      DocValue,
-      ValueChangedEvent;
+np.define('doc.Value', () => {
+  var Observable = np.require('np.Observable'),
+      DocNode = np.require('doc.Node');
 
-  ValueChangedEvent = function(newValue, oldValue) {
-    this.newValue = newValue;
-    this.oldValue = oldValue;
-  };
-
-  DocValue = np.inherits(function(parent, value) {
-    DocNode.call(this, parent);
-    this._value = value;
-  }, DocNode);
-
-  DocValue.prototype.getValue = function() {
-    return this._value;
-  };
-  DocValue.prototype.setValue = function(newValue) {
-    var oldValue = this._value;
-    if (newValue !== oldValue) {
-      this._value = newValue;
-      this._onChanged(newValue, oldValue);
+  class DocValue extends DocNode {
+    constructor(parent, value) {
+      super(parent);
+      this._value = new Observable(value, this);
     }
-    return this;
-  };
 
-  DocValue.prototype._onChanged = function(newValue, oldValue) {
-    if (this._changed.length) {
-      this._changed.raise(new ValueChangedEvent(newValue, oldValue));
+    getValue() { return this._value.getValue(); }
+
+    setValue(value) {
+      this._value.setValue(value);
+      return this;
     }
-  };
 
-  DocValue.prototype.serialize = function() {
-    return this.value;
-  };
+    onChanged(handler, ctx) {
+      this._value.onChanged(handler, ctx);
+    }
+
+    serialize() { return this.getValue(); }
+
+    _dispose() {
+      super._dispose();
+      this._value.dispose();
+    }
+  }
 
   return DocValue;
 });

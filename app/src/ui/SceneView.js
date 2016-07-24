@@ -1,37 +1,36 @@
-np.define('ui.SceneView', function() {
+np.define('ui.SceneView', () => {
   var Element = np.require('ui.Element'),
       Container = np.require('ui.Container'),
       View = np.require('ui.View'),
-      StateView = np.require('ui.StateView'),
-      SceneView;
+      StateView = np.require('ui.StateView');
 
-  SceneView = np.inherits(function(application, scene) {
-    View.call(this, application, 'div', 'app-scene');
+  class SceneView extends View {
+    constructor(application, scene) {
+      super(application, 'div', 'app-scene');
 
-    this._scene = scene;
+      this._scene = scene;
 
-    this.add(new Element('div', 'app-scene-preview'));
-    this._statesList = this.add(new Container('ul', 'app-states'));
+      this.add(new Element('div', 'app-scene-preview', '' + scene.getParent().indexOf(scene)));
+      this._statesList = this.add(new Container('ul', 'app-states'));
 
-    this._scene.getStates().forEach(function(state) {
-      this._statesList.add(new StateView(application, state));
-    }.bind(this));
-    this._scene.onStatesChanged(function(evt) {
-      if (evt.removed) {
-        this._statesList.removeAt(evt.index);
-      }
-      if (evt.added) {
-        this._statesList.insertAt(new StateView(application, evt.added), evt.index);
-      }
-    }.bind(this));
-  }, View);
+      this._scene.getStates().forEach(state => {
+        this._statesList.add(new StateView(application, state));
+      });
+      this._scene.onStatesChanged(evt => {
+        if (evt.removed) {
+          this._statesList.removeAt(evt.index);
+        }
+        if (evt.added) {
+          this._statesList.insertAt(new StateView(application, evt.added), evt.index);
+        }
+      });
+    }
 
-
-  SceneView.prototype._render = function(doc, el) {
-    View.prototype._render.call(this, doc, el);
-
-    setTimeout(function() { this.addClass('appear'); }.bind(this), 20);
-  };
+    _render(doc, el) {
+      super._render(doc, el);
+      setTimeout(() => this.toggleClass('appear', true), 20);
+    }
+  }
 
   return SceneView;
 });

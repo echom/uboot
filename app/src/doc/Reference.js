@@ -1,12 +1,15 @@
-np.define('doc.Reference', function() {
-  var DocValue = np.require('doc.Value'),
-      DocReference;
+np.define('doc.Reference', () => {
+  var DocValue = np.require('doc.Value');
 
-  DocReference = np.inherits(function(parent) {
-    DocValue.call(this, parent);
-  });
+  class DocReference extends DocValue {
+    constructor(parent, value) {
+      super(parent, value);
+    }
 
-  DocReference.prototype.serialize = function() {
-    return this.value ? this.value.id : -1;
-  };
+    serialize() {
+      return this.getValue() ? this.getValue().getId() : -1;
+    }
+  }
+
+  return DocReference;
 });

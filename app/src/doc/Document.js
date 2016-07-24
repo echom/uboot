@@ -1,21 +1,19 @@
-np.define('doc.Document', function() {
-  var DocElement = np.require('doc.Element'),
-      DocDocument;
+np.define('doc.Document', () => {
+  var DocElement = np.require('doc.Element');
 
-  DocDocument = np.inherits(function() {
-    DocElement.call(this);
-  }, DocElement);
+  class DocDocument extends DocElement {
+    constructor() {
+      super();
+    }
 
-  DocDocument.prototype.getParent = function() {
-    return null;
-  };
-  DocDocument.prototype.setParent = function(parent) {
-    throw new Error('Document.setParent: Cannot set parent node of document.');
-  };
+    setParent(parent) {
+      throw new Error('Document.setParent: Cannot set parent node of document.');
+    }
 
-  DocDocument.prototype.serialize = function() {
-    return JSON.stringify(DocElement.prototype.serialize.call(this));
-  };
+    serialize() {
+      return JSON.stringify(super.serialize.call(this));
+    }
+  }
 
   return DocDocument;
 });

@@ -1,41 +1,39 @@
-np.define('ui.Button', function() {
+np.define('ui.Button', () => {
   var Event = np.require('np.Event'),
-      Element = np.require('ui.Element'),
-      Button;
+      Element = np.require('ui.Element');
 
-  Button = np.inherits(function(type, classNames, content, onActivate) {
-    Element.call(this, type || 'button', classNames || 'btn', content);
+  class Button extends Element {
+    constructor(type, classNames, content, onActivate, onActivateCtx) {
+      super(type || 'button', classNames || 'btn', content);
 
-    this._activate = new Event(this);
-    this._onUp = this._onUp.bind(this);
-
-    if (onActivate) {
-      this.onActivate(onActivate);
+      this._activate = new Event(this);
+      this._onUp = this._onUp.bind(this);
+      if (onActivate) {
+        this.onActivate(onActivate, onActivateCtx);
+      }
     }
-  }, Element);
 
-  Button.prototype.onActivate = function(handler, ctx) {
-    return this._activate.on(handler, ctx);
-  };
+    onActivate(handler, ctx) { return this._activate.on(handler, ctx); }
 
-  Button.prototype._onUp = function(evt) {
-    this._activate.raise();
-    evt.stopPropagation();
-  };
-
-  Button.prototype._render = function(doc, el) {
-    Element.prototype._render.call(this, doc, el);
-    el.addEventListener('mouseup', this._onUp);
-  };
-
-  Button.prototype._dispose = function() {
-    var el = this.getElement();
-    if (el) {
-      el.removeEventListener('mouseup', this._onUp);
+    _onUp(evt) {
+      this._activate.raise();
+      evt.stopPropagation();
     }
-    this._activate.dispose();
-    Element.prototype._dispose.call(this);
-  };
+
+    _render(doc, el) {
+      Element.prototype._render.call(this, doc, el);
+      el.addEventListener('mouseup', this._onUp);
+    }
+
+    _dispose() {
+      var el = this.getElement();
+      if (el) {
+        el.removeEventListener('mouseup', this._onUp);
+      }
+      this._activate.dispose();
+      Element.prototype._dispose.call(this);
+    }
+  }
 
   return Button;
 });

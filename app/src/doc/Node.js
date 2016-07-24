@@ -1,47 +1,44 @@
-np.define('doc.Node', function() {
+np.define('doc.Node', () => {
   var Disposable = np.require('np.Disposable'),
       Event = np.require('np.Event'),
-      abstractInvocationError = np.require('np.error').abstractInvocation,
-      DocNode,
       id = 0;
 
-  DocNode = np.inherits(function(parent) {
-    this._id = id++;
-    this._changed = new Event(this);
-    this._parent = null;
-    this._root = null;
+  class DocNode extends Disposable {
+    static getMaxId() { return id; }
 
-    this._parent = parent || null;
-    this._doc = parent ? parent.doc : null;
-  }, Disposable);
+    constructor(parent) {
+      super();
 
-  DocNode.getMaxId = function() {
-    return id;
-  };
+      this._id = id++;
+      this._changed = new Event(this);
+      this._parent = null;
+      this._root = null;
 
-  DocNode.prototype.onChanged = function(handler, ctx) {
-    return this._changed.on(handler, ctx);
-  };
+      this._parent = parent || null;
+      this._doc = parent ? parent.doc : null;
+    }
 
-  DocNode.prototype.getDocument = function() {
-    return this._parent ? this._parent.getDocument() : this;
-  };
+    onChanged(handler, ctx) { return this._changed.on(handler, ctx); }
 
-  DocNode.prototype.getParent = function() {
-    return this._parent;
-  };
-  DocNode.prototype.setParent = function(parent) {
-    this._parent = parent;
-    return this;
-  };
+    getDocument() { return this._parent ? this._parent.getDocument() : this; }
 
-  DocNode.prototype.serialize = function() {
-    throw abstractInvocationError();
-  };
+    getParent() { return this._parent; }
 
-  DocNode.prototype._dispose = function() {
-    this._changed.dispose();
-  };
+    getId() { return this._id; }
+
+    setParent(parent) {
+      this._parent = parent;
+      return this;
+    }
+
+    serialize() {
+      throw new Error('Node.serialize must be overridden');
+    }
+
+    _dispose() {
+      this._changed.dispose();
+    }
+  }
 
   return DocNode;
 });

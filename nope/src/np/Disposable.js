@@ -1,22 +1,22 @@
-np.define('np.Disposable', function() {
+np.define('np.Disposable', () => {
   'use strict';
 
-  var Disposable = function() {
-    this._isDisposed = false;
-  };
-
-  Disposable.prototype.isDisposed = function() {
-    return this._isDisposed;
-  };
-
-  Disposable.prototype._dispose = function() {};
-
-  Disposable.prototype.dispose = function() {
-    if (!this._isDisposed) {
-      this._dispose();
-      this._isDisposed = true;
+  class Disposable {
+    constructor() {
+      this._isDisposed = false;
     }
-  };
+
+    isDisposed() { return this._isDisposed; }
+
+    _dispose() {}
+
+    dispose() {
+      if (this._isDisposed) {
+        this._dispose();
+        this._isDisposed = true;
+      }
+    }
+  }
 
   return Disposable;
 });

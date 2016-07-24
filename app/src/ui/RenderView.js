@@ -1,30 +1,28 @@
-np.define('ui.RenderView', function() {
+np.define('ui.RenderView', () => {
   var View = np.require('ui.View'),
-      DomResizeWatch = np.require('ui.DomResizeWatch'),
-      RenderView;
+      ResizingBehavior = np.require('ui.ResizingBehavior');
 
-  RenderView = np.inherits(function(application) {
-    View.call(this, application, 'div', 'app-render');
+  class RenderView extends View {
+    constructor(application) {
+      super(application, 'div', 'app-render');
 
-    this._resizeWatch = null;
-  }, View);
+      this._canvas = null;
+      this._resizing = new ResizingBehavior(this, (w, h) => {
+        this._canvas.width = w;
+        this._canvas.height = h;
+      });
+    }
 
-  RenderView.prototype._render = function(doc, el) {
-    var canvas = doc.createElement('canvas');
+    _render(doc, el) {
+      super._render(doc, el);
 
-    View.prototype._render.call(this, doc, el);
+      this._canvas = doc.createElement('canvas');
+      this._canvas.style.minHeight = '0';
+      el.appendChild(this._canvas);
 
-    canvas.style.minHeight = '0';
-    el.appendChild(canvas);
-
-    this._resizeWatch = new DomResizeWatch(
-      el,
-      function() {
-        canvas.width = el.clientWidth;
-        canvas.height = el.clientHeight;
-      }
-    ).start();
-  };
+      this._resizing.enable(el);
+    }
+  }
 
   return RenderView;
 });
