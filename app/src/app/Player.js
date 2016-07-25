@@ -26,7 +26,7 @@ np.define('app.Player', () => {
     }
 
     onStateChanged(handler, ctx) {
-      return this._scene.onChanged(handler, ctx);
+      return this._state.onChanged(handler, ctx);
     }
 
     isRunning() { return this._running; }

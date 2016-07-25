@@ -9,6 +9,8 @@ np.define('ui.ListView', () => {
 
     getList() { return this._list; }
 
+    getCount() { return this._list.length; }
+
     has(index) {
       return index in this._map;
     }
@@ -66,11 +68,21 @@ np.define('ui.ListView', () => {
       super(application, type, classNames);
 
       this._selection = new SelectionBehavior(this);
+      this._selected = false;
       this._item = item;
     }
 
     onSelected(handler, ctx) {
       return this._selection.onSelected(handler, ctx);
+    }
+
+    isSelected() { return this._selected; }
+
+    setSelected(selected, force) {
+      if ((this._selected !== selected) || force) {
+        this.toggleClass('selected', selected);
+        this._selected = selected;
+      }
     }
 
     getItem() { return this._item; }
@@ -105,11 +117,6 @@ np.define('ui.ListView', () => {
 
     getList() { return this._list; }
 
-    getSelectedItems() {
-      var list = this._selectedIndeces.getList();
-      return list.map(index => this.getChildren().get(index));
-    }
-
     _createItemView(item) {
       return new ItemView(item);
     }
@@ -128,18 +135,29 @@ np.define('ui.ListView', () => {
     }
 
     _onItemSelected(evt, src) {
-      var index = this.getChildren().indexOf(src);
+      this.select(this.getChildren().indexOf(src), evt.type);
+    }
 
-      if (evt.type === 'single' || this._selectable !== 'multi') {
+    getSelectedItems() {
+      var list = this._selectedIndeces.getList();
+      return list.map(index => this.getChildren().get(index));
+    }
+
+    clearSelection() { this.select(-1); }
+
+    select(index, type) {
+      if (index === -1) {
+        this._selectedIndeces.clear();
+      } else if (type === 'single' || this._selectable !== 'multi') {
         this._selectedIndeces.set(index);
-      } else if (evt.type === 'toggle') {
+      } else if (type === 'toggle') {
         this._selectedIndeces.toggle(index);
-      } else if (evt.type === 'range') {
+      } else if (type === 'range') {
         this._selectedIndeces.range(index);
       }
 
       this.getChildren().forEach((item, index) => {
-        item.toggleClass('selected', this._selectedIndeces.has(index));
+        item.setSelected(this._selectedIndeces.has(index));
       });
     }
   }

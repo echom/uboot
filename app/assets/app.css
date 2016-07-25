@@ -85,6 +85,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   min-height: 0;
 }
 
+.app-scene {
+  border-left: 0.2rem solid transparent;
+}
+
 .app-scenes-item .add-scene-before,
 .app-scenes-item .add-scene-after {
   transition: all 100ms ease-in;
@@ -115,6 +119,8 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   color: lightblue;
 }
 
+
+
 .app-scene {
   margin: 0 auto;
   padding: 0.5rem;
@@ -125,9 +131,13 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 .app-scene:hover .app-scene-preview {
   border: 0.1rem solid rgb(0, 77, 140);
 }
-.app-scene.selected .app-scene-preview,
-.app-scene.selected:hover  .app-scene-preview {
+.app-scene-item.selected .app-scene-preview,
+.app-scene-item.selected:hover  .app-scene-preview {
   border: 0.1rem solid rgb(0, 77, 140);
+}
+
+.app-scenes-item.current .app-scene {
+  border-left: 0.2rem solid green;
 }
 
 .app-scene-preview {
@@ -166,6 +176,10 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   width: 0.5rem;
   height: 0.5rem;
 }
+.app-state.current .app-state-indicator {
+  background: green;
+}
+
 .app-state:hover .app-state-indicator {
   background: rgb(0, 77, 140);
 }

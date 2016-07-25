@@ -24,6 +24,18 @@ np.define('ui.ScenesListView', () => {
             index = scenes.indexOf(scene);
         scenes.insertAt(Scene.create(scene.getProject()), index + 1);
       });
+
+      this.toggleClass('current', application.getPlayer().getScene() === scene);
+      application.getPlayer().onSceneChanged((evt) => {
+        this.toggleClass('current', evt.newValue === this.getItem());
+      });
+    }
+
+    setSelected(selected, force) {
+      if (selected !== this.isSelected()) {
+        this._sceneView.getStatesList().clearSelection();
+      }
+      super.setSelected(selected, force);
     }
   }
 

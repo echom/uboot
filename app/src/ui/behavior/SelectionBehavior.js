@@ -12,6 +12,7 @@ np.define('ui.SelectionBehavior', () => {
         if (this._selected.length) {
           this._selected.raise({ type: type });
         }
+        evt.stopPropagation();
       };
     }
 
