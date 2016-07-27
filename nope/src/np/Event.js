@@ -1,8 +1,11 @@
 np.define('np.Event', () => {
   'use strict';
-  var Disposable = np.require('np.Disposable');
+  var Disposable = np.require('np.Disposable'),
+      EMPTY = Object.freeze({});
 
   class Event extends Disposable {
+    static get EMPTY() { return EMPTY; }
+
     constructor(owner) {
       super();
 
@@ -22,17 +25,19 @@ np.define('np.Event', () => {
     }
 
     raise(evt) {
-      var i = 2;
+      var i = 2,
+          _evt = evt || EMPTY,
+          _src = this._owner;
 
       if (this._listener0) {
-        this._listener0.call(null, evt, this._owner);
+        this._listener0.call(null, _evt, _src);
       }
       if (this._listener1) {
-        this._listener1.call(null, evt, this._owner);
+        this._listener1.call(null, _evt, _src);
       }
       if (this._length > 2) {
         for (; i < this._length; i++) {
-          this._listeners[i].call(null, evt, this._owner);
+          this._listeners[i].call(null, _evt, _src);
         }
       }
     }

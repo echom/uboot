@@ -2,6 +2,7 @@ np.define('ui.ListView', () => {
   var View = np.require('ui.View'),
       SelectionBehavior = np.require('ui.SelectionBehavior');
 
+
   class SelectedIndeces {
     constructor() {
       this.clear();
@@ -52,6 +53,18 @@ np.define('ui.ListView', () => {
       }
     }
 
+    modify(index, type) {
+      if (index === -1) {
+        this.clear();
+      } else if (type === 'single' || this._selectable !== 'multi') {
+        this.set(index);
+      } else if (type === 'toggle') {
+        this.toggle(index);
+      } else if (type === 'range') {
+        this.range(index);
+      }
+    }
+
     _remove(index) {
       this._list.splice(this._map[index]);
       delete this._map[index];
@@ -67,14 +80,12 @@ np.define('ui.ListView', () => {
     constructor(application, item, type, classNames) {
       super(application, type, classNames);
 
-      this._selection = new SelectionBehavior(this);
-      this._selected = false;
       this._item = item;
+      this._selection = new SelectionBehavior(this, onSelectRequest);
+      this._selected = false;
     }
 
-    onSelected(handler, ctx) {
-      return this._selection.onSelected(handler, ctx);
-    }
+
 
     isSelected() { return this._selected; }
 
@@ -146,15 +157,7 @@ np.define('ui.ListView', () => {
     clearSelection() { this.select(-1); }
 
     select(index, type) {
-      if (index === -1) {
-        this._selectedIndeces.clear();
-      } else if (type === 'single' || this._selectable !== 'multi') {
-        this._selectedIndeces.set(index);
-      } else if (type === 'toggle') {
-        this._selectedIndeces.toggle(index);
-      } else if (type === 'range') {
-        this._selectedIndeces.range(index);
-      }
+      this._selectedIndeces.modify(index, type);
 
       this.getChildren().forEach((item, index) => {
         item.setSelected(this._selectedIndeces.has(index));

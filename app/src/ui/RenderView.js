@@ -1,13 +1,13 @@
 np.define('ui.RenderView', () => {
   var View = np.require('ui.View'),
-      ResizingBehavior = np.require('ui.ResizingBehavior');
+      Resizing = np.require('ui.Resizing');
 
   class RenderView extends View {
     constructor(application) {
       super(application, 'div', 'app-render');
 
       this._canvas = null;
-      this._resizing = new ResizingBehavior(this, (w, h) => {
+      this._resizing = new Resizing(this, (w, h) => {
         this._canvas.width = w;
         this._canvas.height = h;
       });

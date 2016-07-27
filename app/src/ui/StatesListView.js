@@ -20,9 +20,11 @@ np.define('ui.StatesListView', () => {
   }
 
   class StatesListView extends ListView {
-    constructor(application, states) {
+    constructor(application, states, onItemSelected) {
       super(application, states, 'multi', 'ul', 'app-states');
+      this._onItemSelected = onItemSelected;
     }
+
     _createItemView(state) {
       return new StatesItemView(this.getApplication(), state);
     }
@@ -32,6 +34,7 @@ np.define('ui.StatesListView', () => {
           state = src.getItem();
 
       super._onItemSelected(evt, src);
+      this._onItemSelected();
 
       if (evt.type === 'single') {
         player.setState(state);

@@ -1,19 +1,19 @@
-np.define('ui.ResizingBehavior', () => {
+np.define('ui.Resizing', () => {
   var Behavior = np.require('ui.Behavior');
 
-  class ResizingBehavior extends Behavior {
+  class Resizing extends Behavior {
     static get LO_FREQ() { return 200; }
     static get HI_FREQ() { return 33; }
     static get THROTTLE_THRESHOLD() { return 30; }
 
-    constructor(owner, callback) {
+    constructor(owner, onResize) {
       super(owner);
-      this._callback = callback;
+      this._onResize = onResize;
 
       this._check = this._check.bind(this);
       this._width = undefined;
       this._height = undefined;
-      this._frequency = ResizingBehavior.LO_FREQ;
+      this._frequency = Resizing.LO_FREQ;
       this._unchanged = 0;
       this._running = false;
     }
@@ -31,16 +31,16 @@ np.define('ui.ResizingBehavior', () => {
         height = this._element.clientHeight;
 
         if (width !== this._width || height !== this._height) {
-          this._callback.call(null, width, height);
+          this._onResize.call(null, width, height);
 
           this._unchanged = 0;
           this._width = width;
           this._height = height;
-          this._frequency = ResizingBehavior.HI_FREQ;
-        } else if (this._unchanged < ResizingBehavior.THROTTLE_THRESHOLD) {
+          this._frequency = Resizing.HI_FREQ;
+        } else if (this._unchanged < Resizing.THROTTLE_THRESHOLD) {
           this._unchanged++;
         } else {
-          this._frequency = ResizingBehavior.LO_FREQ;
+          this._frequency = Resizing.LO_FREQ;
         }
 
         this._checkHandle = setTimeout(this._check, this._frequency);
@@ -48,5 +48,5 @@ np.define('ui.ResizingBehavior', () => {
     }
   }
 
-  return ResizingBehavior;
+  return Resizing;
 });
