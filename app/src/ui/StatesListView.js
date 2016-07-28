@@ -1,42 +1,57 @@
 np.define('ui.StatesListView', () => {
   var Element = np.require('ui.Element'),
-      ListView = np.require('ui.ListView'),
+      List = np.require('ui.List'),
       DurationLabel = np.require('ui.DurationLabel');
 
-  class StatesItemView extends ListView.ItemView {
-    constructor(application, state) {
-      super(application, state, 'li', 'app-state');
+  class StatesListItem extends List.Item {
+    constructor(state, player) {
+      super('li', 'app-state');
 
       this._state = state;
 
       this.add(new Element('i', 'app-state-indicator'));
       this.add(new DurationLabel(state.getDuration(), 'app-state-duration'));
 
-      this.toggleClass('current', application.getPlayer().getState() === state);
-      application.getPlayer().onStateChanged((evt) => {
-        this.toggleClass('current', evt.newValue === this.getItem());
+      this.toggleClass('current', player.getState() === state);
+      player.onStateChanged((evt) => {
+        this.toggleClass('current', evt.newValue === state);
       });
+
+      this._id = 'stateslistitem';
     }
   }
 
-  class StatesListView extends ListView {
-    constructor(application, states, onItemSelected) {
-      super(application, states, 'multi', 'ul', 'app-states');
-      this._onItemSelected = onItemSelected;
+  class StatesListView extends List {
+    constructor(states, player) {
+      super('ul', List.MULTI_SELECT, 'app-states');
+
+      this._states = states;
+      this._player = player;
+
+      states.forEach(state => this.add(this._createItem(state)));
+      states.onChanged(evt => {
+        if (evt.removed) {
+          this.removeAt(evt.index);
+        }
+        if (evt.added) {
+          this.insertAt(this._createItem(evt.added), evt.index);
+        }
+      });
     }
 
-    _createItemView(state) {
-      return new StatesItemView(this.getApplication(), state);
+    _createItem(scene) {
+      return new StatesListItem(scene, this._player);
     }
 
-    _onItemSelected(evt, src) {
-      var player = this.getApplication().getPlayer(),
-          state = src.getItem();
+    _modifySelection(index, type) {
+      var player = this._player,
+          state = this._states.get(index);
 
-      super._onItemSelected(evt, src);
-      this._onItemSelected();
+      console.log('modifying state selection');
 
-      if (evt.type === 'single') {
+      super._modifySelection(index, type);
+
+      if (type === 'single') {
         player.setState(state);
       }
     }

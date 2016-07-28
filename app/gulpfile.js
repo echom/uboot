@@ -29,7 +29,12 @@ gulp.task('copy-assets', ['clean'], () => {
     .pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('build', ['copy-assets'], () => {
+gulp.task('copy-lib', ['clean'], () => {
+  return gulp.src('lib/**/*.*')
+    .pipe(gulp.dest('dist/lib'));
+});
+
+gulp.task('build', ['copy-assets', 'copy-lib'], () => {
   return gulp.src(paths.src)
     .pipe(eslint({ useEslintrc: true }))
     .pipe(eslint.format())

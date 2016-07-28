@@ -1,60 +1,87 @@
 np.define('ui.ScenesListView', () => {
   var Button = np.require('ui.Button'),
-      ListView = np.require('ui.ListView'),
+      List = np.require('ui.List'),
       Scene = np.require('model.Scene'),
       SceneView = np.require('ui.SceneView');
 
-  class SceneItemView extends ListView.ItemView {
-    constructor(application, scene) {
-      super(application, scene, 'li', 'app-scenes-item');
+  class ScenesListItem extends List.Item {
+    constructor(scene, player) {
+      super('li', 'app-scenes-item');
 
       this._addBefore = this.add(new Button('div', 'add-scene-before', '+'));
-      this._sceneView = this.add(new SceneView(application, scene));
+      this._sceneView = this.add(new SceneView(scene, player));
       this._addAfter = this.add(new Button('div', 'add-scene-after', '+'));
 
       this._addBefore.onActivate(evt => {
-        var scene = this.getItem(),
-            scenes = scene.getParent(),
+        var scenes = scene.getParent(),
             index = scenes.indexOf(scene);
         scenes.insertAt(Scene.create(scene.getProject()), index);
       });
       this._addAfter.onActivate(evt => {
-        var scene = this.getItem(),
-            scenes = scene.getParent(),
+        var scenes = scene.getParent(),
             index = scenes.indexOf(scene);
         scenes.insertAt(Scene.create(scene.getProject()), index + 1);
       });
 
-      this.toggleClass('current', application.getPlayer().getScene() === scene);
-      application.getPlayer().onSceneChanged((evt) => {
-        this.toggleClass('current', evt.newValue === this.getItem());
+      this.toggleClass('current', player.getScene() === scene);
+      player.onSceneChanged(evt => {
+        this.toggleClass('current', evt.newValue === scene);
       });
+
+      this._id = 'sceneslistitem';
     }
 
-    setSelected(selected, force) {
-      if (selected !== this.isSelected()) {
+    onStateSelectionChanged(handler, ctx) {
+      return this._sceneView.getStatesList().onSelectionChanged(handler, ctx);
+    }
+
+    setSelected(value, force) {
+      super.setSelected(value, force);
+      if (!value) {
+        console.log('clearing selection');
         this._sceneView.getStatesList().clearSelection();
       }
-      super.setSelected(selected, force);
     }
   }
 
-  class ScenesListView extends ListView {
-    constructor(application, scenes) {
-      super(application, scenes, 'multi', 'ul', 'ui app-scenes');
+  class ScenesListView extends List {
+    constructor(scenes, player) {
+      super('ul', List.MULTI_SELECT, 'ui app-scenes');
+
+      this._scenes = scenes;
+      this._player = player;
+
+      scenes.forEach(scene => this.add(this._createItem(scene)));
+      scenes.onChanged(evt => {
+        if (evt.removed) {
+          this.removeAt(evt.index);
+        }
+        if (evt.added) {
+          this.insertAt(this._createItem(evt.added), evt.index);
+        }
+      });
     }
 
-    _createItemView(scene) {
-      return new SceneItemView(this.getApplication(), scene);
+    _createItem(scene) {
+      var item = new ScenesListItem(scene, this._player);
+
+      item.onStateSelectionChanged(() => {
+        // var index = this.getChildren().indexOf(item);
+        // this._modifySelection(index, 'single');
+      });
+
+      return item;
     }
 
-    _onItemSelected(evt, src) {
-      var player = this.getApplication().getPlayer(),
-          scene = src.getItem();
+    _modifySelection(index, type) {
+      var player = this._player,
+          scene = this._scenes.get(index);
 
-      super._onItemSelected(evt, src);
+      console.log('modifying scene selection');
 
-      if (evt.type === 'single' && player.getScene() !== scene) {
+      super._modifySelection(index, type);
+
+      if (type === 'single' && player.getScene() !== scene) {
         player.setState(scene.getStates().get(0));
       }
     }

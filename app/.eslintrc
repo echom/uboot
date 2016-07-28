@@ -5,6 +5,7 @@
   },
   "globals": {
     "np": true,
+    "THREE": true,
     "Promise": true
   }
 }

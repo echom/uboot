@@ -1,14 +1,14 @@
 np.define('ui.ApplicationView', () => {
-  var View = np.require('ui.View'),
+  var Container = np.require('ui.Container'),
       Toolbar = np.require('ui.Toolbar'),
       ProjectView = np.require('ui.ProjectView');
 
-  class ApplicationView extends View {
+  class ApplicationView extends Container {
     constructor(application) {
-      super(application, 'div', 'app');
+      super('div', 'app');
 
       this._toolbar = this.add(new Toolbar(application));
-      this._projectView = this.add(new ProjectView(application, application.getProject()));
+      this._projectView = this.add(new ProjectView(application.getProject(), application.getPlayer()));
 
       application.onProjectChanged(evt => {
         this.remove(this._projectView);

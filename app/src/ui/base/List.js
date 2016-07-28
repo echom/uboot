@@ -78,6 +78,7 @@ np.define('ui.List', function() {
     constructor(type, classNames) {
       super(type || 'li', classNames);
 
+      this._selected = false;
       this._selectable = false;
       this._selectRequested = new Event(this);
       this._activation = new Activation(this, (domEvt) => {
@@ -85,8 +86,6 @@ np.define('ui.List', function() {
         this._raiseSelectRequested(type);
         domEvt.stopPropagation();
       });
-
-      this.setSelected(false);
     }
 
     isSelectable() { return this._selectable; }
@@ -102,15 +101,23 @@ np.define('ui.List', function() {
         }
         this._selectable = value;
       }
+      return this;
     }
 
     isSelected() { return this._selected; }
 
     setSelected(value, force) {
       if ((value !== this._selected) || force) {
-        this.toggleClass('selected');
+        this.toggleClass('selected', value);
         this._selected = value;
       }
+      return this;
+    }
+
+    _render(doc, el) {
+      super._render(doc, el);
+      this.setSelected(this._selected, true);
+      this.setSelectable(this._selectable, true);
     }
 
     onSelectRequested(handler, ctx) {
@@ -121,11 +128,6 @@ np.define('ui.List', function() {
       if (this._selectRequested.length) {
         this._selectRequested.raise({ type });
       }
-    }
-
-    _render(doc, el) {
-      super._render(doc, el);
-      this.setSelectable(this._selectable, true);
     }
   }
 
@@ -149,6 +151,12 @@ np.define('ui.List', function() {
     setSelectable(selectable, force) {
       this.getChildren().forEach(child => child.setSelectable(selectable, force));
       this._selectable = selectable;
+
+      return this;
+    }
+
+    onSelectionChanged(handler, ctx) {
+      return this._selectionChanged.on(handler, ctx);
     }
 
     clearSelection() {
@@ -161,7 +169,7 @@ np.define('ui.List', function() {
       }
 
       child.setSelectable(this._selectable);
-      child.onSelectRequested(this._onItemSelectRequested);
+      child.onSelectRequested(this._onItemSelectRequested, this);
 
       super.insertAt(child, index);
     }
@@ -183,12 +191,13 @@ np.define('ui.List', function() {
 
       this.getChildren().forEach((child, index) => {
         var oldSelected = child.isSelected(),
-            newSelected = this._selectedIndeces.has(index);
+            newSelected = this._selection.has(index);
 
         selectionChanged |= (oldSelected !== newSelected);
 
+        console.log(child._id + '' + index, newSelected);
         child.setSelected(newSelected);
-      });
+      }, this);
 
       if (selectionChanged) {
         this._raiseSelectionChanged();

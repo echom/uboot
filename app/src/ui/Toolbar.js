@@ -1,10 +1,10 @@
 np.define('ui.Toolbar', () => {
-  var View = np.require('ui.View'),
+  var Container = np.require('ui.Container'),
       Button = np.require('ui.Button');
 
-  class Toolbar extends View {
+  class Toolbar extends Container {
     constructor(application) {
-      super(application, 'ul', 'ui app-toolbar');
+      super('ul', 'ui app-toolbar');
 
       this._hero = this.add(
         new Button('li', 'app-hero', 'uboot', () => this.toggleClass('open'))

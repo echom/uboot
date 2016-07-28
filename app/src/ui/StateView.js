@@ -1,11 +1,11 @@
 np.define('ui.StateView', () => {
-  var View = np.require('ui.View'),
+  var Container = np.require('ui.Container'),
       Element = np.require('ui.Element'),
       DurationLabel = np.require('ui.DurationLabel');
 
-  class StateView extends View {
-    constructor(application, state) {
-      super(application, 'li', 'app-state');
+  class StateView extends Container {
+    constructor(state) {
+      super('li', 'app-state');
 
       this._state = state;
 

@@ -11,6 +11,11 @@ np.define('model.Scene', () => {
 
       this._duration = -1;
       this.onStatesChanged(() => { this._duration = -1; });
+
+      this._renderState = {
+        scene: new THREE.Scene(),
+        camera: new THREE.PerspectiveCamera(75, project.getSettings().getAspect(), 0.1, 1000)
+      };
     }
 
     getProject() {
@@ -43,6 +48,8 @@ np.define('model.Scene', () => {
       }
       return offset;
     }
+
+    getRenderState() { return this._renderState; }
 
     static create(project) {
       var scene = new Scene(project);

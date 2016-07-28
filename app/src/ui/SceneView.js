@@ -1,16 +1,16 @@
 np.define('ui.SceneView', () => {
   var Element = np.require('ui.Element'),
-      View = np.require('ui.View'),
+      Container = np.require('ui.Container'),
       StatesListView = np.require('ui.StatesListView');
 
-  class SceneView extends View {
-    constructor(application, scene) {
-      super(application, 'div', 'app-scene');
+  class SceneView extends Container {
+    constructor(scene, player) {
+      super('div', 'app-scene');
 
       this._scene = scene;
 
       this.add(new Element('div', 'app-scene-preview', '' + scene.getParent().indexOf(scene)));
-      this._statesList = this.add(new StatesListView(application, scene.getStates()));
+      this._statesList = this.add(new StatesListView(scene.getStates(), player));
     }
 
     getStatesList() {

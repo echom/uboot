@@ -6,7 +6,7 @@ np.define('render.Renderer', () => {
   Renderer.prototype.getState = () => {
 
   };
-  Renderer.prototype.setState = () => {
-
+  Renderer.prototype.setState = (state) => {
+    
   };
 });
