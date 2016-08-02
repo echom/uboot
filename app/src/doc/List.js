@@ -64,7 +64,7 @@ np.define('doc.List', () => {
     }
 
     toArray(mapFn, ctx) {
-      this._items.toArray(mapFn, ctx);
+      return this._items.toArray(mapFn, ctx);
     }
 
     _dispose() {

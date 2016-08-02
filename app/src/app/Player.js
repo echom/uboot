@@ -9,6 +9,14 @@ np.define('app.Player', () => {
       this._state = new Observable(null, this);
       this._running = false;
       this._looping = false;
+
+      this.setState(
+        project
+          .getScenes()
+          .get(0)
+          .getStates()
+          .get(0)
+      );
     }
 
     getScene() { return this._scene.getValue(); }

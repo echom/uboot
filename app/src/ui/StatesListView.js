@@ -16,8 +16,6 @@ np.define('ui.StatesListView', () => {
       player.onStateChanged((evt) => {
         this.toggleClass('current', evt.newValue === state);
       });
-
-      this._id = 'stateslistitem';
     }
   }
 
@@ -46,8 +44,6 @@ np.define('ui.StatesListView', () => {
     _modifySelection(index, type) {
       var player = this._player,
           state = this._states.get(index);
-
-      console.log('modifying state selection');
 
       super._modifySelection(index, type);
 

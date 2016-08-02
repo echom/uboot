@@ -27,8 +27,6 @@ np.define('ui.ScenesListView', () => {
       player.onSceneChanged(evt => {
         this.toggleClass('current', evt.newValue === scene);
       });
-
-      this._id = 'sceneslistitem';
     }
 
     onStateSelectionChanged(handler, ctx) {
@@ -38,7 +36,6 @@ np.define('ui.ScenesListView', () => {
     setSelected(value, force) {
       super.setSelected(value, force);
       if (!value) {
-        console.log('clearing selection');
         this._sceneView.getStatesList().clearSelection();
       }
     }
@@ -64,20 +61,12 @@ np.define('ui.ScenesListView', () => {
 
     _createItem(scene) {
       var item = new ScenesListItem(scene, this._player);
-
-      item.onStateSelectionChanged(() => {
-        // var index = this.getChildren().indexOf(item);
-        // this._modifySelection(index, 'single');
-      });
-
       return item;
     }
 
     _modifySelection(index, type) {
       var player = this._player,
           scene = this._scenes.get(index);
-
-      console.log('modifying scene selection');
 
       super._modifySelection(index, type);
 

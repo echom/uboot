@@ -31,7 +31,7 @@ np.define('model.Project', () => {
       return this._members.scenes.onChanged(handler, ctx);
     }
 
-    getSettings() { return this._members.settings.getValue(); }
+    getSettings() { return this._members.settings; }
 
     static create() {
       var project = new Project();

@@ -7,7 +7,7 @@ np.define('app.Application', () => {
     constructor(env, project) {
       this._env = env;
       this._project = new Observable(null, this);
-      this._player = new Player(this._project);
+      this._player = null;
 
       this._persistInfo = null;
 
@@ -45,6 +45,7 @@ np.define('app.Application', () => {
     _setProject(project) {
       this._project.setValue(project);
       this._recorder.reset();
+      this._player = new Player(project);
       return this;
     }
 

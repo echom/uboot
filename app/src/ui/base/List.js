@@ -194,8 +194,6 @@ np.define('ui.List', function() {
             newSelected = this._selection.has(index);
 
         selectionChanged |= (oldSelected !== newSelected);
-
-        console.log(child._id + '' + index, newSelected);
         child.setSelected(newSelected);
       }, this);
 

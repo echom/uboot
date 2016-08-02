@@ -8,6 +8,7 @@ np.define('model.Scene', () => {
       super(project.getScenes());
 
       this._define('states', new List(this));
+      this._define('entities', new List(this));
 
       this._duration = -1;
       this.onStatesChanged(() => { this._duration = -1; });
@@ -27,6 +28,13 @@ np.define('model.Scene', () => {
     }
     onStatesChanged(handler, ctx) {
       return this._members.states.onChanged(handler, ctx);
+    }
+
+    getEntities() {
+      return this._members.entities;
+    }
+    onEntitiesChanged(handler, ctx) {
+      return this._members.entities.onChanged(handler, ctx);
     }
 
     getDuration() {
@@ -52,10 +60,13 @@ np.define('model.Scene', () => {
     getRenderState() { return this._renderState; }
 
     static create(project) {
-      var scene = new Scene(project);
+      var scene = new Scene(project),
+          BoxEntity = np.require('entities.BoxEntity');
       scene.getStates().add(State.create(scene));
       scene.getStates().add(State.create(scene));
       scene.getStates().add(State.create(scene));
+
+      scene.getEntities().add(new BoxEntity(scene));
       return scene;
     }
   }

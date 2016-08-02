@@ -12,6 +12,8 @@ np.define('ui.ProjectView', () => {
       this._rightCol = this.add(new Container('div', 'app-right'));
       this._renderView = this._rightCol.add(new RenderView(project, player));
       this._editorView = this._rightCol.add(new Element('div', 'app-editor'));
+
+      setTimeout(() => this._renderView.renderState());
     }
   }
 

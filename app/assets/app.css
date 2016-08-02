@@ -69,8 +69,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   flex: 1 1 100px;
   overflow: hidden;
 
+  /*
   border-radius: 0.2rem;
   border: 0.1rem solid rgb(200, 200, 200);
+  */
 }
 
 .app-editor {
