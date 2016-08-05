@@ -34,7 +34,7 @@ np.define('ui.RenderView', () => {
       this._canvas = this._renderer.domElement;
       el.appendChild(this._canvas);
 
-      this._resizing.enable(el);
+      this._resizing.setTarget(el, true);
     }
 
     renderState() {
@@ -43,6 +43,10 @@ np.define('ui.RenderView', () => {
           renderState = scene.getRenderState();
 
       this._renderer.render(renderState.scene, renderState.camera);
+    }
+
+    _dispose() {
+      this._resizing.dispose();
     }
   }
 

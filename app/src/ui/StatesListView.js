@@ -21,7 +21,7 @@ np.define('ui.StatesListView', () => {
 
   class StatesListView extends List {
     constructor(states, player) {
-      super('ul', List.MULTI_SELECT, 'app-states');
+      super('ul', List.multiSelection, 'app-states');
 
       this._states = states;
       this._player = player;

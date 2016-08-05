@@ -7,12 +7,12 @@ np.define('ui.Activation', () => {
       this._onActivate = onActivate;
     }
 
-    _enable(el) {
-      el.addEventListener('mouseup', this._onActivate);
+    _enable(target) {
+      target.addEventListener('mouseup', this._onActivate);
     }
 
-    _disable(el) {
-      el.removeEventListener('mouseup', this._onActivate);
+    _disable(target) {
+      target.removeEventListener('mouseup', this._onActivate);
     }
   }
 

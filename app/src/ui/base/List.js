@@ -1,7 +1,8 @@
 np.define('ui.List', function() {
   var Event = np.require('np.Event'),
       Container = np.require('ui.Container'),
-      Activation = np.require('ui.Activation');
+      Activation = np.require('ui.Activation'),
+      SELECTED_CLASS_NAME = 'selected';
 
   class Selection {
     constructor() {
@@ -75,6 +76,9 @@ np.define('ui.List', function() {
   }
 
   class Item extends Container {
+    static get selectedClassName() { return SELECTED_CLASS_NAME; }
+    static set selectedClassName(value) { return SELECTED_CLASS_NAME = value; }
+
     constructor(type, classNames) {
       super(type || 'li', classNames);
 
@@ -92,13 +96,7 @@ np.define('ui.List', function() {
 
     _setSelectable(selectable, force) {
       if ((selectable !== this._selectable) || force) {
-        if (this._element) {
-          if (selectable && this.isEnabled()) {
-            this._activation.enable(this._element);
-          } else {
-            this._activation.disable();
-          }
-        }
+        this._activation.setTarget(selectable && this.isEnabled() ? this.getElement() : null);
         this._selectable = selectable;
       }
       return this;
@@ -109,7 +107,7 @@ np.define('ui.List', function() {
     setSelected(selected, force) {
       if ((selected !== this._selected) || force) {
         if (this.isSelectable()) {
-          this.toggleClass('selected', selected);
+          this.toggleClass(SELECTED_CLASS_NAME, selected);
           this._selected = selected;
         }
       }
@@ -118,22 +116,14 @@ np.define('ui.List', function() {
 
     setEnabled(enabled, force) {
       super.setEnabled(enabled, force);
-
-      if (this._element) {
-        if (enabled && this.isSelectable()) {
-          this._activation.enable(this._element);
-        } else {
-          this._activation.disable();
-        }
-      }
-
+      this._activation.setTarget(enabled && this.isSelectable() ? this.getElement() : null);
       return this;
     }
 
     _render(doc, el) {
       super._render(doc, el);
+      this._setSelectable(this._selectable, true);
       this.setSelected(this._selected, true);
-      this.setSelectable(this._selectable, true);
     }
 
     onSelectRequested(handler, ctx) {
@@ -154,11 +144,13 @@ np.define('ui.List', function() {
   }
 
   class List extends Container {
-    static get SINGLE_SELECT() { return 'single'; }
-    static get MULTI_SELECT() { return 'multi'; }
-    static get NO_SELECT() { return false; }
+    static get singleSelection() { return 'single'; }
+    static get multiSelection() { return 'multi'; }
+    static get noSelection() { return false; }
 
     static get Item() { return Item; }
+    static get selectedClassName() { return List.Item.selectedClassName; }
+    static set selectedClassName(value) { return List.Item.selectedClassName = value; }
 
     constructor(type, selectable, classNames) {
       super(type || 'ul', classNames);
@@ -194,7 +186,7 @@ np.define('ui.List', function() {
         throw new Error('List.insertAt: child is not a List.Item');
       }
 
-      child.setSelectable(this._selectable);
+      child._setSelectable(this._selectable);
       child.onSelectRequested(this._onItemSelectRequested, this);
 
       super.insertAt(child, index);

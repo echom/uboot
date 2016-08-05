@@ -4,33 +4,33 @@ np.define('ui.Behavior', () => {
   class Behavior extends Disposable {
     constructor(owner) {
       super();
-      this._element = null;
       this._owner = owner;
+      this._target = null;
     }
 
-    isEnabled() { return !!this._element; }
+    hasTarget() { return !!this._target; }
 
-    enable(el) {
-      if (this._element) {
-        this.disable();
+    getTarget() { return this._target; }
+
+    setTarget(target, force) {
+      if ((target !== this._target) || force) {
+        if (this._target) {
+          this._disable(this._target);
+          this._target = null;
+        }
+        if (target) {
+          this._target = target;
+          this._enable(target);
+        }
       }
-      this._element = el;
-      this._enable(this._element);
     }
 
-    disable() {
-      if (this._element) {
-        this._disable(this._element);
-        this._element = null;
-      }
-    }
-
-    _enable(el) {}
-    _disable(el) {}
+    _enable(target) {}
+    _disable(target) {}
 
     _dispose() {
       super._dispose();
-      this.disable();
+      this.setEnabled(false, true);
     }
   }
 

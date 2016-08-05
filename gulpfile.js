@@ -5,28 +5,28 @@ var gulp = require('gulp'),
 
 
 gulp.task('build:nope', done => {
-  exec('gulp build --gulpfile nope/gulpfile.js --cwd nope', function(err, stdout, stderr) {
+  exec('./node_modules/.bin/gulp build --gulpfile nope/gulpfile.js --cwd nope', function(err, stdout, stderr) {
     stdout && console.log(stdout); // eslint-disable-line no-unused-expressions, no-console
     stderr && console.log(stderr); // eslint-disable-line no-unused-expressions, no-console
     done(err);
   });
 });
 gulp.task('build:app', done => {
-  exec('gulp build --gulpfile app/gulpfile.js', function(err, stdout, stderr) {
+  exec('./node_modules/.bin/gulp build --gulpfile app/gulpfile.js', function(err, stdout, stderr) {
     stdout && console.log(stdout); // eslint-disable-line no-unused-expressions, no-console
     stderr && console.log(stderr); // eslint-disable-line no-unused-expressions, no-console
     done(err);
   });
 });
 gulp.task('build:electron', done => {
-  exec('gulp build --gulpfile app-electron/gulpfile.js', function(err, stdout, stderr) {
+  exec('./node_modules/.bin/gulp build --gulpfile app-electron/gulpfile.js', function(err, stdout, stderr) {
     stdout && console.log(stdout); // eslint-disable-line no-unused-expressions, no-console
     stderr && console.log(stderr); // eslint-disable-line no-unused-expressions, no-console
     done(err);
   });
 });
 gulp.task('build:web', done => {
-  exec('gulp build --gulpfile app-web/gulpfile.js', function(err, stdout, stderr) {
+  exec('./node_modules/.bin/gulp build --gulpfile app-web/gulpfile.js', function(err, stdout, stderr) {
     stdout && console.log(stdout); // eslint-disable-line no-unused-expressions, no-console
     stderr && console.log(stderr); // eslint-disable-line no-unused-expressions, no-console
     done(err);

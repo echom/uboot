@@ -1,16 +1,27 @@
 np.define('ui.Toggle', function() {
   var Element = np.require('ui.Element'),
       Activation = np.require('ui.Activation'),
-      Event = np.require('np.Event');
+      Event = np.require('np.Event'),
+      TOGGLE_CLASS_NAME = 'toggle',
+      ACTIVE_CLASS_NAME = 'active';
 
   class Toggle extends Element {
-    constructor(type, classNames) {
-      super(type || 'span', classNames);
+    static get activeClassName() { return ACTIVE_CLASS_NAME; }
+    static set activeClassName(value) { return ACTIVE_CLASS_NAME = value; }
+    static get toggleClassName() { return TOGGLE_CLASS_NAME; }
+    static set toggleClassName(value) { return TOGGLE_CLASS_NAME = value; }
+
+    constructor(type, classNames, onActiveChanged, onActiveChangedCtx) {
+      super(type || 'div', classNames);
 
       this._activeChanged = new Event(this);
-      this._activation = new Activation((domEvt) => {
-        this.setActive(!this.isActive());
-      });
+      if (onActiveChanged) {
+        this.onActiveChanged(onActiveChanged, onActiveChangedCtx);
+      }
+
+      this._activation = new Activation((domEvt) => this.setActive(!this.isActive()));
+
+      this.toggleClass(TOGGLE_CLASS_NAME, true);
     }
 
     isActive() { return this._active; }
@@ -19,7 +30,7 @@ np.define('ui.Toggle', function() {
       var _active = this._active;
 
       if ((active !== _active) || force) {
-        this.toggleClass('active', active);
+        this.toggleClass(ACTIVE_CLASS_NAME, active);
         this._active = active;
 
         if (active !== _active) {
@@ -27,6 +38,10 @@ np.define('ui.Toggle', function() {
         }
       }
       return this;
+    }
+
+    onActiveChanged(handler, ctx) {
+      return this._activeChanged.on(handler, ctx);
     }
 
     _render(doc, el) {

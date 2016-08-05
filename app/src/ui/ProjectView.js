@@ -2,6 +2,7 @@ np.define('ui.ProjectView', () => {
   var Element = np.require('ui.Element'),
       Container = np.require('ui.Container'),
       ScenesListView = np.require('ui.ScenesListView'),
+      PlayerControlView = np.require('ui.PlayerControlView'),
       RenderView = np.require('ui.RenderView');
 
   class ProjectView extends Container {
@@ -11,6 +12,7 @@ np.define('ui.ProjectView', () => {
       this._scenesList = this.add(new ScenesListView(project.getScenes(), player));
       this._rightCol = this.add(new Container('div', 'app-right'));
       this._renderView = this._rightCol.add(new RenderView(project, player));
+      this._playerView = this._rightCol.add(new PlayerControlView(player));
       this._editorView = this._rightCol.add(new Element('div', 'app-editor'));
 
       setTimeout(() => this._renderView.renderState());

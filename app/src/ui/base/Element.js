@@ -1,7 +1,14 @@
 np.define('ui.Element', () => {
-  var Disposable = np.require('np.Disposable');
+  var Disposable = np.require('np.Disposable'),
+      HIDDEN_CLASS_NAME = 'hidden',
+      DISABLED_CLASS_NAME = 'disabled';
 
   class Element extends Disposable {
+    static get hiddenClassName() { return HIDDEN_CLASS_NAME; }
+    static set hiddenClassName(value) { return HIDDEN_CLASS_NAME = value; }
+    static get disabledClassName() { return DISABLED_CLASS_NAME; }
+    static set disabledClassName(value) { return DISABLED_CLASS_NAME = value; }
+
     constructor(type, classNames, content) {
       super();
 
@@ -53,7 +60,7 @@ np.define('ui.Element', () => {
     setEnabled(enabled, force) {
       if ((enabled !== this._enabled) || force) {
         this._enabled = enabled;
-        this.toggleClass('disabled', !enabled);
+        this.toggleClass(DISABLED_CLASS_NAME, !enabled);
       }
       return this;
     }
@@ -63,7 +70,7 @@ np.define('ui.Element', () => {
     setVisible(visible, force) {
       if ((visible !== this._visible) || force) {
         this._visible = visible;
-        this.toggleClass('hidden', !visible);
+        this.toggleClass(HIDDEN_CLASS_NAME, !visible);
       }
       return this;
     }

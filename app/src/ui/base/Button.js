@@ -21,27 +21,16 @@ np.define('ui.Button', () => {
     onActivate(handler, ctx) { return this._activate.on(handler, ctx); }
 
     _render(doc, el) {
-      Element.prototype._render.call(this, doc, el);
-      this._activation.enable(el);
+      super._render(doc, el);
+      this._activation.setTarget(el);
     }
 
     setEnabled(enabled, force) {
       super.setEnabled(enabled, force);
-
-      if (this._element) {
-        if (enabled) {
-          this._activation.enable(this._element);
-        } else {
-          this._activation.disable();
-        }
-      }
+      this._activation.setTarget(enabled ? this.getElement() : null);
     }
 
     _dispose() {
-      var el = this.getElement();
-      if (el) {
-        el.removeEventListener('mouseup', this._onUp);
-      }
       this._activate.dispose();
       this._activation.dispose();
       Element.prototype._dispose.call(this);

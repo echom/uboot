@@ -68,11 +68,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 .app-render {
   flex: 1 1 100px;
   overflow: hidden;
-
-  /*
-  border-radius: 0.2rem;
-  border: 0.1rem solid rgb(200, 200, 200);
-  */
 }
 
 .app-render > canvas {
@@ -85,8 +80,20 @@ ul { margin: 0; padding: 0; list-style: none; }
   box-sizing: border-box;
 }
 
+.app-player {
+  flex: 0 0 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.app-player .play-pause i {
+  font-size: 3rem;
+}
+
+
 .app-editor {
-  flex: 0 0 200px;
+  flex: 0 0 160px;
 }
 
 

@@ -43,7 +43,7 @@ np.define('ui.ScenesListView', () => {
 
   class ScenesListView extends List {
     constructor(scenes, player) {
-      super('ul', List.MULTI_SELECT, 'ui app-scenes');
+      super('ul', List.multiSelection, 'ui app-scenes');
 
       this._scenes = scenes;
       this._player = player;

@@ -31,11 +31,12 @@ np.define('ui.Resizing', () => {
 
     _check() {
       var width,
-          height;
+          height,
+          target = this.getTarget();
 
-      if (this._element) {
-        width = this._element.clientWidth;
-        height = this._element.clientHeight;
+      if (target) {
+        width = target.clientWidth;
+        height = target.clientHeight;
 
         if (width !== this._width || height !== this._height) {
           this._onResize.call(null, width, height);
