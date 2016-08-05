@@ -75,6 +75,16 @@ ul { margin: 0; padding: 0; list-style: none; }
   */
 }
 
+.app-render > canvas {
+  min-height: 0;
+  display: block;
+  margin: auto;
+  padding: 0;
+  border: 0.1rem dotted rgb(200, 200, 200);
+  border-radius: 0.2rem;
+  box-sizing: border-box;
+}
+
 .app-editor {
   flex: 0 0 200px;
 }

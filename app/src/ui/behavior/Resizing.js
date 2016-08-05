@@ -22,6 +22,13 @@ np.define('ui.Resizing', () => {
       this._check();
     }
 
+    _disable(el) {
+      super._disable();
+      if (this._checkHandle) {
+        clearTimeout(this._checkHandle);
+      }
+    }
+
     _check() {
       var width,
           height;

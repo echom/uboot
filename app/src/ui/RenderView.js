@@ -22,17 +22,16 @@ np.define('ui.RenderView', () => {
         this._renderer.setSize(tw, th);
         this.renderState();
       });
+
+      this._player.onStateChanged(evt => this.renderState());
     }
 
     _render(doc, el) {
       super._render(doc, el);
 
-      this._renderer = new THREE.WebGLRenderer();
+      this._renderer = new THREE.WebGLRenderer({ alpha: true });
+      this._renderer.setClearColor(0xffffff, 0);
       this._canvas = this._renderer.domElement;
-      this._canvas.style.minHeight = '0';
-      this._canvas.style.display = 'block';
-      this._canvas.style.margin = 'auto';
-      this._canvas.style.padding = '0';
       el.appendChild(this._canvas);
 
       this._resizing.enable(el);

@@ -90,27 +90,43 @@ np.define('ui.List', function() {
 
     isSelectable() { return this._selectable; }
 
-    setSelectable(value, force) {
-      if ((value !== this._selectable) || force) {
+    _setSelectable(selectable, force) {
+      if ((selectable !== this._selectable) || force) {
         if (this._element) {
-          if (value) {
+          if (selectable && this.isEnabled()) {
             this._activation.enable(this._element);
           } else {
             this._activation.disable();
           }
         }
-        this._selectable = value;
+        this._selectable = selectable;
       }
       return this;
     }
 
     isSelected() { return this._selected; }
 
-    setSelected(value, force) {
-      if ((value !== this._selected) || force) {
-        this.toggleClass('selected', value);
-        this._selected = value;
+    setSelected(selected, force) {
+      if ((selected !== this._selected) || force) {
+        if (this.isSelectable()) {
+          this.toggleClass('selected', selected);
+          this._selected = selected;
+        }
       }
+      return this;
+    }
+
+    setEnabled(enabled, force) {
+      super.setEnabled(enabled, force);
+
+      if (this._element) {
+        if (enabled && this.isSelectable()) {
+          this._activation.enable(this._element);
+        } else {
+          this._activation.disable();
+        }
+      }
+
       return this;
     }
 
@@ -128,6 +144,12 @@ np.define('ui.List', function() {
       if (this._selectRequested.length) {
         this._selectRequested.raise({ type });
       }
+    }
+
+    _dispose() {
+      super._dispose();
+      this._activation.dispose();
+      this._selectRequested.dispose();
     }
   }
 
@@ -149,8 +171,12 @@ np.define('ui.List', function() {
     isSelectable() { return this._selectable; }
 
     setSelectable(selectable, force) {
-      this.getChildren().forEach(child => child.setSelectable(selectable, force));
-      this._selectable = selectable;
+      if ((selectable !== this._selectable) || force) {
+        this.getChildren().forEach(
+          child => child._setSelectable(selectable, force)
+        );
+        this._selectable = selectable;
+      }
 
       return this;
     }
@@ -200,6 +226,11 @@ np.define('ui.List', function() {
       if (selectionChanged) {
         this._raiseSelectionChanged();
       }
+    }
+
+    _dispose() {
+      super._dispose();
+      this._selectionChanged.dispose();
     }
   }
 
