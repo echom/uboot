@@ -22,16 +22,24 @@ var paths = {
   specs: 'src/**/*.spec.js'
 };
 
-gulp.task('clean', () => del(['dist/*']));
+gulp.task('clean', () => del([
+  'dist/lib/iconfont/*.*',
+  'dist/lib/three/*.*'
+]));
 
 gulp.task('copy-assets', ['clean'], () => {
   return gulp.src('assets/**/*.*')
     .pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('copy-lib', ['clean'], () => {
-  return gulp.src('lib/**/*.*')
-    .pipe(gulp.dest('dist/lib'));
+gulp.task('copy-lib', ['clean', 'copy-icons', 'copy-three']);
+gulp.task('copy-icons', () => {
+  return gulp.src('../node_modules/material-design-icons/iconfont/*.*')
+    .pipe(gulp.dest('dist/lib/iconfont'));
+});
+gulp.task('copy-three', () => {
+  return gulp.src('../node_modules/three/build/*.*')
+    .pipe(gulp.dest('dist/lib/three'));
 });
 
 gulp.task('build', ['copy-assets', 'copy-lib'], () => {

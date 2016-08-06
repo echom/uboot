@@ -160,6 +160,7 @@ np.define('ui.List', function() {
       this._selectionChanged = new Event(this);
     }
 
+
     isSelectable() { return this._selectable; }
 
     setSelectable(selectable, force) {
@@ -192,9 +193,9 @@ np.define('ui.List', function() {
       super.insertAt(child, index);
     }
 
-    _raiseSelectionChanged() {
+    _raiseSelectionChanged(added, removed) {
       if (this._selectionChanged.length) {
-        this._selectionChanged.raise(null);
+        this._selectionChanged.raise({ added: added, removed: removed });
       }
     }
 
@@ -203,7 +204,8 @@ np.define('ui.List', function() {
     }
 
     _modifySelection(index, type) {
-      var selectionChanged = false;
+      var added = [],
+          removed = [];
 
       this._selection.modify(index, type);
 
@@ -211,12 +213,14 @@ np.define('ui.List', function() {
         var oldSelected = child.isSelected(),
             newSelected = this._selection.has(index);
 
-        selectionChanged |= (oldSelected !== newSelected);
-        child.setSelected(newSelected);
+        if (oldSelected !== newSelected) {
+          child.setSelected(newSelected);
+          (oldSelected ? removed : added).push(child);
+        }
       }, this);
 
-      if (selectionChanged) {
-        this._raiseSelectionChanged();
+      if (added.length || removed.length) {
+        this._raiseSelectionChanged(added, removed);
       }
     }
 

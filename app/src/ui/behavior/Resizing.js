@@ -11,6 +11,7 @@ np.define('ui.Resizing', () => {
       this._onResize = onResize;
 
       this._check = this._check.bind(this);
+      this._checkHandle = 0;
       this._width = undefined;
       this._height = undefined;
       this._frequency = Resizing.LO_FREQ;

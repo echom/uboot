@@ -29,16 +29,7 @@ np.define('ui.ScenesListView', () => {
       });
     }
 
-    onStateSelectionChanged(handler, ctx) {
-      return this._sceneView.getStatesList().onSelectionChanged(handler, ctx);
-    }
-
-    setSelected(value, force) {
-      super.setSelected(value, force);
-      if (!value) {
-        this._sceneView.getStatesList().clearSelection();
-      }
-    }
+    getStatesList() { return this._sceneView.getStatesList(); }
   }
 
   class ScenesListView extends List {
@@ -61,6 +52,18 @@ np.define('ui.ScenesListView', () => {
 
     _createItem(scene) {
       var item = new ScenesListItem(scene, this._player);
+
+      item.getStatesList().onSelectionChanged(evt => {
+        if (evt.added.length) {
+          this.getChildren().forEach(child => {
+            if (child !== item) {
+              child.getStatesList().clearSelection();
+            }
+          });
+          this.clearSelection();
+        }
+      });
+
       return item;
     }
 

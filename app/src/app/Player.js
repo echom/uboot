@@ -7,7 +7,7 @@ np.define('app.Player', () => {
 
       this._scene = new Observable(null, this);
       this._state = new Observable(null, this);
-      this._running = false;
+      this._running = new Observable(false, this);
       this._looping = false;
 
       this.setState(
@@ -37,7 +37,11 @@ np.define('app.Player', () => {
       return this._state.onChanged(handler, ctx);
     }
 
-    isRunning() { return this._running; }
+    isRunning() { return this._running.getValue(); }
+
+    onRunningChanged(handler, ctx) {
+      return this._running.onChanged(handler, ctx);
+    }
 
     isLooping() { return this._looping; }
 
@@ -56,12 +60,12 @@ np.define('app.Player', () => {
           .get(0);
       }
       this.setState(reference);
-      this._running = true;
+      this._running.setValue(true);
       return this;
     }
 
     stop() {
-      this._running = false;
+      this._running.setValue(false);
       return this;
     }
 

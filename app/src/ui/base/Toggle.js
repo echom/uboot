@@ -11,16 +11,15 @@ np.define('ui.Toggle', function() {
     static get toggleClassName() { return TOGGLE_CLASS_NAME; }
     static set toggleClassName(value) { return TOGGLE_CLASS_NAME = value; }
 
-    constructor(type, classNames, onActiveChanged, onActiveChangedCtx) {
-      super(type || 'div', classNames);
+    constructor(type, classNames, content, onActiveChanged, onActiveChangedCtx) {
+      super(type || 'div', classNames, content);
 
+      this._activation = new Activation(this, (domEvt) => this.setActive(!this.isActive()));
+      this._active = false;
       this._activeChanged = new Event(this);
       if (onActiveChanged) {
         this.onActiveChanged(onActiveChanged, onActiveChangedCtx);
       }
-
-      this._activation = new Activation((domEvt) => this.setActive(!this.isActive()));
-
       this.toggleClass(TOGGLE_CLASS_NAME, true);
     }
 
@@ -44,9 +43,14 @@ np.define('ui.Toggle', function() {
       return this._activeChanged.on(handler, ctx);
     }
 
+    setEnabled(enabled, force) {
+      super.setEnabled(enabled, false);
+      this._activation.setTarget(enabled ? this.getElement() : null);
+    }
+
     _render(doc, el) {
       super._render(doc, el);
-
+      this._activation.setTarget(el);
       this.setActive(this._active, true);
     }
   }
