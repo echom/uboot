@@ -19,6 +19,7 @@ np.define('ui.PlayerControls', function() {
 
       this._playPause.onActivate(() => this._togglePlayPause());
       this._loopToggle.onActiveChanged(evt => this._player.setLooping(evt.newValue));
+      this._stateNext.onActivate(() => this._player.next());
     }
 
     _togglePlayPause() {

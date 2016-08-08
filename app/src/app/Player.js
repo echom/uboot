@@ -74,23 +74,23 @@ np.define('app.Player', () => {
           states = this.getScene().getStates(),
           index;
 
-      if (this._running) {
-        index = states.indexOf(this.getState());
-        if (index < states.length - 1) {
-          this.setState(states.get(index + 1));
+
+      index = states.indexOf(this.getState());
+      if (index < states.length - 1) {
+        this.setState(states.get(index + 1));
+      } else {
+        index = scenes.indexOf(this.getScene());
+        if (index < scenes.length - 1) {
+          states = scenes.get(index + 1).getStates();
+          this.setState(states.get(0));
+        } else if (this.isLooping()) {
+          states = scenes.get(0).getStates();
+          this.setState(states.get(0));
         } else {
-          index = scenes.indexOf(this.getScene());
-          if (index < scenes.length - 1) {
-            states = scenes.get(index + 1).getStates();
-            this.setState(states.get(0));
-          } else if (this.isLooping()) {
-            states = scenes.get(0).getStates();
-            this.setState(states.get(0));
-          } else {
-            this._running = false;
-          }
+          this._running = false;
         }
       }
+      
       return this;
     }
   }
