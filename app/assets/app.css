@@ -107,7 +107,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 .app-scene {
-  border-left: 0.2rem solid transparent;
+  padding: 0.3rem;
 }
 
 .app-scenes-item .add-scene-before,
@@ -144,28 +144,20 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 
 .app-scene {
   margin: 0 auto;
-  padding: 0.5rem;
+  /*border-left: 0.5rem solid transparent; */
+  overflow: hidden;
 }
 .app-scenes-item.selected .app-scene {
   background: rgba(0, 77, 140, 0.05);
 }
-.app-scene:hover .app-scene-preview {
-  border: 0.1rem solid rgb(0, 77, 140);
-}
-.app-scene-item.selected .app-scene-preview,
-.app-scene-item.selected:hover  .app-scene-preview {
-  border: 0.1rem solid rgb(0, 77, 140);
-}
 
 .app-scenes-item.current .app-scene {
-  border-left: 0.2rem solid green;
+  /* border-left: 0.5rem solid blue; */
 }
 
 .app-scene-preview {
-  background: darkblue;
-  color: white;
-  transition: all 200ms ease-in;
-  width: 9.6rem;
+  transition: all 0.2s ease-in;
+  width: 12.8rem;
   height: 0;
   box-sizing: border-box;
   border: 0.1rem solid rgb(200, 200, 200);
@@ -175,34 +167,71 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   transition: none;
 }
 .appear .app-scene-preview {
-  height: 5.4rem;
+  height: 7.2rem;
 }
 
-.app-states {
+.app-scene-control {
+  transition: all 0.2s ease-in;
+  width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  overflow: hidden;
+  z-index: 1;
 }
+.app-scene-preview:hover .app-scene-control {
+  width: 2rem;
+}
+.app-scene-control .material-icons {
+  display: block;
+  color: rgb(200, 200, 200);
+  font-size: 1.8rem;
+}
+
+
+.app-states {}
+
 .app-state {
-  padding: 0.3rem 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-top: 0.1rem solid rgb(220, 220, 220);
 }
+
+.app-state:first-child {
+  border-top: none;
+}
+
 .app-state.selected {
   background: rgba(0, 77, 140, 0.05);
 }
 
 .app-state .app-state-indicator {
   transition: all 100ms ease-in;
-  border-radius: 100%;
-  background: rgb(200, 200, 200);
-  width: 0.5rem;
-  height: 0.5rem;
-}
-.app-state.current .app-state-indicator {
-  background: green;
+  padding: 0.2rem;
+  margin: 0.2rem;
 }
 
-.app-state:hover .app-state-indicator {
-  background: rgb(0, 77, 140);
+.app-state .app-state-indicator .material-icons {
+  font-size: 1.5rem;
+  display: block;
+  color: rgb(200, 200, 200);
+}
+
+.app-state.current .app-state-indicator .material-icons {
+  color: #fff;
+}
+
+.app-state.current .app-state-indicator,
+.app-state.current:hover .app-state-indicator {
+  background: blue;
+  border-radius: 0.3rem;
+}
+
+.app-state:hover {
+  background: rgba(0, 77, 140, 0.05);
 }
 .app-state .app-state-duration {
   font-size: 0.8rem;

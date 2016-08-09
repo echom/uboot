@@ -18,6 +18,8 @@ np.define('model.State', () => {
 
     setDuration(value) { return this._members.duration.setValue(value); }
 
+    onDurationChanged(handler, ctx) { return this._members.duration.onChanged(handler, ctx); }
+
     getStart() { this.getScene().getStateStart(this); }
 
     static create(scene) {

@@ -90,7 +90,7 @@ np.define('app.Player', () => {
           this._running = false;
         }
       }
-      
+
       return this;
     }
   }
