@@ -1,0 +1,37 @@
+.btn {
+  font-size: 2rem;
+  line-height: 1em;
+  padding: 0.1em;
+  margin: 0.1em;
+  border-radius: 0.1em;
+  transition: background-color 0.1s ease-in;
+}
+
+.btn .material-icons {
+  font-size: inherit;
+  vertical-align: bottom;
+}
+.btn span {
+  font-size: 0.7em;
+  margin: auto 0.3em;
+  vertical-align: bottom;
+}
+.btn small {
+  font-size: 0.5em;
+  margin: auto 0.4em;
+  vertical-align: bottom;
+}
+
+.btn.mini {
+  font-size: 1.2rem;
+  padding: 0.3em;
+}
+
+.btn.maxi {
+  font-size: 4rem;
+  margin: 0.05em;
+}
+
+.btn.round {
+  border-radius: 1em;
+}

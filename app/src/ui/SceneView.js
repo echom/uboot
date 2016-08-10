@@ -3,7 +3,8 @@ np.define('ui.SceneView', () => {
       Container = np.require('ui.Container'),
       Button = np.require('ui.Button'),
       StatesListView = np.require('ui.StatesListView'),
-      Icon = np.require('ui.Icon');
+      Icon = np.require('ui.Icon'),
+      State = np.require('model.State');
 
   class SceneView extends Container {
     constructor(scene, player) {
@@ -17,6 +18,9 @@ np.define('ui.SceneView', () => {
       this._remove = this._control.add(new Button('div', 'delete-scene', Icon.str('delete_forever')));
 
       this._statesList = this.add(new StatesListView(scene.getStates(), player));
+
+      this.addState = this.add(new Button('div', 'round mini btn add-state', Icon.str('add')));
+      this.addState.onActivate((evt) => scene.getStates().add(State.create(scene)));
     }
 
     getStatesList() {

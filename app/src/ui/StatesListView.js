@@ -1,7 +1,9 @@
 np.define('ui.StatesListView', () => {
   var Element = np.require('ui.Element'),
+      Button = np.require('ui.Button'),
       List = np.require('ui.List'),
-      Icon = np.require('ui.Icon');
+      Icon = np.require('ui.Icon'),
+      State = np.require('model.State');
 
   class StatesListItem extends List.Item {
     constructor(state, player) {
@@ -9,8 +11,8 @@ np.define('ui.StatesListView', () => {
 
       this._state = state;
 
-      this._indicator = this.add(new Element('div', 'app-state-indicator'));
-      this._duration = this.add(new Element('span', 'app-state-duration'));
+      this._indicator = this.add(new Element('div', 'round mini btn app-state-indicator'));
+      this._duration = this.add(new Element('span', 'round mini btn app-state-duration'));
 
       this._indicator.setContent(this._state.getDuration() <= 0 ? Icon.str('mouse') : Icon.str('play_arrow'));
       this._duration.setContent(this._state.getDuration() || '');

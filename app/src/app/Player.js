@@ -87,7 +87,7 @@ np.define('app.Player', () => {
           states = scenes.get(0).getStates();
           this.setState(states.get(0));
         } else {
-          this._running = false;
+          this._running.setValue(true);
         }
       }
 

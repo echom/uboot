@@ -10,6 +10,9 @@ var del = require('del'),
     rename = require('gulp-rename'),
     eslint = require('gulp-eslint'),
     uglify = require('gulp-uglify'),
+    postcss = require('gulp-postcss'),
+    autoprefixer = require('autoprefixer'),
+    cssnano = require('cssnano'),
     karmaConfigure = require('../tools/karma-configure');
 
 var paths = {
@@ -28,7 +31,12 @@ gulp.task('clean', () => del([
 ]));
 
 gulp.task('copy-assets', ['clean'], () => {
-  return gulp.src('assets/**/*.*')
+  return gulp.src('assets/*.css')
+    .pipe(concat('app.css'))
+    .pipe(postcss([
+      autoprefixer({ browsers: ['last 1 version'] }),
+      cssnano()
+    ]))
     .pipe(gulp.dest('dist/assets'));
 });
 

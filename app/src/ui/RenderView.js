@@ -56,9 +56,11 @@ np.define('ui.RenderView', () => {
             th = Math.round(h2 > h ? h : h2),
             tw = Math.round(h2 > h ? h * this._aspect : w);
 
-        this._canvas.width = tw * dpi;
-        this._canvas.height = th * dpi;
         this._renderer.setSize(tw, th);
+        this._renderer.setPixelRatio(dpi);
+        // this._canvas.width = tw * dpi;
+        // this._canvas.height = th * dpi;
+
         this._renderLoop.trigger();
       });
 
@@ -69,7 +71,7 @@ np.define('ui.RenderView', () => {
     _render(doc, el) {
       super._render(doc, el);
 
-      this._renderer = new THREE.WebGLRenderer({ alpha: true });
+      this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       this._renderer.setClearColor(0xffffff, 0);
       this._canvas = this._renderer.domElement;
       el.appendChild(this._canvas);

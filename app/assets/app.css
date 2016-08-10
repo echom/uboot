@@ -5,11 +5,6 @@ body { font-size: 1.4rem; overflow: hidden; }
 ul { margin: 0; padding: 0; list-style: none; }
 
 .ui {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -khtml-user-select: none;
-  -o-user-select: none;
   user-select: none;
   cursor: default;
 }
@@ -24,15 +19,23 @@ ul { margin: 0; padding: 0; list-style: none; }
 .app-toolbar {
   display: flex;
   flex: 0 0 auto;
-  margin: 0 0.5rem 0.5rem 0.5rem;
+  align-items: center;
 }
+.app-toolbar li.btn {
+  display: none;
+}
+.app-toolbar.open .btn {
+  display: initial;
+}
+
 .app-hero {
   background: rgb(133, 0, 140);
-  padding: 1rem 3.5rem;
+  padding: 1rem 4.6rem;
   color: #fff;
   font-weight: bolder;
   border-bottom-left-radius: 0.3rem;
   border-bottom-right-radius: 0.3rem;
+  margin: 0 0.8rem;
 }
 .app-toolbar .toolbtn {
   display: none;
@@ -62,12 +65,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   align-items: stretch;
   flex: 1 1 auto;
   margin-top: 0.6rem;
-  margin-right: 0.5rem;
 }
 
 .app-render {
   flex: 1 1 10rem;
   overflow: hidden;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .app-render > canvas {
@@ -82,17 +86,25 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .app-player {
   margin-top: -4.5rem;
-  flex: 0 0 6rem;
+  padding: 0 0.5rem;
+  flex: 0 0 5.5rem;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-
   z-index: 1;
 }
-.app-player .play-pause i { font-size: 5rem; }
-.app-player .play-loop i { opacity: 0.2; }
-.app-player .play-loop.active i { opacity: 1; }
+
+.app-player-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 1rem;
+  /*border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;*/
+}
+
 
 .app-editor {
   flex: 0 0 160px;
@@ -155,6 +167,11 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   /* border-left: 0.5rem solid blue; */
 }
 
+.app-scene .add-state {
+  margin: 0 auto;
+  width: 1.1em;
+}
+
 .app-scene-preview {
   transition: all 0.2s ease-in;
   width: 12.8rem;
@@ -197,68 +214,28 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 0.1rem solid rgb(220, 220, 220);
 }
 
-.app-state:first-child {
-  border-top: none;
+.app-state:nth-child(even) {
+  background: linear-gradient(to right, rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 100%);
 }
 
 .app-state.selected {
-  background: rgba(0, 77, 140, 0.05);
+  background: rgba(0, 0, 0, 0.3);
 }
 
-.app-state .app-state-indicator {
-  transition: all 100ms ease-in;
-  padding: 0.2rem;
-  margin: 0.2rem;
-}
-
-.app-state .app-state-indicator .material-icons {
-  font-size: 1.5rem;
-  display: block;
-  color: rgb(200, 200, 200);
-}
-
-.app-state.current .app-state-indicator .material-icons {
-  color: #fff;
+.app-state:hover .app-state-indicator {
+  background: #607d8b
 }
 
 .app-state.current .app-state-indicator,
 .app-state.current:hover .app-state-indicator {
-  background: blue;
-  border-radius: 0.3rem;
+  background: rgb(76, 175, 80);
 }
 
-.app-state:hover {
-  background: rgba(0, 77, 140, 0.05);
-}
 .app-state .app-state-duration {
   font-size: 0.8rem;
 }
-
-.btn {
-  border: 0.1rem solid rgb(200, 200, 200);
-  border-radius: 0.3rem;
-  padding: 0.5rem 1rem;
-}
-.btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-li.btn {
-  border-radius: 0;
-  border-right-width: 0;
-}
-li.btn:first-child {
-  border-top-left-radius: 0.3rem;
-  border-bottom-left-radius: 0.3rem;
-}
-li.btn:last-child {
-  border-right-width: 0.1rem;
-  border-top-right-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
-}
-
 
 .dialog-bg {
   position: absolute;

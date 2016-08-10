@@ -1,0 +1,30 @@
+body {
+  background: #455A64;
+  color: #fff;
+}
+
+body .material-icons {
+  color: inherit;
+}
+
+.bright {
+  background: #cfd8dc;
+  color: #212121;
+}
+.bright .material-icons {
+  color: inherit;
+}
+
+.accent1 {
+  background: rgb(76, 175, 80);
+  color: #fff;
+}
+.accent1 .material-icons { color: white; }
+
+.btn:hover {
+  background: #607d8b;
+  color: #fff;
+}
+.btn.accent1:hover {
+  background: rgb(51, 150, 55)
+}

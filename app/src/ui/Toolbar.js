@@ -7,29 +7,43 @@ np.define('ui.Toolbar', () => {
     constructor(application) {
       super('ul', 'ui app-toolbar');
 
-      this._hero = this.add(
-        new Button('li', 'app-hero', 'uboot', () => this.toggleClass('open'))
+      this._hero = this.add(new Button(
+        'li',
+        'app-hero accent1',
+        'uboot',
+        () => this.toggleClass('open')
+      ));
+
+      this._newProject = this.add(new Button(
+        'li',
+        'btn',
+        Icon.str('note_add') + '<small>New</small>',
+        () => application.newProject()
+      ));
+
+      this._saveProject = this.add(new Button(
+        'li',
+        'btn',
+        Icon.str('save') + '<small>Save</small>',
+        () => application.persistProject())
       );
 
-      this._newProject = this.add(
-        new Button('li', 'toolbtn', Icon.str('note_add'), () => application.newProject())
+      this._loadProject = this.add(new Button(
+        'li',
+        'btn',
+        Icon.str('folder_open') + '<small>Open</small>',
+        () => application.restoreProject())
       );
 
-      this._saveProject = this.add(
-        new Button('li', 'toolbtn', Icon.str('save'), () => application.persistProject())
-      );
+      this._settings = this.add(new Button(
+        'li',
+        'btn',
+        Icon.str('settings') + '<small>Settings</small>'
+      ));
 
-      this._loadProject = this.add(
-        new Button('li', 'toolbtn', Icon.str('folder_open'), () => application.restoreProject())
-      );
-
-      this._settings = this.add(
-        new Button('li', 'toolbtn', Icon.str('settings'), () => { throw new Error('not implemented'); })
-      );
-
-      this._close = this.add(
-        new Button('li', 'toolbtn', Icon.str('close'), () => this.toggleClass('open', false))
-      );
+      // this._close = this.add(
+      //   new Button('li', 'btn', Icon.str('close'), () => this.toggleClass('open', false))
+      // );
     }
   }
 
