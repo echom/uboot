@@ -24,13 +24,13 @@ np.define('doc.List', () => {
       return this._items.toArray(item => item.serialize());
     }
 
-    get(index) {
-      return this._items.get(index);
-    }
+    get(index) { return this._items.get(index); }
 
-    indexOf(item) {
-      return this._items.indexOf(item);
-    }
+    first() { return this._items[0]; }
+
+    last() { return this._items[this._items.length - 1]; }
+
+    indexOf(item) { return this._items.indexOf(item); }
 
     add(item) {
       return this.insertAt(item, this.length);

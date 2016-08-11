@@ -23,6 +23,34 @@ np.define('model.Scene', () => {
       return this.getDocument();
     }
 
+    getPredecessor(wrap) {
+      var scenes = this.getParent(),
+          index = scenes.indexOf(this);
+
+      if (index > 0) {
+        return scenes.get(index - 1);
+      } else if (wrap) {
+        return scenes.last();
+      } else {
+        return null;
+      }
+    }
+
+    getSuccessor(wrap) {
+      var scenes = this.getParent(),
+          length = scenes.length,
+          index = scenes.indexOf(this);
+
+      if (index < length - 1) {
+        return scenes.get(index + 1);
+      } else if (wrap) {
+        return scenes.first();
+      } else {
+        return null;
+      }
+    }
+
+
     getStates() {
       return this._members.states;
     }

@@ -120,6 +120,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .app-scene {
   padding: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .app-scenes-item .add-scene-before,
@@ -141,18 +144,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 .app-scenes-item .add-scene-before { display: none; }
 li.app-scenes-item:first-child .add-scene-before { display: block; }
 
-.app-scenes-item .rem-scene {
-  text-align: center;
-  font-size: 2rem;
-  color: lightblue;
-  border-radius: 100%;
-}
-.app-scenes-item:hover .rem-scene {
-  background: rgba(255, 255, 255, 0.5);
-  color: lightblue;
-}
-
-
 
 .app-scene {
   margin: 0 auto;
@@ -168,8 +159,7 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 }
 
 .app-scene .add-state {
-  margin: 0 auto;
-  width: 1.1em;
+  align-self: flex-start;
 }
 
 .app-scene-preview {
@@ -188,32 +178,36 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 }
 
 .app-scene-control {
-  transition: all 0.2s ease-in;
-  width: 0;
   height: 100%;
+  float: right;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  justify-content: space-between;
   overflow: hidden;
   z-index: 1;
 }
-.app-scene-preview:hover .app-scene-control {
-  width: 2rem;
+.app-scene-control .btn {
+  transition: all 0.2s ease-in;
+  transform: translateX(2rem);
 }
-.app-scene-control .material-icons {
-  display: block;
-  color: rgb(200, 200, 200);
-  font-size: 1.8rem;
+.app-scene-preview:hover .app-scene-control .btn,
+.app-scenes-item.current .app-scene-control .btn {
+  transform: translateX(0);
 }
 
 
-.app-states {}
+
+
+.app-states {
+  margin-top: 0.2rem;
+}
 
 .app-state {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
 }
 
 .app-state:nth-child(even) {
@@ -232,6 +226,16 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 .app-state.current:hover .app-state-indicator {
   background: rgb(76, 175, 80);
 }
+
+.app-state .delete-state {
+  transition: all 0.2s ease-in;
+  transform: translateX(2rem);
+}
+.app-state:hover .delete-state,
+.app-state.current .delete-state {
+  transform: translateX(0);
+}
+
 
 .app-state .app-state-duration {
   font-size: 0.8rem;

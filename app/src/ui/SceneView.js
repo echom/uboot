@@ -1,6 +1,5 @@
 np.define('ui.SceneView', () => {
-  var Element = np.require('ui.Element'),
-      Container = np.require('ui.Container'),
+  var Container = np.require('ui.Container'),
       Button = np.require('ui.Button'),
       StatesListView = np.require('ui.StatesListView'),
       Icon = np.require('ui.Icon'),
@@ -14,8 +13,12 @@ np.define('ui.SceneView', () => {
 
       this._preview = this.add(new Container('div', 'app-scene-preview'));
       this._control = this._preview.add(new Container('div', 'app-scene-control'));
-      this._settings = this._control.add(new Button('div', 'edit-scene', Icon.str('settings')));
-      this._remove = this._control.add(new Button('div', 'delete-scene', Icon.str('delete_forever')));
+      this._settings = this._control.add(new Button('div', 'mini btn edit-scene', Icon.str('settings')));
+
+      this._remove = this._control.add(new Button('div', 'mini btn delete-scene', Icon.str('delete_forever')));
+      this._remove.onActivate(() => {
+        
+      });
 
       this._statesList = this.add(new StatesListView(scene.getStates(), player));
 

@@ -1,5 +1,6 @@
 np.define('ui.StatesListView', () => {
   var Element = np.require('ui.Element'),
+      Button = np.require('ui.Button'),
       List = np.require('ui.List'),
       Icon = np.require('ui.Icon');
 
@@ -11,6 +12,7 @@ np.define('ui.StatesListView', () => {
 
       this._indicator = this.add(new Element('div', 'round mini btn app-state-indicator'));
       this._duration = this.add(new Element('span', 'round mini btn app-state-duration'));
+      this._remove = this.add(new Button('div', 'mini btn delete-state', Icon.str('delete_forever')));
 
       this._indicator.setContent(this._state.getDuration() <= 0 ? Icon.str('mouse') : Icon.str('play_arrow'));
       this._duration.setContent(this._state.getDuration() || '');

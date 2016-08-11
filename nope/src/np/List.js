@@ -8,6 +8,10 @@ np.define('np.List', () => {
 
     get(index) { return this._items[index]; }
 
+    first() { return this._items[0]; }
+
+    last() { return this._items[this._items.length - 1]; }
+
     indexOf(item) { return this._items.indexOf(item); }
 
     contains(item) { return this.indexOf(item) >= 0; }

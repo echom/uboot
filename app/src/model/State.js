@@ -12,6 +12,34 @@ np.define('model.State', () => {
 
     getProject() { return this.getDocument(); }
 
+    getPredecessor(wrap) {
+      var states = this.getParent(),
+          index = states.indexOf(this);
+
+      if (index > 0) {
+        return states.get(index - 1);
+      } else if (wrap) {
+        return states.last();
+      } else {
+        return null;
+      }
+    }
+
+    getSuccessor(wrap) {
+      var states = this.getParent(),
+          length = states.length,
+          index = states.indexOf(this);
+
+      if (index < length - 1) {
+        return states.get(index + 1);
+      } else if (wrap) {
+        return states.first();
+      } else {
+        return null;
+      }
+    }
+
+
     getScene() { return this._scene; }
 
     getDuration() { return this._members.duration.getValue(); }
