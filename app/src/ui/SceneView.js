@@ -3,7 +3,8 @@ np.define('ui.SceneView', () => {
       Button = np.require('ui.Button'),
       StatesListView = np.require('ui.StatesListView'),
       Icon = np.require('ui.Icon'),
-      State = np.require('model.State');
+      State = np.require('model.State'),
+      Scene = np.require('model.Scene');
 
   class SceneView extends Container {
     constructor(scene, player) {
@@ -17,21 +18,33 @@ np.define('ui.SceneView', () => {
 
       this._remove = this._control.add(new Button('div', 'mini btn delete-scene', Icon.str('delete_forever')));
       this._remove.onActivate(() => {
-        
+        var scene = this._scene,
+            project = scene.getProject(),
+            nextScene = scene.getPredecessor() || scene.getSuccessor();
+        if (!nextScene) {
+          nextScene = project.addScene(Scene.create(project));
+        }
+        if (player.getScene() === scene) {
+          player.setState(nextScene.getState(0));
+        }
+        project.removeScene(scene);
       });
 
       this._statesList = this.add(new StatesListView(scene.getStates(), player));
 
       this.addState = this.add(new Button('div', 'round mini btn add-state', Icon.str('add')));
-      this.addState.onActivate((evt) => scene.getStates().add(State.create(scene)));
+      this.addState.onActivate((evt) => {
+        var added = scene.addState(State.create(scene));
+        player.setState(added);
+      });
     }
 
     getStatesList() {
       return this._statesList;
     }
 
-    _render(doc, el) {
-      super._render(doc, el);
+    _createElement(doc, el) {
+      super._createElement(doc, el);
       setTimeout(() => this.toggleClass('appear', true), 20);
     }
   }

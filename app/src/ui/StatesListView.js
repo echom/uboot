@@ -2,7 +2,8 @@ np.define('ui.StatesListView', () => {
   var Element = np.require('ui.Element'),
       Button = np.require('ui.Button'),
       List = np.require('ui.List'),
-      Icon = np.require('ui.Icon');
+      Icon = np.require('ui.Icon'),
+      State = np.require('model.State');
 
   class StatesListItem extends List.Item {
     constructor(state, player) {
@@ -16,9 +17,21 @@ np.define('ui.StatesListView', () => {
 
       this._indicator.setContent(this._state.getDuration() <= 0 ? Icon.str('mouse') : Icon.str('play_arrow'));
       this._duration.setContent(this._state.getDuration() || '');
-      this._state.onDurationChanged((evt) => {
+      this._state.onDurationChanged(evt => {
         this._indicator.setContent(evt.newValue <= 0 ? Icon.str('mouse') : Icon.str('play_arrow'));
         this._setDuration(evt.newValue);
+      });
+      this._remove.onActivate(evt => {
+        var state = this._state,
+            scene = state.getScene(),
+            nextState = state.getPredecessor() || state.getSuccessor();
+        if (!nextState) {
+          nextState = scene.addState(State.create(scene));
+        }
+        if (player.getState() === state) {
+          player.setState(nextState);
+        }
+        scene.removeState(state);
       });
 
       this.toggleClass('current', player.getState() === state);
@@ -66,7 +79,7 @@ np.define('ui.StatesListView', () => {
       states.forEach(state => this.add(this._createItem(state)));
       states.onChanged(evt => {
         if (evt.removed) {
-          this.removeAt(evt.index);
+          this.removeAt(evt.index).dispose();
         }
         if (evt.added) {
           this.insertAt(this._createItem(evt.added), evt.index);

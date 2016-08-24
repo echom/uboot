@@ -1,5 +1,6 @@
 np.define('model.Entity', function() {
-  var Element = np.require('doc.Element');
+  var Element = np.require('doc.Element'),
+      Value = np.require('doc.Value');
 
   class Entity extends Element {
     constructor(scene) {

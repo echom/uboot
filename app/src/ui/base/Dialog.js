@@ -62,8 +62,8 @@ np.define('ui.Dialog', () => {
       }
     }
 
-    _render(doc, el) {
-      Container.prototype._render.call(this, doc, el);
+    _createElement(doc, el) {
+      super._createElement(doc, el);
       this.setContent(this._content, true);
       el.addEventListener('mouseup', this._cancel);
       this._frame.getElement().addEventListener('mouseup', evt => {
@@ -88,7 +88,7 @@ np.define('ui.Dialog', () => {
             reject(evt.result);
           }
         });
-        doc.body.appendChild(dialog.render(doc));
+        doc.body.appendChild(dialog.createElement(doc));
       });
     }
   }

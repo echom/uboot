@@ -12,6 +12,8 @@ np.define('model.State', () => {
 
     getProject() { return this.getDocument(); }
 
+    getScene() { return this._scene; }
+
     getPredecessor(wrap) {
       var states = this.getParent(),
           index = states.indexOf(this);
@@ -39,9 +41,6 @@ np.define('model.State', () => {
       }
     }
 
-
-    getScene() { return this._scene; }
-
     getDuration() { return this._members.duration.getValue(); }
 
     setDuration(value) { return this._members.duration.setValue(value); }
@@ -49,6 +48,13 @@ np.define('model.State', () => {
     onDurationChanged(handler, ctx) { return this._members.duration.onChanged(handler, ctx); }
 
     getStart() { this.getScene().getStateStart(this); }
+
+    hasEntries(slot) {
+      
+    }
+
+
+
 
     static create(scene) {
       return new State(scene);

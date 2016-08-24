@@ -120,8 +120,8 @@ np.define('ui.List', function() {
       return this;
     }
 
-    _render(doc, el) {
-      super._render(doc, el);
+    _createElement(doc, el) {
+      super._createElement(doc, el);
       this._setSelectable(this._selectable, true);
       this.setSelected(this._selected, true);
     }

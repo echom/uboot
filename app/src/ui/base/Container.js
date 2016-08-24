@@ -25,12 +25,12 @@ np.define('ui.Container', () => {
         if (this._element) {
           if (index < this._children.length - 1) {
             this._element.insertBefore(
-              child.render(this._element.ownerDocument),
+              child.createElement(this._element.ownerDocument),
               this._children.get(index).getElement()
             );
           } else {
             this._element.appendChild(
-              child.render(this._element.ownerDocument)
+              child.createElement(this._element.ownerDocument)
             );
           }
         }
@@ -45,14 +45,15 @@ np.define('ui.Container', () => {
 
       if (index >= 0 && index < this._children.length) {
         child = this._children.removeAt(index);
+        child.detach();
       }
 
       return child;
     }
 
-    _render(doc, el) {
-      Element.prototype._render.call(this, doc, el);
-      this._children.forEach(child => el.appendChild(child.render(doc)));
+    _createElement(doc, el) {
+      super._createElement(doc, el);
+      this._children.forEach(child => el.appendChild(child.createElement(doc)));
     }
 
     setEnabled(value, force) {

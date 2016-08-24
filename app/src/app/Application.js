@@ -23,8 +23,6 @@ np.define('app.Application', () => {
       this._restoreProject = this._restoreProject.bind(this);
       this._persistProject = this._persistProject.bind(this);
 
-      this._onProjectNameChanged = this._onProjectNameChanged.bind(this);
-
       this.onProjectChanged(this._onProjectChanged, this);
       this._setProject(project || Project.create());
     }
@@ -50,12 +48,15 @@ np.define('app.Application', () => {
     }
 
     _onProjectChanged(evt) {
-      if (evt.oldValue) {
-        evt.oldValue.onNameChanged(this._onProjectNameChanged, this);
+      var project = evt.newValue;
+
+      if (this._offNameChanged) {
+        this._offNameChanged();
       }
-      if (evt.newValue) {
-        evt.newValue.onNameChanged(this._onProjectNameChanged);
-        this._setTitle(evt.newValue.getName());
+
+      if (project) {
+        project.onNameChanged(this._onProjectNameChanged, this);
+        this._setTitle(project.getName());
       } else {
         this._setProject(Project.create());
       }

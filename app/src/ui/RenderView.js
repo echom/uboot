@@ -40,13 +40,25 @@ np.define('ui.RenderView', () => {
     }
   }
 
+  // class Picking {
+  //   constructor() {
+  //
+  //   }
+  // }
+
   class RenderView extends Container {
     constructor(project, player) {
       super('div', 'app-render');
 
       this._player = player;
       this._aspect = project.getSettings().getAspect();
-      this._renderLoop = new RenderLoop(this, (dt) => this._renderCurrentState(dt));
+      this._renderLoop = new RenderLoop(this, (dt) => {
+        var // state = this._player.getState(),
+            scene = this._player.getScene(),
+            renderState = scene.getRenderState();
+
+        this._renderer.render(renderState.scene, renderState.camera);
+      });
 
       this._renderer = null;
       this._canvas = null;
@@ -64,12 +76,12 @@ np.define('ui.RenderView', () => {
         this._renderLoop.trigger();
       });
 
-      this._player.onStateChanged(evt => this._renderCurrentState());
+      this._player.onStateChanged(evt => this._renderLoop.trigger());
       this._player.onRunningChanged(evt => this._renderLoop.trigger(evt.newValue));
     }
 
-    _render(doc, el) {
-      super._render(doc, el);
+    _createElement(doc, el) {
+      super._createElement(doc, el);
 
       this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       this._renderer.setClearColor(0xffffff, 0);
@@ -78,14 +90,6 @@ np.define('ui.RenderView', () => {
 
       this._resizing.setTarget(el, true);
       this._renderLoop.trigger();
-    }
-
-    _renderCurrentState(ts) {
-      var // state = this._player.getState(),
-          scene = this._player.getScene(),
-          renderState = scene.getRenderState();
-
-      this._renderer.render(renderState.scene, renderState.camera);
     }
 
     _dispose() {

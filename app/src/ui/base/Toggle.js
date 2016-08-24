@@ -48,8 +48,8 @@ np.define('ui.Toggle', function() {
       this._activation.setTarget(enabled ? this.getElement() : null);
     }
 
-    _render(doc, el) {
-      super._render(doc, el);
+    _createElement(doc, el) {
+      super._createElement(doc, el);
       this._activation.setTarget(el);
       this.setActive(this._active, true);
     }

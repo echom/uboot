@@ -20,10 +20,10 @@ np.define('ui.Element', () => {
       this.setClasses(classNames);
     }
 
-    render(doc) {
+    createElement(doc) {
       if (!this._element) {
         this._element = doc.createElement(this._type);
-        this._render(doc, this._element);
+        this._createElement(doc, this._element);
         this._syncClassNames();
       }
       this.setVisible(this._visible, true);
@@ -32,7 +32,7 @@ np.define('ui.Element', () => {
       return this._element;
     }
 
-    _render(doc, element) {}
+    _createElement(doc, element) {}
 
     getElement() { return this._element; }
 

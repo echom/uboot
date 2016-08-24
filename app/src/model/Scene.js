@@ -23,6 +23,26 @@ np.define('model.Scene', () => {
       return this.getDocument();
     }
 
+    getDuration() {
+      if (this._duration < 0) {
+        this._duration = 0;
+        this.getStates().forEach(state => this._duration += state.getDuration());
+      }
+      return this._duration;
+    }
+
+    getStateStart(state) {
+      var offset = this.getProject().getSceneStart(this),
+          states = this.getStates(),
+          index = states.indexOf(state);
+      if (index >= 0) {
+        while (--index) {
+          offset += states.get(index).getDuration();
+        }
+      }
+      return offset;
+    }
+
     getPredecessor(wrap) {
       var scenes = this.getParent(),
           index = scenes.indexOf(this);
@@ -50,50 +70,23 @@ np.define('model.Scene', () => {
       }
     }
 
+    getStates() { return this._members.states; }
+    getState(index) { return this.getStates().get(index); }
+    onStatesChanged(handler, ctx) { return this.getStates().onChanged(handler, ctx); }
+    addState(state) { return this.getStates().add(state); }
+    insertStateAt(state, index) { return this.getStates().insertAt(state, index); }
+    removeState(state) { return this.getStates().remove(state); }
+    removeStateAt(index) { return this.getStates().removeAt(index); }
 
-    getStates() {
-      return this._members.states;
-    }
-    onStatesChanged(handler, ctx) {
-      return this._members.states.onChanged(handler, ctx);
-    }
-
-    getEntities() {
-      return this._members.entities;
-    }
-    onEntitiesChanged(handler, ctx) {
-      return this._members.entities.onChanged(handler, ctx);
-    }
-
-    getDuration() {
-      if (this._duration < 0) {
-        this._duration = 0;
-        this.getStates().forEach(state => this._duration += state.getDuration());
-      }
-      return this._duration;
-    }
-
-    getStateStart(state) {
-      var offset = this.getProject().getSceneStart(this),
-          states = this.getStates(),
-          index = states.indexOf(state);
-      if (index >= 0) {
-        while (--index) {
-          offset += states.get(index).getDuration();
-        }
-      }
-      return offset;
-    }
+    getEntities() { return this._members.entities; }
+    onEntitiesChanged(handler, ctx) { return this._members.entities.onChanged(handler, ctx); }
 
     getRenderState() { return this._renderState; }
 
     static create(project) {
       var scene = new Scene(project),
           BoxEntity = np.require('entities.BoxEntity');
-      scene.getStates().add(State.create(scene));
-      scene.getStates().add(State.create(scene));
-      scene.getStates().add(State.create(scene));
-
+      scene.addState(State.create(scene));
       scene.getEntities().add(new BoxEntity(scene));
       return scene;
     }

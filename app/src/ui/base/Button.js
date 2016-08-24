@@ -20,8 +20,8 @@ np.define('ui.Button', () => {
 
     onActivate(handler, ctx) { return this._activate.on(handler, ctx); }
 
-    _render(doc, el) {
-      super._render(doc, el);
+    _createElement(doc, el) {
+      super._createElement(doc, el);
       this._activation.setTarget(el);
     }
 

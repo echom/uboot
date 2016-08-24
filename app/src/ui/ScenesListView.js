@@ -14,13 +14,16 @@ np.define('ui.ScenesListView', () => {
 
       this._addBefore.onActivate(evt => {
         var scenes = scene.getParent(),
-            index = scenes.indexOf(scene);
-        scenes.insertAt(Scene.create(scene.getProject()), index);
+            index = scenes.indexOf(scene),
+            added = scenes.insertAt(Scene.create(scene.getProject()), index);
+
+        player.setState(added.getState(0));
       });
       this._addAfter.onActivate(evt => {
         var scenes = scene.getParent(),
-            index = scenes.indexOf(scene);
-        scenes.insertAt(Scene.create(scene.getProject()), index + 1);
+            index = scenes.indexOf(scene),
+            added = scenes.insertAt(Scene.create(scene.getProject()), index + 1);
+        player.setState(added.getState(0));
       });
 
       this.toggleClass('current', player.getScene() === scene);

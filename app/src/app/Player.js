@@ -10,13 +10,7 @@ np.define('app.Player', () => {
       this._running = new Observable(false, this);
       this._looping = false;
 
-      this.setState(
-        project
-          .getScenes()
-          .get(0)
-          .getStates()
-          .get(0)
-      );
+      this.setState(project.getScene(0).getState(0));
     }
 
     getScene() { return this._scene.getValue(); }
@@ -53,11 +47,7 @@ np.define('app.Player', () => {
     start(state) {
       var reference = state;
       if (!state) {
-        reference = this._project
-          .getScenes()
-          .get(0)
-          .getStates()
-          .get(0);
+        reference = this._project.getScene(0).getState(0);
       }
       this.setState(reference);
       this._running.setValue(true);
@@ -70,25 +60,17 @@ np.define('app.Player', () => {
     }
 
     next() {
-      var scenes = this._project.getScenes(),
-          states = this.getScene().getStates(),
-          index;
+      var nextState = this.getState().getSuccessor(),
+          nextScene = !nextState ? this.getScene().getSuccessor() : null;
 
-
-      index = states.indexOf(this.getState());
-      if (index < states.length - 1) {
-        this.setState(states.get(index + 1));
+      if (nextState) {
+        this.setState(nextState);
+      } else if (nextScene) {
+        this.setState(nextScene.getState(0));
+      } else if (this.isLooping) {
+        this.setState(this._project.getScene(0).getState(0));
       } else {
-        index = scenes.indexOf(this.getScene());
-        if (index < scenes.length - 1) {
-          states = scenes.get(index + 1).getStates();
-          this.setState(states.get(0));
-        } else if (this.isLooping()) {
-          states = scenes.get(0).getStates();
-          this.setState(states.get(0));
-        } else {
-          this._running.setValue(true);
-        }
+        this._running.setValue(false);
       }
 
       return this;
