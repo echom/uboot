@@ -5,7 +5,6 @@
   },
   "globals": {
     "np": true,
-    "Promise": true,
     "require": true
   }
 }

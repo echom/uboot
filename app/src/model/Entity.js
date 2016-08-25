@@ -20,8 +20,6 @@ np.define('model.Entity', function() {
       Object.keys(renderState).forEach(key => {
         sceneRenderState.scene.add(renderState[key]);
       });
-
-      this._renderState = renderState;
     }
 
     applyState(state) {

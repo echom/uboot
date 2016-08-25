@@ -1,6 +1,7 @@
 np.define('ui.RenderView', () => {
   var Container = np.require('ui.Container'),
-      Resizing = np.require('ui.Resizing');
+      Resizing = np.require('ui.Resizing'),
+      Disposable = np.require('np.Disposable');
 
   class RenderLoop {
     static get SLEEP_THRESHOLD() { return 2000; }
@@ -40,11 +41,90 @@ np.define('ui.RenderView', () => {
     }
   }
 
-  // class Picking {
-  //   constructor() {
-  //
-  //   }
-  // }
+  class Picking extends Disposable {
+    constructor(renderer, resolution) {
+      super();
+
+      this._renderer = renderer;
+      this._resolution = resolution;
+
+      this._pickingRenderTarget = null;
+      this._pickingPixelBuffer = new Uint8Array(4);
+
+      this.setSize(renderer.getSize(), true);
+
+      this._pickingMaterial = new THREE.RawShaderMaterial({
+        vertexShader: [
+          '#define SHADER_NAME vertMaterial',
+          'precision highp float;',
+          'uniform mat4 modelViewMatrix;',
+          'uniform mat4 projectionMatrix;',
+          'attribute vec3 position;',
+          'varying vec3 vPosition;',
+          'void main()  {',
+          '  vPosition = ( modelViewMatrix * vec4( position, 1.0 ) ).xyz;',
+          '  gl_Position = projectionMatrix * vec4( vPosition, 1.0 );',
+          '}'
+        ].join('\n'),
+        fragmentShader: [
+          '#define SHADER_NAME fragMaterial',
+          'precision highp float;',
+          'uniform vec3 pickingColor;',
+          'varying vec3 vPosition;',
+          'void main()  {',
+          '  gl_FragColor = vec4( pickingColor, 1.0 );',
+          '}'
+        ].join('\n'),
+        uniforms: {
+          pickingColor: new THREE.Uniform(new THREE.Color())
+            .onUpdate(function(object, camera) {
+              this.value.setHex(object.userData.id);
+            })
+        }
+      });
+    }
+
+    setSize(size, force) {
+      var resolution = this._resolution,
+          width = Math.round(size.width * resolution),
+          height = Math.round(size.height * resolution);
+
+      if (this._width !== width || this._height !== height || force) {
+        this._width = width;
+        this._height = height;
+
+        if (!this._pickingRenderTarget) {
+          this._pickingRenderTarget = new THREE.WebGLRenderTarget(width, height);
+          this._pickingRenderTarget.texture.generateMipmaps = false;
+          this._pickingRenderTarget.texture.minFilter = THREE.NearestFilter;
+        } else {
+          this._pickingRenderTarget.setSize(width, height);
+        }
+      }
+    }
+
+    //addPickable()
+
+    pick(mouseX, mouseY, scene, camera) {
+      var x = Math.round(mouseX * this._resolution),
+          y = Math.round(mouseY * this._resolution),
+          rt = this._pickingRenderTarget,
+          pb = this._pickingPixelBuffer,
+          id = -1;
+
+      this.setSize(this._renderer.getSize());
+
+      scene.overrideMaterial = this._pickingMaterial;
+      this._renderer.render(scene, camera, this._pickingRenderTarget);
+      scene.overrideMaterial = null;
+
+      this._renderer.readRenderTargetPixels(rt, x, this._height - y, 1, 1, pb);
+
+      id = (pb[0] << 16) | (pb[1] << 8) | pb[2];
+
+      return this._pickables[id];
+    }
+  }
 
   class RenderView extends Container {
     constructor(project, player) {

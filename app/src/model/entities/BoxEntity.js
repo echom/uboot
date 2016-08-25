@@ -9,6 +9,9 @@ np.define('entities.BoxEntity', function() {
       box.position.z = -5;
       box.rotation.x = 0.4;
       box.rotation.y = 0.8;
+
+      box.data = { pick: this };
+
       return { box: box };
     }
   }
