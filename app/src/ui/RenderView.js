@@ -78,7 +78,7 @@ np.define('ui.RenderView', () => {
         uniforms: {
           pickingColor: new THREE.Uniform(new THREE.Color())
             .onUpdate(function(object, camera) {
-              this.value.setHex((object.data && object.data.pickingId) || 0);
+              this.value.setHex(object.data.pickingId || 0);
             })
         }
       });
