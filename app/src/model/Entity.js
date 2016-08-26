@@ -1,6 +1,5 @@
 np.define('model.Entity', function() {
-  var Element = np.require('doc.Element'),
-      Value = np.require('doc.Value');
+  var Element = np.require('doc.Element');
 
   class Entity extends Element {
     constructor(scene) {
@@ -14,12 +13,10 @@ np.define('model.Entity', function() {
     getScene() { return this._scene; }
 
     createRenderState() {
-      var sceneRenderState = this.getScene().getRenderState(),
-          renderState = this._createRenderState();
-
-      Object.keys(renderState).forEach(key => {
-        sceneRenderState.scene.add(renderState[key]);
-      });
+      this
+        .getScene()
+        .getRenderState()
+        .addRenderables(this._createRenderState());
     }
 
     applyState(state) {

@@ -10,9 +10,9 @@ np.define('entities.BoxEntity', function() {
       box.rotation.x = 0.4;
       box.rotation.y = 0.8;
 
-      box.data = { pick: this };
+      box.data = { pickingId: this.getId() };
 
-      return { box: box };
+      return [box];
     }
   }
 

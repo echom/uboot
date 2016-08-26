@@ -1,7 +1,8 @@
 np.define('model.Scene', () => {
   var Element = np.require('doc.Element'),
       List = np.require('doc.List'),
-      State = np.require('model.State');
+      State = np.require('model.State'),
+      SceneRenderState = np.require('render.SceneRenderState');
 
   class Scene extends Element {
     constructor(project) {
@@ -13,10 +14,7 @@ np.define('model.Scene', () => {
       this._duration = -1;
       this.onStatesChanged(() => { this._duration = -1; });
 
-      this._renderState = {
-        scene: new THREE.Scene(),
-        camera: new THREE.PerspectiveCamera(75, project.getSettings().getAspect(), 0.1, 1000)
-      };
+      this._renderState = new SceneRenderState(project.getSettings().getAspect());
     }
 
     getProject() {

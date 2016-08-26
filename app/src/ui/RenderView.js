@@ -78,7 +78,7 @@ np.define('ui.RenderView', () => {
         uniforms: {
           pickingColor: new THREE.Uniform(new THREE.Color())
             .onUpdate(function(object, camera) {
-              this.value.setHex(object.userData.id);
+              this.value.setHex((object.data && object.data.pickingId) || 0);
             })
         }
       });
@@ -102,8 +102,6 @@ np.define('ui.RenderView', () => {
         }
       }
     }
-
-    //addPickable()
 
     pick(mouseX, mouseY, scene, camera) {
       var x = Math.round(mouseX * this._resolution),
@@ -137,7 +135,7 @@ np.define('ui.RenderView', () => {
             scene = this._player.getScene(),
             renderState = scene.getRenderState();
 
-        this._renderer.render(renderState.scene, renderState.camera);
+        this._renderer.render(renderState.getRenderScene(), renderState.getCamera());
       });
 
       this._renderer = null;
