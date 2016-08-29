@@ -45,14 +45,12 @@ np.define('ui.RenderView', () => {
     constructor(renderer, resolution) {
       super();
 
+      this._scene = null;
       this._renderer = renderer;
       this._resolution = resolution;
 
       this._pickingRenderTarget = null;
       this._pickingPixelBuffer = new Uint8Array(4);
-
-      this.setSize(renderer.getSize(), true);
-
       this._pickingMaterial = new THREE.RawShaderMaterial({
         vertexShader: [
           '#define SHADER_NAME vertMaterial',
@@ -82,6 +80,8 @@ np.define('ui.RenderView', () => {
             })
         }
       });
+
+      this.setSize(renderer.getSize(), true);
     }
 
     setSize(size, force) {
@@ -103,14 +103,21 @@ np.define('ui.RenderView', () => {
       }
     }
 
-    pick(mouseX, mouseY, scene, camera) {
+    setScene(scene) {
+      this._scene = scene;
+    }
+
+    pick(mouseX, mouseY) {
       var x = Math.round(mouseX * this._resolution),
           y = Math.round(mouseY * this._resolution),
           rt = this._pickingRenderTarget,
           pb = this._pickingPixelBuffer,
+          scene = this._scene.getRenderState().getScene(),
+          camera = this._scene.getRenderState().getCamera(),
           id = -1;
 
       this.setSize(this._renderer.getSize());
+
 
       scene.overrideMaterial = this._pickingMaterial;
       this._renderer.render(scene, camera, this._pickingRenderTarget);
@@ -119,8 +126,7 @@ np.define('ui.RenderView', () => {
       this._renderer.readRenderTargetPixels(rt, x, this._height - y, 1, 1, pb);
 
       id = (pb[0] << 16) | (pb[1] << 8) | pb[2];
-
-      return this._pickables[id];
+      return id;
     }
   }
 
@@ -135,7 +141,7 @@ np.define('ui.RenderView', () => {
             scene = this._player.getScene(),
             renderState = scene.getRenderState();
 
-        this._renderer.render(renderState.getRenderScene(), renderState.getCamera());
+        this._renderer.render(renderState.getScene(), renderState.getCamera());
       });
 
       this._renderer = null;

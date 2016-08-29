@@ -16,7 +16,7 @@ np.define('model.Entity', function() {
       this
         .getScene()
         .getRenderState()
-        .addRenderables(this._createRenderState());
+        .add(this._createRenderState());
     }
 
     applyState(state) {
