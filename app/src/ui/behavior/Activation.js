@@ -2,6 +2,7 @@ np.define('ui.Activation', () => {
   var Behavior = np.require('ui.Behavior');
 
   class Activation extends Behavior {
+
     constructor(owner, onActivate) {
       super(owner);
       this._onActivate = onActivate;

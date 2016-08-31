@@ -8,24 +8,24 @@ np.define('model.Project', () => {
   class Project extends Document {
     constructor() {
       super();
-      this._define('name', new Value(this, 'untitled'));
-      this._define('scenes', new List(this));
+      this.setMember('name', new Value(this, 'untitled'));
+      this.setMember('scenes', new List(this));
 
-      this._define('settings', new Settings(this));
+      this.setMember('settings', new Settings(this));
     }
 
-    getName() { return this._members.name.getValue(); }
+    getName() { return this.getMember('name').getValue(); }
 
     setName(value) {
-      this._members.name.setValue(value);
+      this.getMember('name').setValue(value);
       return this;
     }
 
     onNameChanged(handler, ctx) {
-      return this._members.name.onChanged(handler, ctx);
+      return this.getMember('name').onChanged(handler, ctx);
     }
 
-    getScenes() { return this._members.scenes; }
+    getScenes() { return this.getMember('scenes'); }
     getScene(index) { return this.getScenes().get(index); }
     onScenesChanged(handler, ctx) { return this.getScenes().onChanged(handler, ctx); }
     addScene(scene) { return this.getScenes().add(scene); }
@@ -33,7 +33,7 @@ np.define('model.Project', () => {
     removeScene(scene) { return this.getScenes().remove(scene); }
     removeSceneAt(index) { return this.getScenes().removeAt(index); }
 
-    getSettings() { return this._members.settings; }
+    getSettings() { return this.getMember('settings'); }
 
     static create() {
       var project = new Project();

@@ -7,7 +7,8 @@ np.define('model.State', () => {
       super(scene.getStates());
 
       this._scene = scene;
-      this._define('duration', new Value(this, 0));
+      this.setMember('duration', new Value(this, 0));
+      this.setMember('inputs', new Element(this));
     }
 
     getProject() { return this.getDocument(); }
@@ -41,17 +42,13 @@ np.define('model.State', () => {
       }
     }
 
-    getDuration() { return this._members.duration.getValue(); }
+    getDuration() { return this.getMember('duration').getValue(); }
 
-    setDuration(value) { return this._members.duration.setValue(value); }
+    setDuration(value) { return this.getMember('duration').setValue(value); }
 
-    onDurationChanged(handler, ctx) { return this._members.duration.onChanged(handler, ctx); }
+    onDurationChanged(handler, ctx) { return this.getMember('duration').onChanged(handler, ctx); }
 
     getStart() { this.getScene().getStateStart(this); }
-
-    hasEntries(slot) {
-      
-    }
 
 
 

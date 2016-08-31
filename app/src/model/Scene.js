@@ -8,8 +8,8 @@ np.define('model.Scene', () => {
     constructor(project) {
       super(project.getScenes());
 
-      this._define('states', new List(this));
-      this._define('entities', new List(this));
+      this.setMember('states', new List(this));
+      this.setMember('entities', new List(this));
 
       this._duration = -1;
       this.onStatesChanged(() => { this._duration = -1; });
@@ -68,7 +68,7 @@ np.define('model.Scene', () => {
       }
     }
 
-    getStates() { return this._members.states; }
+    getStates() { return this.getMember('states'); }
     getState(index) { return this.getStates().get(index); }
     onStatesChanged(handler, ctx) { return this.getStates().onChanged(handler, ctx); }
     addState(state) { return this.getStates().add(state); }
@@ -76,8 +76,8 @@ np.define('model.Scene', () => {
     removeState(state) { return this.getStates().remove(state); }
     removeStateAt(index) { return this.getStates().removeAt(index); }
 
-    getEntities() { return this._members.entities; }
-    onEntitiesChanged(handler, ctx) { return this._members.entities.onChanged(handler, ctx); }
+    getEntities() { return this.getMember('entities'); }
+    onEntitiesChanged(handler, ctx) { return this.getMember('entities').onChanged(handler, ctx); }
 
     getRenderState() { return this._renderState; }
 

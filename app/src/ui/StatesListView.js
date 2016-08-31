@@ -18,8 +18,8 @@ np.define('ui.StatesListView', () => {
       this._indicator.setContent(this._state.getDuration() <= 0 ? Icon.str('mouse') : Icon.str('play_arrow'));
       this._duration.setContent(this._state.getDuration() || '');
       this._state.onDurationChanged(evt => {
-        this._indicator.setContent(evt.newValue <= 0 ? Icon.str('mouse') : Icon.str('play_arrow'));
-        this._setDuration(evt.newValue);
+        this._indicator.setContent(evt.value <= 0 ? Icon.str('mouse') : Icon.str('play_arrow'));
+        this._setDuration(evt.value);
       });
       this._remove.onActivate(evt => {
         var state = this._state,
@@ -36,7 +36,7 @@ np.define('ui.StatesListView', () => {
 
       this.toggleClass('current', player.getState() === state);
       player.onStateChanged((evt) => {
-        this.toggleClass('current', evt.newValue === state);
+        this.toggleClass('current', evt.value === state);
       });
     }
 

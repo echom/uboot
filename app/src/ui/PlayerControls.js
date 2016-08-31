@@ -22,7 +22,7 @@ np.define('ui.PlayerControls', function() {
       this._fullscreen = this.add(new Button('div', 'btn', Icon.str('fullscreen')));
 
       this._playPause.onActivate(() => this._togglePlayPause());
-      this._loopToggle.onActiveChanged(evt => this._player.setLooping(evt.newValue));
+      this._loopToggle.onActiveChanged(evt => this._player.setLooping(evt.value));
       this._stateNext.onActivate(() => this._player.next());
     }
 

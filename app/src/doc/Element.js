@@ -1,20 +1,38 @@
 np.define('doc.Element', () => {
-  var DocNode = np.require('doc.Node');
+  var Event = np.require('np.Event'),
+      DocNode = np.require('doc.Node');
+
+  class ChangeEvent extends Event {
+    raise(index, added, removed) {
+      if (this.length) {
+        super.raise({
+          index: index,
+          added: added,
+          removed: removed
+        });
+      }
+    }
+  }
 
   class DocElement extends DocNode {
     constructor(parent) {
       super(parent);
       this._members = {};
+      this._changed = new ChangeEvent(this);
     }
-    _define(name, value) {
-      if (!this._members[name]) {
-        this._members[name] = value;
-        value.parent = this;
-      } else {
-        throw new Error('Element._define: "' + name + '" is already defined.');
+
+    setMember(name, newValue, force) {
+      var oldValue = this.getMember(name);
+
+      if ((oldValue !== newValue) || force) {
+        this._members[name] = newValue;
+        this._changed.raise(name, newValue, oldValue);
       }
-      return value;
+
+      return this;
     }
+
+    getMember(name) { return this._members[name]; }
 
     serialize() {
       var result = {},

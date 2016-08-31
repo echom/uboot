@@ -15,9 +15,7 @@ np.define('doc.Value', () => {
       return this;
     }
 
-    onChanged(handler, ctx) {
-      this._value.onChanged(handler, ctx);
-    }
+    onChanged(handler, ctx) { this._value.onChanged(handler, ctx); }
 
     serialize() { return this.getValue(); }
 

@@ -1,6 +1,7 @@
 np.define('ui.RenderView', () => {
   var Container = np.require('ui.Container'),
       Resizing = np.require('ui.Resizing'),
+      Activation = np.require('ui.Activation'),
       Disposable = np.require('np.Disposable');
 
   class RenderLoop {
@@ -58,9 +59,8 @@ np.define('ui.RenderView', () => {
           'uniform mat4 modelViewMatrix;',
           'uniform mat4 projectionMatrix;',
           'attribute vec3 position;',
-          'varying vec3 vPosition;',
           'void main()  {',
-          '  vPosition = ( modelViewMatrix * vec4( position, 1.0 ) ).xyz;',
+          '  vec3 vPosition = ( modelViewMatrix * vec4( position, 1.0 ) ).xyz;',
           '  gl_Position = projectionMatrix * vec4( vPosition, 1.0 );',
           '}'
         ].join('\n'),
@@ -68,7 +68,6 @@ np.define('ui.RenderView', () => {
           '#define SHADER_NAME fragMaterial',
           'precision highp float;',
           'uniform vec3 pickingColor;',
-          'varying vec3 vPosition;',
           'void main()  {',
           '  gl_FragColor = vec4( pickingColor, 1.0 );',
           '}'
@@ -94,7 +93,11 @@ np.define('ui.RenderView', () => {
         this._height = height;
 
         if (!this._pickingRenderTarget) {
-          this._pickingRenderTarget = new THREE.WebGLRenderTarget(width, height);
+          this._pickingRenderTarget = new THREE.WebGLRenderTarget(width, height, {
+            minFilter: THREE.NearestFilter,
+            magFilter: THREE.NearestFilter,
+            format: THREE.RGBFormat
+          });
           this._pickingRenderTarget.texture.generateMipmaps = false;
           this._pickingRenderTarget.texture.minFilter = THREE.NearestFilter;
         } else {
@@ -103,29 +106,24 @@ np.define('ui.RenderView', () => {
       }
     }
 
-    setScene(scene) {
-      this._scene = scene;
-    }
-
-    pick(mouseX, mouseY) {
+    pick(scene, mouseX, mouseY) {
       var x = Math.round(mouseX * this._resolution),
           y = Math.round(mouseY * this._resolution),
-          rt = this._pickingRenderTarget,
-          pb = this._pickingPixelBuffer,
-          scene = this._scene.getRenderState().getScene(),
-          camera = this._scene.getRenderState().getCamera(),
+          renderTarget = this._pickingRenderTarget,
+          pixelBuffer = this._pickingPixelBuffer,
+          renderScene = scene.getRenderState().getScene(),
+          renderCamera = scene.getRenderState().getCamera(),
           id = -1;
 
       this.setSize(this._renderer.getSize());
 
+      renderScene.overrideMaterial = this._pickingMaterial;
+      this._renderer.render(renderScene, renderCamera, renderTarget);
+      renderScene.overrideMaterial = null;
 
-      scene.overrideMaterial = this._pickingMaterial;
-      this._renderer.render(scene, camera, this._pickingRenderTarget);
-      scene.overrideMaterial = null;
+      this._renderer.readRenderTargetPixels(renderTarget, x, this._height - y, 1, 1, pixelBuffer);
 
-      this._renderer.readRenderTargetPixels(rt, x, this._height - y, 1, 1, pb);
-
-      id = (pb[0] << 16) | (pb[1] << 8) | pb[2];
+      id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | pixelBuffer[2];
       return id;
     }
   }
@@ -145,7 +143,8 @@ np.define('ui.RenderView', () => {
       });
 
       this._renderer = null;
-      this._canvas = null;
+      this._picking = null;
+
       this._resizing = new Resizing(this, (w, h) => {
         var dpi = devicePixelRatio,
             h2 = w / this._aspect,
@@ -154,25 +153,33 @@ np.define('ui.RenderView', () => {
 
         this._renderer.setSize(tw, th);
         this._renderer.setPixelRatio(dpi);
-        // this._canvas.width = tw * dpi;
-        // this._canvas.height = th * dpi;
 
         this._renderLoop.trigger();
       });
+      this._activation = new Activation(this, (evt) => {
+        var rect = evt.target.getBoundingClientRect(),
+            offsetX = evt.clientX - rect.left,
+            offsetY = evt.clientY - rect.top;
+        console.log(this._picking.pick(this._player.getScene(), offsetX, offsetY));
+      });
+
 
       this._player.onStateChanged(evt => this._renderLoop.trigger());
-      this._player.onRunningChanged(evt => this._renderLoop.trigger(evt.newValue));
+      this._player.onRunningChanged(evt => this._renderLoop.trigger(evt.value));
     }
 
     _createElement(doc, el) {
+      var canvas;
+
       super._createElement(doc, el);
 
       this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       this._renderer.setClearColor(0xffffff, 0);
-      this._canvas = this._renderer.domElement;
-      el.appendChild(this._canvas);
+      el.appendChild(canvas = this._renderer.domElement);
 
+      this._picking = new Picking(this._renderer, 0.5);
       this._resizing.setTarget(el, true);
+      this._activation.setTarget(canvas, true);
       this._renderLoop.trigger();
     }
 

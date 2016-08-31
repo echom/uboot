@@ -11,12 +11,12 @@ np.define('model.Settings', function() {
     constructor(parent) {
       super(parent);
 
-      this._define('aspect', new Value(this, ASPECT_16BY9));
+      this.setMember('aspect', new Value(this, ASPECT_16BY9));
     }
 
-    getAspect() { return this._members.aspect.getValue(); }
+    getAspect() { return this.getMember('aspect').getValue(); }
     setAspect(value) {
-      this._members.aspect.setValue(value);
+      this.getMember('aspect').setValue(value);
       return this;
     }
   }

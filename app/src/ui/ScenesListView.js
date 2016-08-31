@@ -28,7 +28,7 @@ np.define('ui.ScenesListView', () => {
 
       this.toggleClass('current', player.getScene() === scene);
       player.onSceneChanged(evt => {
-        this.toggleClass('current', evt.newValue === scene);
+        this.toggleClass('current', evt.value === scene);
       });
     }
 

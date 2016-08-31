@@ -10,15 +10,12 @@ np.define('doc.Node', () => {
       super();
 
       this._id = id++;
-      this._changed = new Event(this);
       this._parent = null;
       this._root = null;
 
       this._parent = parent || null;
       this._doc = parent ? parent.doc : null;
     }
-
-    onChanged(handler, ctx) { return this._changed.on(handler, ctx); }
 
     getDocument() { return this._parent ? this._parent.getDocument() : this; }
 

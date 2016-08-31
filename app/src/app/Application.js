@@ -48,7 +48,7 @@ np.define('app.Application', () => {
     }
 
     _onProjectChanged(evt) {
-      var project = evt.newValue;
+      var project = evt.value;
 
       if (this._offNameChanged) {
         this._offNameChanged();
@@ -63,7 +63,7 @@ np.define('app.Application', () => {
     }
 
     _onProjectNameChanged(evt) {
-      this._setTitle(evt.newValue);
+      this._setTitle(evt.value);
     }
 
     newProject() {
