@@ -9,7 +9,8 @@ var del = require('del'),
     concat = require('gulp-concat'),
     rename = require('gulp-rename'),
     eslint = require('gulp-eslint'),
-    uglify = require('gulp-uglify'),
+    uglify = require('uglify-js'),
+    minify = require('gulp-uglify/minifier'),
     postcss = require('gulp-postcss'),
     autoprefixer = require('autoprefixer'),
     cssnano = require('cssnano'),
@@ -56,11 +57,11 @@ gulp.task('build', ['copy-assets', 'copy-lib'], () => {
     .pipe(eslint.format())
     .pipe(concat('app.js'))
     .pipe(gulp.dest('dist'))
-    .pipe(uglify({
+    .pipe(minify({
       mangle: true,
       output: { max_line_len: 300 },
       compress: { hoist_vars: true }
-    }))
+    }, uglify))
     .on('error', gutil.log)
     .pipe(rename('app.min.js'))
     .pipe(gulp.dest('dist'));

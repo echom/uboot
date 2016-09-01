@@ -9,7 +9,6 @@ np.define('entities.BoxEntity', function() {
       this.addInput('rotation', new THREE.Vector3(0, 0, 0));
     }
 
-
     _createRenderState() {
       var geo = new THREE.BoxGeometry(1, 1, 1),
           mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 }),

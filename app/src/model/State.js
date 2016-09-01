@@ -50,9 +50,6 @@ np.define('model.State', () => {
 
     getStart() { this.getScene().getStateStart(this); }
 
-
-
-
     static create(scene) {
       return new State(scene);
     }

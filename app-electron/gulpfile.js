@@ -9,7 +9,8 @@ var del = require('del'),
     concat = require('gulp-concat'),
     rename = require('gulp-rename'),
     eslint = require('gulp-eslint'),
-    uglify = require('gulp-uglify'),
+    uglify = require('uglify-js'),
+    minify = require('gulp-uglify/minifier'),
     karmaConfigure = require('../tools/karma-configure');
 
 var paths = {
@@ -30,11 +31,11 @@ gulp.task('build', ['clean'], () => {
     .pipe(eslint.format())
     .pipe(concat('electron.js'))
     .pipe(gulp.dest('dist'))
-    .pipe(uglify({
+    .pipe(minify({
       mangle: true,
       output: { max_line_len: 300 },
       compress: { hoist_vars: true }
-    }))
+    }, uglify))
     .on('error', gutil.log)
     .pipe(rename('electron.min.js'))
     .pipe(gulp.dest('dist'));
