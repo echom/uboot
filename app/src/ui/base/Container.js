@@ -63,7 +63,7 @@ np.define('ui.Container', () => {
     }
 
     _dispose() {
-      Element.prototype._dispose.call(this);
+      super._dispose();
       this._children.forEach(child => child.dispose());
     }
   }

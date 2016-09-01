@@ -1,9 +1,9 @@
-np.define('doc.List', () => {
-  var Event = np.require('np.Event'),
-      List = np.require('np.List'),
-      DocNode = np.require('doc.Node');
+np.define('np.DocList', (require) => {
+  var Event = require('np.Event'),
+      List = require('np.List'),
+      DocNode = require('np.DocNode');
 
-  class ChangeEvent extends Event {
+  class ChangedEvent extends Event {
     raise(index, added, removed) {
       if (this.length) {
         super.raise({
@@ -16,19 +16,15 @@ np.define('doc.List', () => {
   }
 
   class DocList extends DocNode {
-    constructor(parent) {
-      super(parent);
+    constructor() {
+      super();
       this._items = new List();
-      this._changed = new ChangeEvent(this);
+      this._changed = new ChangedEvent();
     }
 
     get length() { return this._items.length; }
 
     onChanged(handler, ctx) { return this._changed.on(handler, ctx); }
-
-    serialize() {
-      return this._items.toArray(item => item.serialize());
-    }
 
     get(index) { return this._items.get(index); }
 
@@ -73,9 +69,18 @@ np.define('doc.List', () => {
       return this._items.toArray(mapFn, ctx);
     }
 
+    _orphan() {
+      super._orphan();
+      this.forEach(i => i._orphan(null));
+    }
+    _adopt(doc) {
+      super._adopt(doc);
+      this.forEach(i => i._adopt(doc));
+    }
+
     _dispose() {
-      DocNode.prototype._dispose.call(this);
-      this._items.forEach(item => item.dispose());
+      super._dispose();
+      this._items.forEach(i => i.dispose());
     }
   }
 

@@ -1,6 +1,6 @@
-np.define('np.Observable', () => {
-  var Disposable = np.require('np.Disposable'),
-      Event = np.require('np.Event');
+np.define('np.Observable', (require) => {
+  var Disposable = require('np.Disposable'),
+      Event = require('np.Event');
 
   class ChangeEvent extends Event {
     raise(value) {

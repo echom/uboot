@@ -1,14 +1,14 @@
 np.define('model.State', () => {
-  var Element = np.require('doc.Element'),
-      Value = np.require('doc.Value');
+  var DocElement = np.require('np.DocElement'),
+      DocValue = np.require('np.DocValue');
 
-  class State extends Element {
+  class State extends DocElement {
     constructor(scene) {
       super(scene.getStates());
 
       this._scene = scene;
-      this.setMember('duration', new Value(this, 0));
-      this.setMember('inputs', new Element(this));
+      this.setMember('duration', new DocValue(0));
+      this.setMember('inputs', new DocElement());
     }
 
     getProject() { return this.getDocument(); }

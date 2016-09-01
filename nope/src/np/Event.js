@@ -1,6 +1,5 @@
-np.define('np.Event', () => {
-  'use strict';
-  var Disposable = np.require('np.Disposable'),
+np.define('np.Event', (require) => {
+  var Disposable = require('np.Disposable'),
       EMPTY = Object.freeze({});
 
   class Event extends Disposable {

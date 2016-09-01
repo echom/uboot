@@ -31,7 +31,7 @@
     if (module) {
       return module;
     } else if (name in registry) {
-      module = registry[name](name);
+      module = registry[name](np.require, name);
       if (module === undefined) {
         throw new Error('np.require: Module "' + name + '" did not return anything.');
       }

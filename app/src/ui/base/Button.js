@@ -31,6 +31,7 @@ np.define('ui.Button', () => {
     }
 
     _dispose() {
+      super._dispose();
       this._activate.dispose();
       this._activation.dispose();
       Element.prototype._dispose.call(this);

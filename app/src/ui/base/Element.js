@@ -123,6 +123,7 @@ np.define('ui.Element', () => {
     }
 
     _dispose() {
+      super._dispose();
       this.detach();
     }
   }

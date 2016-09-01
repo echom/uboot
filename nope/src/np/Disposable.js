@@ -1,6 +1,4 @@
 np.define('np.Disposable', () => {
-  'use strict';
-
   class Disposable {
     constructor() {
       this._isDisposed = false;

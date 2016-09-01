@@ -53,6 +53,12 @@ np.define('ui.Toggle', function() {
       this._activation.setTarget(el);
       this.setActive(this._active, true);
     }
+
+    _dispose() {
+      super._dispose();
+      this._activation.dispose();
+      this._activeChanged.dispose();
+    }
   }
 
   return Toggle;

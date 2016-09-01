@@ -1,13 +1,13 @@
 np.define('model.Entity', function() {
-  var Element = np.require('doc.Element'),
+  var DocElement = np.require('np.DocElement'),
       Input = np.require('model.Input');
 
-  class Entity extends Element {
+  class Entity extends DocElement {
     constructor(scene) {
       super(scene.getEntities());
 
       this._scene = scene;
-      this.setMember('inputs', new Element(this));
+      this.setMember('inputs', new DocElement());
 
       this.createRenderState();
     }

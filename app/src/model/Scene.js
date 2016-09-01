@@ -1,15 +1,15 @@
 np.define('model.Scene', () => {
-  var Element = np.require('doc.Element'),
-      List = np.require('doc.List'),
+  var DocElement = np.require('np.DocElement'),
+      DocList = np.require('np.DocList'),
       State = np.require('model.State'),
       SceneRenderState = np.require('render.SceneRenderState');
 
-  class Scene extends Element {
+  class Scene extends DocElement {
     constructor(project) {
       super(project.getScenes());
 
-      this.setMember('states', new List(this));
-      this.setMember('entities', new List(this));
+      this.setMember('states', new DocList());
+      this.setMember('entities', new DocList());
 
       this._duration = -1;
       this.onStatesChanged(() => { this._duration = -1; });
