@@ -85,14 +85,11 @@ np.define('np.DocList', (require, name) => {
 
     serialize(serializer) {
       super.serialize(serializer);
-      serializer.write(
-        'items',
-        this.getItems().toArray((item) => serializer.serialize(item))
-      );
+      serializer.write('items', this.toArray((item) => serializer.serialize(item)));
     }
     deserialize(serializer) {
       super.deserialize(serializer);
-      serializer.read('items').forEach(item => this.getItems().add(item));
+      serializer.read('items').forEach(item => this.add(serializer.deserialize(item)));
     }
   }
 

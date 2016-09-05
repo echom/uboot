@@ -1,27 +1,39 @@
 np.define('np.DocRoot', (require, name) => {
-  var DocElement = require('np.DocElement');
+  var DocElement = require('np.DocElement'),
+      Serializer = require('np.Serializer');
 
   class DocRoot extends DocElement {
     constructor() {
       super();
       this._maxId = this._id = 0;
       this._nodes = {};
+      this._deserializing = false;
     }
 
     getRoot() { return this; }
 
     setParent() {
-      throw new Error('DocRoot.setParent: Cannot set parent node of root.');
+      throw new Error(
+        name + '.setParent: Cannot set parent node of root.'
+      );
     }
 
     getNodeById(id) { return this._nodes[id]; }
 
     register(node) {
-      var id = node.getId();
+      var id = node.getId(),
+          nd = this._nodes[id];
       if (id === -1) {
         id = ++this._maxId;
-        this._nodes[id] = node;
       }
+      if (!nd || this._deserializing) {
+        this._nodes[id] = node;
+      } else if (nd !== node) {
+        throw new Error(
+          name + '.register: Node ID "' + id + '" is already assigned to another node.'
+        );
+      }
+
       return id;
     }
     unregister(node) {
@@ -31,8 +43,15 @@ np.define('np.DocRoot', (require, name) => {
       }
       return -1;
     }
+
+    deserialize(serializer) {
+      this._deserializing = true;
+      super.deserialize(serializer);
+      this._deserializing = false;
+    }
   }
-  np.require('np.Serializer').register(name, DocRoot);
+
+  Serializer.register(name, DocRoot);
 
   return DocRoot;
 });

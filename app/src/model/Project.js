@@ -1,16 +1,16 @@
-np.define('model.Project', () => {
-  var DocRoot = np.require('np.DocRoot'),
-      DocList = np.require('np.DocList'),
-      DocValue = np.require('np.DocValue'),
-      Settings = np.require('model.Settings'),
-      Scene = np.require('model.Scene');
+np.define('model.Project', (require, name) => {
+  var DocRoot = require('np.DocRoot'),
+      DocList = require('np.DocList'),
+      DocValue = require('np.DocValue'),
+      Settings = require('model.Settings'),
+      Scene = require('model.Scene');
 
   class Project extends DocRoot {
     constructor() {
       super();
       this.setMember('name', new DocValue('untitled'));
       this.setMember('scenes', new DocList());
-      this.setMember('settings', new Settings(this));
+      this.setMember('settings', new Settings());
     }
 
     getName() { return this.getMember('name').getValue(); }
@@ -34,10 +34,12 @@ np.define('model.Project', () => {
 
     static create() {
       var project = new Project();
-      project.getScenes().add(Scene.create(project));
+      project.getScenes().add(Scene.create());
       return project;
     }
   }
+
+  require('np.Serializer').register(name, Project);
 
   return Project;
 });

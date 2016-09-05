@@ -1,15 +1,11 @@
-np.define('model.Entity', function() {
-  var DocElement = np.require('np.DocElement'),
-      Input = np.require('model.Input');
+np.define('model.Entity', function(require, name) {
+  var DocElement = require('np.DocElement'),
+      Input = require('model.Input');
 
   class Entity extends DocElement {
-    constructor(scene) {
-      super(scene.getEntities());
-
-      this._scene = scene;
+    constructor() {
+      super();
       this.setMember('inputs', new DocElement());
-
-      this.createRenderState();
     }
 
     getInputs() { return this.getMember('inputs'); }
@@ -17,19 +13,18 @@ np.define('model.Entity', function() {
       this.getInputs().setMember(new Input(group || 'default', name, value));
     }
 
-    getScene() { return this._scene; }
+    getScene() { return this.getParent().getParent(); }
 
     createRenderState() {
-      this
-        .getScene()
-        .getRenderState()
-        .add(this._createRenderState());
+      this.getScene().getRenderState().add(this._createRenderState());
     }
 
     applyState(state) {
       this._applyState(state, this._renderState);
     }
   }
+
+  require('np.Serializer').register(name, Entity);
 
   return Entity;
 });

@@ -1,19 +1,17 @@
-np.define('model.State', () => {
-  var DocElement = np.require('np.DocElement'),
-      DocValue = np.require('np.DocValue');
+np.define('model.State', (require, name) => {
+  var DocElement = require('np.DocElement'),
+      DocValue = require('np.DocValue');
 
   class State extends DocElement {
-    constructor(scene) {
-      super(scene.getStates());
-
-      this._scene = scene;
+    constructor() {
+      super();
       this.setMember('duration', new DocValue(0));
       this.setMember('inputs', new DocElement());
     }
 
     getProject() { return this.getRoot(); }
 
-    getScene() { return this._scene; }
+    getScene() { return this.getParent().getParent(); }
 
     getPredecessor(wrap) {
       var states = this.getParent(),
@@ -50,10 +48,12 @@ np.define('model.State', () => {
 
     getStart() { this.getScene().getStateStart(this); }
 
-    static create(scene) {
-      return new State(scene);
+    static create() {
+      return new State();
     }
   }
+
+  require('np.Serializer').register(name, State);
 
   return State;
 });

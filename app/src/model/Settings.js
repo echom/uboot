@@ -1,6 +1,6 @@
-np.define('model.Settings', function() {
-  var DocValue = np.require('np.DocValue'),
-      DocElement = np.require('np.DocElement'),
+np.define('model.Settings', function(require, name) {
+  var DocValue = require('np.DocValue'),
+      DocElement = require('np.DocElement'),
       ASPECT_4BY3 = 4 / 3,
       ASPECT_16BY9 = 16 / 9;
 
@@ -21,6 +21,8 @@ np.define('model.Settings', function() {
       return this;
     }
   }
+
+  require('np.Serializer').register(name, Settings);
 
   return Settings;
 });

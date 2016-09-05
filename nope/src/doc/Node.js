@@ -11,8 +11,15 @@ np.define('np.DocNode', (require, name) => {
     }
 
     getId() { return this._id; }
-
-    getRoot() { return this._root; }
+    getPath() {
+      var path = [],
+          node = this; // eslint-disable-line consistent-this
+      while (node) {
+        path.unshift(node.getId());
+        node = node.getParent();
+      }
+      return path.join('/');
+    }
 
     getParent() { return this._parent; }
     setParent(parent) {
@@ -20,6 +27,7 @@ np.define('np.DocNode', (require, name) => {
       this._setRoot(this._parent ? this._parent.getRoot() : null);
     }
 
+    getRoot() { return this._root; }
     _setRoot(root) {
       if (root !== this._root) {
         if (this._root) {

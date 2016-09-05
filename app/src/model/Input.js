@@ -1,10 +1,10 @@
-np.define('model.Input', () => {
-  var DocElement = np.require('np.DocElement'),
-      DocValue = np.require('np.DocValue');
+np.define('model.Input', (require, name) => {
+  var DocElement = require('np.DocElement'),
+      DocValue = require('np.DocValue');
 
   class Input extends DocElement {
     constructor(entity, group, name, value) {
-      super(entity);
+      super();
       this.setMember('name', name);
       this.setMember('group', group || 'default');
       this.setMember('value', new DocValue(value));
@@ -21,6 +21,8 @@ np.define('model.Input', () => {
       return this;
     }
   }
+
+  require('np.Serializer').register(name, Input);
 
   return Input;
 });

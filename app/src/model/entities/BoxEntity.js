@@ -1,9 +1,9 @@
-np.define('entities.BoxEntity', function() {
-  var Entity = np.require('model.Entity');
+np.define('entities.BoxEntity', function(require, name) {
+  var Entity = require('model.Entity');
 
   class BoxEntity extends Entity {
-    constructor(scene) {
-      super(scene);
+    constructor() {
+      super();
 
       this.addInput('position', new THREE.Vector3(0, 0, 0));
       this.addInput('rotation', new THREE.Vector3(0, 0, 0));
@@ -22,6 +22,8 @@ np.define('entities.BoxEntity', function() {
       return [box];
     }
   }
+
+  require('np.Serializer').register(name, BoxEntity);
 
   return BoxEntity;
 });

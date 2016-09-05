@@ -1,12 +1,12 @@
-np.define('model.Scene', () => {
-  var DocElement = np.require('np.DocElement'),
-      DocList = np.require('np.DocList'),
-      State = np.require('model.State'),
-      SceneRenderState = np.require('render.SceneRenderState');
+np.define('model.Scene', (require, name) => {
+  var DocElement = require('np.DocElement'),
+      DocList = require('np.DocList'),
+      State = require('model.State'),
+      SceneRenderState = require('render.SceneRenderState');
 
   class Scene extends DocElement {
-    constructor(project) {
-      super(project.getScenes());
+    constructor() {
+      super();
 
       this.setMember('states', new DocList());
       this.setMember('entities', new DocList());
@@ -14,7 +14,7 @@ np.define('model.Scene', () => {
       this._duration = -1;
       this.onStatesChanged(() => { this._duration = -1; });
 
-      this._renderState = new SceneRenderState(project.getSettings().getAspect());
+      this._renderState = null;
     }
 
     getProject() {
@@ -79,7 +79,14 @@ np.define('model.Scene', () => {
     getEntities() { return this.getMember('entities'); }
     onEntitiesChanged(handler, ctx) { return this.getMember('entities').onChanged(handler, ctx); }
 
-    getRenderState() { return this._renderState; }
+    getRenderState() {
+      if (this._renderState === null) {
+        this._renderState = new SceneRenderState(
+          this.getProject().getSettings().getAspect()
+        );
+      }
+      return this._renderState;
+    }
 
     static create(project) {
       var scene = new Scene(project),
@@ -89,6 +96,8 @@ np.define('model.Scene', () => {
       return scene;
     }
   }
+
+  require('np.Serializer').register(name, Scene);
 
   return Scene;
 });
