@@ -1,4 +1,4 @@
-np.define('np.DocValue', function(require) {
+np.define('np.DocValue', function(require, name) {
   var Observable = require('np.Observable'),
       DocNode = require('np.DocNode');
 
@@ -17,7 +17,18 @@ np.define('np.DocValue', function(require) {
       super._dispose();
       this._value.dispose();
     }
+
+    serialize(serializer) {
+      super.serialize(serializer);
+      serializer.write('value', this.getValue());
+    }
+    deserialize(serializer) {
+      super.deserialize(serializer);
+      this.setValue(serializer.read('value'));
+    }
   }
+
+  np.require('np.Serializer').register(name, DocValue);
 
   return DocValue;
 });

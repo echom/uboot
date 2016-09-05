@@ -1,4 +1,4 @@
-np.define('np.DocList', (require) => {
+np.define('np.DocList', (require, name) => {
   var Event = require('np.Event'),
       List = require('np.List'),
       DocNode = require('np.DocNode');
@@ -82,7 +82,21 @@ np.define('np.DocList', (require) => {
       super._dispose();
       this._items.forEach(i => i.dispose());
     }
+
+    serialize(serializer) {
+      super.serialize(serializer);
+      serializer.write(
+        'items',
+        this.getItems().toArray((item) => serializer.serialize(item))
+      );
+    }
+    deserialize(serializer) {
+      super.deserialize(serializer);
+      serializer.read('items').forEach(item => this.getItems().add(item));
+    }
   }
+
+  np.require('np.Serializer').register(name, DocList);
 
   return DocList;
 });

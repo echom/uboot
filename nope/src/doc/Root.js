@@ -1,6 +1,5 @@
-np.define('np.DocRoot', (require) => {
-  var Event = require('np.Event'),
-      DocElement = require('np.DocElement');
+np.define('np.DocRoot', (require, name) => {
+  var DocElement = require('np.DocElement');
 
   class DocRoot extends DocElement {
     constructor() {
@@ -9,10 +8,10 @@ np.define('np.DocRoot', (require) => {
       this._nodes = {};
     }
 
-    getDocument() { return this; }
+    getRoot() { return this; }
 
     setParent() {
-      throw new Error('Document.setParent: Cannot set parent node of document.');
+      throw new Error('DocRoot.setParent: Cannot set parent node of root.');
     }
 
     getNodeById(id) { return this._nodes[id]; }
@@ -33,6 +32,7 @@ np.define('np.DocRoot', (require) => {
       return -1;
     }
   }
+  np.require('np.Serializer').register(name, DocRoot);
 
   return DocRoot;
 });

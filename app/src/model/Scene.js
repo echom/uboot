@@ -18,7 +18,7 @@ np.define('model.Scene', () => {
     }
 
     getProject() {
-      return this.getDocument();
+      return this.getRoot();
     }
 
     getDuration() {

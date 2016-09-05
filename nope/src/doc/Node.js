@@ -7,36 +7,43 @@ np.define('np.DocNode', (require, name) => {
 
       this._id = -1;
       this._parent = null;
-      this._document = null;
+      this._root = null;
     }
 
     getId() { return this._id; }
 
-    getDocument() { return this._document; }
+    getRoot() { return this._root; }
 
     getParent() { return this._parent; }
     setParent(parent) {
       this._parent = parent;
-      this._setDocument(this._parent ? this._parent.getDocument() : null);
+      this._setRoot(this._parent ? this._parent.getRoot() : null);
     }
 
-    _setDocument(doc) {
-      if (doc !== this._document) {
-        if (this._document) {
+    _setRoot(root) {
+      if (root !== this._root) {
+        if (this._root) {
           this._orphan();
         }
-        if (doc) {
-          this._adopt(doc);
+        if (root) {
+          this._adopt(root);
         }
       }
     }
     _orphan() {
-      this._id = this._document.unregister(this);
-      this._document = null;
+      this._id = this._root.unregister(this);
+      this._root = null;
     }
-    _adopt(doc) {
-      this._document = doc;
-      this._id = this._document.register(this);
+    _adopt(root) {
+      this._root = root;
+      this._id = this._root.register(this);
+    }
+
+    serialize(serializer) {
+      serializer.write('id', this.getId());
+    }
+    deserialize(serializer) {
+      this._id = serializer.read('id');
     }
   }
 

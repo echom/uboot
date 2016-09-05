@@ -11,7 +11,7 @@ np.define('model.State', () => {
       this.setMember('inputs', new DocElement());
     }
 
-    getProject() { return this.getDocument(); }
+    getProject() { return this.getRoot(); }
 
     getScene() { return this._scene; }
 

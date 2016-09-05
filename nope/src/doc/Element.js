@@ -1,4 +1,4 @@
-np.define('np.DocElement', (require) => {
+np.define('np.DocElement', (require, name) => {
   var Event = require('np.Event'),
       DocNode = require('np.DocNode');
 
@@ -62,7 +62,25 @@ np.define('np.DocElement', (require) => {
       super._adopt(doc);
       this.forEach(m => m._adopt(doc));
     }
+
+    serialize(serializer) {
+      var members = {};
+      super.serialize(serializer);
+      this.forEach(
+        (member, name) => members[name] = serializer.serialize(member)
+      );
+      serializer.write('members', members);
+    }
+    deserialize(serializer) {
+      var members = serializer.read('members'),
+          key;
+      for (key in members) {
+        this.setMember(key, serializer.deserialize(members[key]));
+      }
+    }
   }
+
+  np.require('np.Serializer').register(name, DocElement);
 
   return DocElement;
 });
