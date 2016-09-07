@@ -26,6 +26,10 @@ np.define('np.DocElement', (require, name) => {
       var oldValue = this.getMember(name);
 
       if ((oldValue !== newValue) || force) {
+        if (oldValue instanceof DocNode) {
+          oldValue.setParent(null);
+        }
+
         this._members[name] = newValue;
 
         if (newValue instanceof DocNode) {

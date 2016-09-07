@@ -1,6 +1,7 @@
 np.define('app.ElectronEnv', () => {
   var Env = np.require('app.Env'),
-      electron = require('electron').remote;
+      electron = require('electron').remote,
+      fs = electron.require('fs');
 
   class ElectronEnv extends Env {
     constructor(win) {
@@ -83,10 +84,22 @@ np.define('app.ElectronEnv', () => {
     }
 
     persist(persistInfo, toPersist) {
-      throw new Error('abstract invocation');
+      return new Promise((resolve, reject) => {
+        fs.writeFile(
+          persistInfo.path,
+          JSON.stringify(toPersist),
+          (err) => err ? reject(err) : resolve()
+        );
+      });
     }
+
     restore(persistInfo) {
-      throw new Error('abstract invocation');
+      return new Promise((resolve, reject) => {
+        fs.readFile(
+          persistInfo.path,
+          (err, data) => err ? reject(err) : resolve(JSON.parse(data))
+        );
+      });
     }
 
     setTitle(title) {

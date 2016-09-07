@@ -1,5 +1,6 @@
 np.define('app.Application', () => {
   var Observable = np.require('np.Observable'),
+      Serializer = np.require('np.Serializer'),
       Project = np.require('model.Project'),
       Player = np.require('app.Player');
 
@@ -90,7 +91,9 @@ np.define('app.Application', () => {
     }
 
     _persistProject(persistInfo) {
-      return this._env.persist(persistInfo, this._project.serialize())
+      var serializer = new Serializer();
+
+      return this._env.persist(persistInfo, serializer.serialize(this.getProject()))
         .then(() => {
           this._persistInfo = persistInfo;
           this._recorder.reset();
@@ -103,9 +106,10 @@ np.define('app.Application', () => {
     }
 
     _restoreProject(persistInfo) {
+      var serializer = new Serializer();
       return this._env.restore(persistInfo)
         .then(restored => {
-          this._setProject(Project.deserialize(restored));
+          this._setProject(serializer.deserialize(restored));
           this._persistInfo = persistInfo;
         });
     }
