@@ -12,7 +12,7 @@ np.define('ui.ApplicationView', () => {
 
       application.onProjectChanged(evt => {
         this.remove(this._projectView);
-        this._projectView = this.add(new ProjectView(application.getProject(), evt.value));
+        this._projectView = this.add(new ProjectView(application.getProject(), application.getPlayer()));
       });
     }
   }

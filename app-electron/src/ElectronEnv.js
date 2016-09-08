@@ -51,7 +51,11 @@ np.define('app.ElectronEnv', () => {
     queryPersistInfo(persistInfo) {
       var that = this;
       return new Promise((resolve, reject) => {
-        var opts = {};
+        var opts = {
+          filters: [
+            { name: 'Uboot Project', extensions: ['ubt'] }
+          ]
+        };
         if (persistInfo) {
           opts.defaultPath = persistInfo.path;
         }
@@ -68,14 +72,19 @@ np.define('app.ElectronEnv', () => {
     queryRestoreInfo(persistInfo) {
       var that = this;
       return new Promise((resolve, reject) => {
-        var opts = { properties: ['openFile', 'createDirectory'] };
+        var opts = {
+          properties: ['openFile', 'createDirectory'],
+          filters: [
+            { name: 'Uboot Project', extensions: ['ubt'] }
+          ]
+        };
         if (persistInfo) {
           opts.defaultPath = persistInfo.path;
         }
 
         electron.dialog.showOpenDialog(that._win, opts, (result) => {
           if (result) {
-            resolve({ path: result });
+            resolve({ path: result[0] });
           } else {
             reject('cancel');
           }

@@ -7,6 +7,8 @@ np.define('np.DocRoot', (require, name) => {
       super();
       this._maxId = this._id = 0;
       this._nodes = {};
+
+      this._deserializing = false;
     }
 
     getRoot() { return this; }
@@ -41,6 +43,12 @@ np.define('np.DocRoot', (require, name) => {
         delete this._nodes[node.getId()];
       }
       return -1;
+    }
+
+    deserialize(serializer) {
+      this._deserializing = true;
+      super.deserialize(serializer);
+      this._deserializing = false;
     }
   }
 
