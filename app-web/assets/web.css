@@ -1,0 +1,36 @@
+.persist {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.persist-projects {
+  border-radius: 0.3rem;
+  margin: 2rem 0;
+}
+
+.persist-projects li {
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  box-sizing: border-box;
+  border-left: 5px solid transparent;
+}
+.persist-projects li:nth-child(odd) {
+  background: #313131;
+}
+.persist-projects li:first-child {
+  border-top-right-radius: 0.3rem;
+  border-top-left-radius: 0.3rem;
+}
+.persist-projects li:last-child {
+  border-bottom-right-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+
+.persist-projects li:hover {
+  background: #000
+}
+.persist-projects li.selected {
+  border-left: 5px solid #fff;
+}

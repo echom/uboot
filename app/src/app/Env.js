@@ -4,9 +4,9 @@ np.define('app.Env', () => {
 
     queryOkCancel(message) { throw new Error('abstract invocation'); }
 
-    queryPersistInfo() { throw new Error('abstract invocation'); }
+    queryPersistInfo(/* persistInfo */) { throw new Error('abstract invocation'); }
 
-    queryRestoreInfo() { throw new Error('abstract invocation'); }
+    queryRestoreInfo(/* persistInfo */) { throw new Error('abstract invocation'); }
 
     persist(persistInfo, toPersist) { throw new Error('abstract invocation'); }
 

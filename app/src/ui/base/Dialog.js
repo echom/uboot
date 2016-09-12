@@ -10,7 +10,7 @@ np.define('ui.Dialog', () => {
 
       this._closed = new Event(this);
       this._content = null;
-      this._frame = this.add(new Container('div', 'dialog-frame'));
+      this._frame = this.add(new Container('div', 'dialog-frame bright ui'));
       this._contents = this._frame.add(new Element('div', 'dialog-content'));
       this._buttons = this._frame.add(new Container('div', 'dialog-buttons'));
 
@@ -54,13 +54,13 @@ np.define('ui.Dialog', () => {
 
     _makeButtons(buttons) {
       if (!buttons || !buttons.length) {
-        this._buttons.add(new Button(null, null, '<small>OK</small>', this._confirm));
+        this._buttons.add(new Button('div', 'btn', '<span>OK</span>', this._confirm));
       } else {
         buttons.forEach(btn => this._buttons.add(
           new Button(
             'div',
             'btn',
-            '<small>' + btn.name + '</small>',
+            '<span>' + btn.name + '</span>',
             btn.confirm ? this._confirm : this._cancel
           )
         ));

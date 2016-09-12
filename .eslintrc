@@ -94,7 +94,6 @@
     "no-trailing-spaces": 2,
     "no-unneeded-ternary": 2,
     "no-whitespace-before-property": 2,
-    "object-curly-newline": [2, { "multiline": true, "minProperties": 3 }],
     "object-curly-spacing": [2, "always"],
     "object-property-newline": [2, { "allowMultiplePropertiesPerLine": true }],
     "one-var-declaration-per-line": [2, "initializations"],

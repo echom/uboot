@@ -52,6 +52,7 @@ gulp.task('watch', ['build'], () => {
   gulp.watch('app/assets/**/*.*', ['pull:app']);
   gulp.watch('app-electron/src/**/*.js', ['build:electron']);
   gulp.watch('app-web/src/**/*.js', ['build:web']);
+  gulp.watch('app-web/assets/**/*.*', ['build:web']);
 });
 
 gulp.task('default', ['build']);

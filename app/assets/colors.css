@@ -1,9 +1,11 @@
-body {
+body,
+.dark {
   background: #455A64;
   color: #fff;
 }
 
-body .material-icons {
+body .material-icons,
+.dark .material-icons {
   color: inherit;
 }
 

@@ -11,6 +11,9 @@ var del = require('del'),
     eslint = require('gulp-eslint'),
     uglify = require('uglify-js'),
     minify = require('gulp-uglify/minifier'),
+    postcss = require('gulp-postcss'),
+    autoprefixer = require('autoprefixer'),
+    cssnano = require('cssnano'),
     karmaConfigure = require('../tools/karma-configure');
 
 var paths = {
@@ -23,9 +26,19 @@ var paths = {
   specs: 'src/**/*.spec.js'
 };
 
-gulp.task('clean', () => del(['dist/web.js', 'dist/web.min.js']));
+gulp.task('clean', () => del(['dist/web.js', 'dist/web.min.js', 'dist/web.css']));
 
-gulp.task('build', ['clean'], () => {
+gulp.task('copy-assets', ['clean'], () => {
+  return gulp.src('assets/*.css')
+    .pipe(concat('web.css'))
+    .pipe(postcss([
+      autoprefixer({ browsers: ['last 1 version'] }),
+      cssnano()
+    ]))
+    .pipe(gulp.dest('dist/assets'));
+});
+
+gulp.task('build', ['clean', 'copy-assets'], () => {
   return gulp.src(paths.src)
     .pipe(eslint({ useEslintrc: true }))
     .pipe(eslint.format())

@@ -257,7 +257,7 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   box-shadow: 15px 15px 40px 0px rgba(0,0,0,0.4);
   border-bottom-right-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
-  padding: 2rem 2rem 1rem;
+  padding: 2rem 3rem 1rem;
   flex: 0 1 auto;
   min-width: 40rem;
   max-width: 85%;
@@ -271,7 +271,9 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 .dialog-content {
   padding-top: 1rem;
   flex: 0 1 auto;
+  display: flex;
 }
+
 .dialog-buttons {
   display: flex;
   justify-content: flex-end;
