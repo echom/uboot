@@ -54,9 +54,9 @@ np.define('ui.Dialog', () => {
 
     _makeButtons(buttons) {
       if (!buttons || !buttons.length) {
-        this.add(new Button(null, null, 'OK', this._confirm));
+        this._buttons.add(new Button(null, null, 'OK', this._confirm));
       } else {
-        buttons.forEach(btn => this.add(
+        buttons.forEach(btn => this._buttons.add(
           new Button(null, null, btn.name, btn.confirm ? this._confirm : this._cancel)
         ));
       }
@@ -81,6 +81,20 @@ np.define('ui.Dialog', () => {
       return new Promise((resolve, reject) => {
         var dialog = new Dialog(opts.buttons);
         dialog.setContent('<div class="dialog-message">' + opts.message + '</div>');
+        dialog.onClosed(evt => {
+          if (evt.confirmed) {
+            resolve(evt.result);
+          } else {
+            reject(evt.result);
+          }
+        });
+        doc.body.appendChild(dialog.createElement(doc));
+      });
+    }
+    static showDialog(doc, opts) {
+      return new Promise((resolve, reject) => {
+        var dialog = new Dialog(opts.buttons);
+        dialog.setContent(opts.content);
         dialog.onClosed(evt => {
           if (evt.confirmed) {
             resolve(evt.result);

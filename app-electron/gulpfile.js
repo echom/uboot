@@ -11,9 +11,6 @@ var del = require('del'),
     eslint = require('gulp-eslint'),
     uglify = require('uglify-js'),
     minify = require('gulp-uglify/minifier'),
-    postcss = require('gulp-postcss'),
-    autoprefixer = require('autoprefixer'),
-    cssnano = require('cssnano'),
     karmaConfigure = require('../tools/karma-configure');
 
 var paths = {
@@ -26,32 +23,9 @@ var paths = {
   specs: 'src/**/*.spec.js'
 };
 
-gulp.task('clean', () => del([
-  'dist/lib/iconfont/*.*',
-  'dist/lib/three/*.*'
-]));
+gulp.task('clean', () => del(['dist/electron.js', 'dist/electron.min.js']));
 
-gulp.task('copy-assets', ['clean'], () => {
-  return gulp.src('assets/*.css')
-    .pipe(concat('app.css'))
-    .pipe(postcss([
-      autoprefixer({ browsers: ['last 1 version'] }),
-      cssnano()
-    ]))
-    .pipe(gulp.dest('dist/assets'));
-});
-
-gulp.task('copy-lib', ['clean', 'copy-icons', 'copy-three']);
-gulp.task('copy-icons', () => {
-  return gulp.src('../node_modules/material-design-icons/iconfont/*.*')
-    .pipe(gulp.dest('dist/lib/iconfont'));
-});
-gulp.task('copy-three', () => {
-  return gulp.src('../node_modules/three/build/*.*')
-    .pipe(gulp.dest('dist/lib/three'));
-});
-
-gulp.task('build', ['copy-assets', 'copy-lib'], () => {
+gulp.task('build', ['clean'], () => {
   return gulp.src(paths.src)
     .pipe(eslint({ useEslintrc: true }))
     .pipe(eslint.format())

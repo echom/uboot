@@ -155,7 +155,7 @@ np.define('ui.List', function() {
     constructor(type, selectable, classNames) {
       super(type || 'ul', classNames);
 
-      this.setSelectable(selectable);
+      this.setSelectable(!!selectable);
       this._selection = new Selection();
       this._selectionChanged = new Event(this);
     }

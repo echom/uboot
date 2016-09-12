@@ -69,11 +69,13 @@ np.define('app.Application', () => {
 
     newProject() {
       var project = this.getProject();
-
       if (project && this._recorder.hasChanges) {
         this._env.queryYesNo(project.getName() + ' has unsaved changes. Do you want to save it?')
           .then(this.persistProject, np.noop)
-          .then(() => this._setProject(Project.create()));
+          .then(() => {
+            this._setProject(Project.create());
+            this._persistInfo = null;
+          });
       } else {
         this._setProject(Project.create());
       }
@@ -87,7 +89,7 @@ np.define('app.Application', () => {
 
     persistProjectAs() {
       return this._env.queryPersistInfo(this._persistInfo)
-        .then(this._persistProject);
+        .then(this._persistProject, np.noop);
     }
 
     _persistProject(persistInfo) {
@@ -96,6 +98,7 @@ np.define('app.Application', () => {
       return this._env.persist(persistInfo, serializer.serialize(this.getProject()))
         .then(() => {
           this._persistInfo = persistInfo;
+          this.getProject().setName(this._persistInfo.path.split('/').pop());
           this._recorder.reset();
         });
     }
@@ -111,6 +114,7 @@ np.define('app.Application', () => {
         .then(restored => {
           this._setProject(serializer.deserialize(restored));
           this._persistInfo = persistInfo;
+          this.getProject().setName(this._persistInfo.path.split('/').pop());
         });
     }
   }

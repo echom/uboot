@@ -44,7 +44,7 @@ gulp.task('pull:app', ['build:app'], () => {
     .pipe(gulp.dest('app-web/dist'));
 });
 
-gulp.task('build', ['pull:nope', 'pull:app', 'build:electron', 'build:web']);
+gulp.task('build', ['build:electron', 'build:web', 'pull:nope', 'pull:app']);
 
 gulp.task('watch', ['build'], () => {
   gulp.watch('nope/src/**/*.js', ['pull:nope']);

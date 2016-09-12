@@ -23,7 +23,7 @@ var paths = {
   specs: 'src/**/*.spec.js'
 };
 
-gulp.task('clean', () => del(['dist/*']));
+gulp.task('clean', () => del(['dist/web.js', 'dist/web.min.js']));
 
 gulp.task('build', ['clean'], () => {
   return gulp.src(paths.src)
