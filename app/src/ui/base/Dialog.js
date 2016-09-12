@@ -54,10 +54,15 @@ np.define('ui.Dialog', () => {
 
     _makeButtons(buttons) {
       if (!buttons || !buttons.length) {
-        this._buttons.add(new Button(null, null, 'OK', this._confirm));
+        this._buttons.add(new Button(null, null, '<small>OK</small>', this._confirm));
       } else {
         buttons.forEach(btn => this._buttons.add(
-          new Button(null, null, btn.name, btn.confirm ? this._confirm : this._cancel)
+          new Button(
+            'div',
+            'btn',
+            '<small>' + btn.name + '</small>',
+            btn.confirm ? this._confirm : this._cancel
+          )
         ));
       }
     }

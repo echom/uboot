@@ -247,25 +247,33 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 .dialog-frame {
   background: rgb(220, 220, 220);
-  border: 1px solid rgb(190, 190, 190);
-  border-radius: 0.5rem;
-  padding: 2rem;
+  box-shadow: 15px 15px 40px 0px rgba(0,0,0,0.4);
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  padding: 2rem 2rem 1rem;
   flex: 0 1 auto;
-  min-width: 15rem;
+  min-width: 40rem;
   max-width: 85%;
+  display: flex;
+  flex-direction: column;
 }
 .dialog-message {
-  margin: 1rem;
+  padding-top: 1rem;
   text-align: center;
+}
+.dialog-content {
+  padding-top: 1rem;
+  flex: 0 1 auto;
 }
 .dialog-buttons {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-top: 1rem;
 }
