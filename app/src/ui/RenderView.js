@@ -96,7 +96,7 @@ np.define('ui.RenderView', () => {
           this._pickingRenderTarget = new THREE.WebGLRenderTarget(width, height, {
             minFilter: THREE.NearestFilter,
             magFilter: THREE.NearestFilter,
-            format: THREE.RGBFormat
+            format: THREE.RGBAFormat
           });
           this._pickingRenderTarget.texture.generateMipmaps = false;
           this._pickingRenderTarget.texture.minFilter = THREE.NearestFilter;
@@ -125,6 +125,58 @@ np.define('ui.RenderView', () => {
 
       id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | pixelBuffer[2];
       return id;
+    }
+  }
+
+  class Preview extends Disposable {
+    constructor(renderer, size) {
+      super();
+
+      this._scene = null;
+      this._renderer = renderer;
+
+      this._previewRenderTarget = null;
+      this._previewPixelBuffer = null;
+
+      this.setSize(size, true);
+    }
+
+    setSize(width, height, force) {
+      if (this._width !== width || this._height !== height || force) {
+        this._width = width;
+        this._height = height;
+
+        if (!this._previewRenderTarget) {
+          this._previewRenderTarget = new THREE.WebGLRenderTarget(width, height, {
+            format: THREE.RGBAFormat
+          });
+          this._previewRenderTarget.texture.generateMipmaps = false;
+          this._previewRenderTarget.texture.minFilter = THREE.NearestFilter;
+        } else {
+          this._pickingRenderTarget.setSize(width, height);
+        }
+        if (!this._previewPixelBuffer) {
+          this._previewPixelBuffer = new Uint8Array(4 * width * height);
+        }
+      }
+    }
+
+    render(scene, canvas) {
+      var renderTarget = this._pickingRenderTarget,
+          pixelBuffer = this._pickingPixelBuffer,
+          renderScene = scene.getRenderState().getScene(),
+          renderCamera = scene.getRenderState().getCamera();
+
+      this.setSize(canvas.width, canvas.height);
+
+      renderScene.overrideMaterial = this._pickingMaterial;
+      this._renderer.render(renderScene, renderCamera, renderTarget);
+      renderScene.overrideMaterial = null;
+
+      this._renderer.readRenderTargetPixels(
+        renderTarget, 0, 0, this._width, this._height, pixelBuffer);
+
+      canvas.getContext('2d').putImageData(pixelBuffer, 0, 0);
     }
   }
 

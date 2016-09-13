@@ -84,7 +84,9 @@ np.define('model.Scene', (require, name) => {
         this._renderState = new SceneRenderState(
           this.getProject().getSettings().getAspect()
         );
+        this.getEntities().forEach(entity => entity.createRenderState());
       }
+
       return this._renderState;
     }
 
