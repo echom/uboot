@@ -1,8 +1,8 @@
-np.define('ui.RenderView', () => {
-  var Container = np.require('ui.Container'),
-      Resizing = np.require('ui.Resizing'),
-      Activation = np.require('ui.Activation'),
-      Disposable = np.require('np.Disposable');
+np.define('ui.RenderView', (require) => {
+  var Container = require('ui.Container'),
+      Resizing = require('ui.Resizing'),
+      Activation = require('ui.Activation'),
+      Picker = require('render.Picker');
 
   class RenderLoop {
     static get SLEEP_THRESHOLD() { return 2000; }
@@ -42,146 +42,8 @@ np.define('ui.RenderView', () => {
     }
   }
 
-  class Picking extends Disposable {
-    constructor(renderer, resolution) {
-      super();
-
-      this._scene = null;
-      this._renderer = renderer;
-      this._resolution = resolution;
-
-      this._pickingRenderTarget = null;
-      this._pickingPixelBuffer = new Uint8Array(4);
-      this._pickingMaterial = new THREE.RawShaderMaterial({
-        vertexShader: [
-          '#define SHADER_NAME vertMaterial',
-          'precision highp float;',
-          'uniform mat4 modelViewMatrix;',
-          'uniform mat4 projectionMatrix;',
-          'attribute vec3 position;',
-          'void main()  {',
-          '  vec3 vPosition = ( modelViewMatrix * vec4( position, 1.0 ) ).xyz;',
-          '  gl_Position = projectionMatrix * vec4( vPosition, 1.0 );',
-          '}'
-        ].join('\n'),
-        fragmentShader: [
-          '#define SHADER_NAME fragMaterial',
-          'precision highp float;',
-          'uniform vec3 pickingColor;',
-          'void main()  {',
-          '  gl_FragColor = vec4( pickingColor, 1.0 );',
-          '}'
-        ].join('\n'),
-        uniforms: {
-          pickingColor: new THREE.Uniform(new THREE.Color())
-            .onUpdate(function(object, camera) {
-              this.value.setHex(object.data.pickingId || 0);
-            })
-        }
-      });
-
-      this.setSize(renderer.getSize(), true);
-    }
-
-    setSize(size, force) {
-      var resolution = this._resolution,
-          width = Math.round(size.width * resolution),
-          height = Math.round(size.height * resolution);
-
-      if (this._width !== width || this._height !== height || force) {
-        this._width = width;
-        this._height = height;
-
-        if (!this._pickingRenderTarget) {
-          this._pickingRenderTarget = new THREE.WebGLRenderTarget(width, height, {
-            minFilter: THREE.NearestFilter,
-            magFilter: THREE.NearestFilter,
-            format: THREE.RGBAFormat
-          });
-          this._pickingRenderTarget.texture.generateMipmaps = false;
-          this._pickingRenderTarget.texture.minFilter = THREE.NearestFilter;
-        } else {
-          this._pickingRenderTarget.setSize(width, height);
-        }
-      }
-    }
-
-    pick(scene, mouseX, mouseY) {
-      var x = Math.round(mouseX * this._resolution),
-          y = Math.round(mouseY * this._resolution),
-          renderTarget = this._pickingRenderTarget,
-          pixelBuffer = this._pickingPixelBuffer,
-          renderScene = scene.getRenderState().getScene(),
-          renderCamera = scene.getRenderState().getCamera(),
-          id = -1;
-
-      this.setSize(this._renderer.getSize());
-
-      renderScene.overrideMaterial = this._pickingMaterial;
-      this._renderer.render(renderScene, renderCamera, renderTarget);
-      renderScene.overrideMaterial = null;
-
-      this._renderer.readRenderTargetPixels(renderTarget, x, this._height - y, 1, 1, pixelBuffer);
-
-      id = (pixelBuffer[0] << 16) | (pixelBuffer[1] << 8) | pixelBuffer[2];
-      return id;
-    }
-  }
-
-  class Preview extends Disposable {
-    constructor(renderer, size) {
-      super();
-
-      this._scene = null;
-      this._renderer = renderer;
-
-      this._previewRenderTarget = null;
-      this._previewPixelBuffer = null;
-
-      this.setSize(size, true);
-    }
-
-    setSize(width, height, force) {
-      if (this._width !== width || this._height !== height || force) {
-        this._width = width;
-        this._height = height;
-
-        if (!this._previewRenderTarget) {
-          this._previewRenderTarget = new THREE.WebGLRenderTarget(width, height, {
-            format: THREE.RGBAFormat
-          });
-          this._previewRenderTarget.texture.generateMipmaps = false;
-          this._previewRenderTarget.texture.minFilter = THREE.NearestFilter;
-        } else {
-          this._pickingRenderTarget.setSize(width, height);
-        }
-        if (!this._previewPixelBuffer) {
-          this._previewPixelBuffer = new Uint8Array(4 * width * height);
-        }
-      }
-    }
-
-    render(scene, canvas) {
-      var renderTarget = this._pickingRenderTarget,
-          pixelBuffer = this._pickingPixelBuffer,
-          renderScene = scene.getRenderState().getScene(),
-          renderCamera = scene.getRenderState().getCamera();
-
-      this.setSize(canvas.width, canvas.height);
-
-      renderScene.overrideMaterial = this._pickingMaterial;
-      this._renderer.render(renderScene, renderCamera, renderTarget);
-      renderScene.overrideMaterial = null;
-
-      this._renderer.readRenderTargetPixels(
-        renderTarget, 0, 0, this._width, this._height, pixelBuffer);
-
-      canvas.getContext('2d').putImageData(pixelBuffer, 0, 0);
-    }
-  }
-
   class RenderView extends Container {
-    constructor(project, player) {
+    constructor(project, player, renderer) {
       super('div', 'app-render');
 
       this._player = player;
@@ -194,8 +56,10 @@ np.define('ui.RenderView', () => {
         this._renderer.render(renderState.getScene(), renderState.getCamera());
       });
 
-      this._renderer = null;
-      this._picking = null;
+      this._renderer = renderer;
+      this._renderer.setClearColor(0xffffff, 0);
+
+      this._picker = new Picker(this._renderer, 0.5);
 
       this._resizing = new Resizing(this, (w, h) => {
         var dpi = devicePixelRatio,
@@ -212,31 +76,26 @@ np.define('ui.RenderView', () => {
         var rect = evt.target.getBoundingClientRect(),
             offsetX = evt.clientX - rect.left,
             offsetY = evt.clientY - rect.top;
-        console.log(this._picking.pick(this._player.getScene(), offsetX, offsetY));
+        console.log(this._picker.pick(this._player.getScene(), offsetX, offsetY));
       });
-
 
       this._player.onStateChanged(evt => this._renderLoop.trigger());
       this._player.onRunningChanged(evt => this._renderLoop.trigger(evt.value));
     }
 
     _createElement(doc, el) {
-      var canvas;
-
       super._createElement(doc, el);
+      el.appendChild(this._renderer.domElement);
 
-      this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      this._renderer.setClearColor(0xffffff, 0);
-      el.appendChild(canvas = this._renderer.domElement);
-
-      this._picking = new Picking(this._renderer, 0.5);
       this._resizing.setTarget(el, true);
-      this._activation.setTarget(canvas, true);
+      this._activation.setTarget(this._renderer.domElement, true);
       this._renderLoop.trigger();
     }
 
     _dispose() {
+      this._picker.dispose();
       this._resizing.dispose();
+      this._activation.dispose();
     }
   }
 

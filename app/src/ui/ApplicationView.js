@@ -8,11 +8,20 @@ np.define('ui.ApplicationView', () => {
       super('div', 'app');
 
       this._toolbar = this.add(new Toolbar(application));
-      this._projectView = this.add(new ProjectView(application.getProject(), application.getPlayer()));
+      this._projectView = this.add(new ProjectView(
+        application.getProject(),
+        application.getPlayer(),
+        application.getRenderer()
+      ));
 
       application.onProjectChanged(evt => {
         this.remove(this._projectView);
-        this._projectView = this.add(new ProjectView(application.getProject(), application.getPlayer()));
+        this._projectView = this.add(
+          new ProjectView(
+            application.getProject(),
+            application.getPlayer(),
+            application.getRenderer()
+          ));
       });
     }
   }

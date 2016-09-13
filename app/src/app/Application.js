@@ -10,6 +10,9 @@ np.define('app.Application', () => {
       this._project = new Observable(null, this);
       this._player = null;
 
+      this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      this._renderer.setClearColor(0xffffff, 0);
+
       this._persistInfo = null;
 
       this._recorder = {
@@ -35,6 +38,8 @@ np.define('app.Application', () => {
     }
 
     getPlayer() { return this._player; }
+
+    getRenderer() { return this._renderer; }
 
     _setTitle(title) {
       this._env.setTitle(title);

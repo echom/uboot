@@ -2,14 +2,15 @@ np.define('ui.ScenesListView', () => {
   var Button = np.require('ui.Button'),
       List = np.require('ui.List'),
       Scene = np.require('model.Scene'),
-      SceneView = np.require('ui.SceneView');
+      SceneView = np.require('ui.SceneView'),
+      Thumbnail = np.require('render.Thumbnail');
 
   class ScenesListItem extends List.Item {
-    constructor(scene, player) {
+    constructor(scene, player, thumbnail) {
       super('li', 'app-scenes-item');
 
       this._addBefore = this.add(new Button('div', 'add-scene-before', '+'));
-      this._sceneView = this.add(new SceneView(scene, player));
+      this._sceneView = this.add(new SceneView(scene, player, thumbnail));
       this._addAfter = this.add(new Button('div', 'add-scene-after', '+'));
 
       this._addBefore.onActivate(evt => {
@@ -36,11 +37,12 @@ np.define('ui.ScenesListView', () => {
   }
 
   class ScenesListView extends List {
-    constructor(scenes, player) {
+    constructor(scenes, player, renderer) {
       super('ul', List.multiSelection, 'ui app-scenes');
 
       this._scenes = scenes;
       this._player = player;
+      this._thumbnail = new Thumbnail(renderer);
 
       scenes.forEach(scene => this.add(this._createItem(scene)));
       scenes.onChanged(evt => {
@@ -54,7 +56,7 @@ np.define('ui.ScenesListView', () => {
     }
 
     _createItem(scene) {
-      var item = new ScenesListItem(scene, this._player);
+      var item = new ScenesListItem(scene, this._player, this._thumbnail);
 
       item.getStatesList().onSelectionChanged(evt => {
         if (evt.added.length) {

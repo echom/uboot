@@ -163,18 +163,13 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
 }
 
 .app-scene-preview {
-  transition: all 0.2s ease-in;
-  width: 12.8rem;
-  height: 0;
-  box-sizing: border-box;
   border: 0.1rem solid rgb(200, 200, 200);
   border-radius: 0.2rem;
 }
-.app-scene:only-child .app-scene-preview {
-  transition: none;
-}
-.appear .app-scene-preview {
-  height: 7.2rem;
+
+.scene-thumbnail {
+  transform: scaleY(-1);
+  transition: all 0.2s ease-in;
 }
 
 .app-scene-control {
@@ -186,6 +181,7 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   justify-content: space-between;
   overflow: hidden;
   z-index: 1;
+  margin-left: -2.4rem;
 }
 .app-scene-control .btn {
   transition: all 0.2s ease-in;

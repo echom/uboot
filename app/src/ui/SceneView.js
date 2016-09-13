@@ -1,18 +1,40 @@
-np.define('ui.SceneView', () => {
-  var Container = np.require('ui.Container'),
-      Button = np.require('ui.Button'),
-      StatesListView = np.require('ui.StatesListView'),
-      Icon = np.require('ui.Icon'),
-      State = np.require('model.State'),
-      Scene = np.require('model.Scene');
+np.define('ui.SceneView', (require) => {
+  var Container = require('ui.Container'),
+      Element = require('ui.Element'),
+      Button = require('ui.Button'),
+      StatesListView = require('ui.StatesListView'),
+      Icon = require('ui.Icon'),
+      State = require('model.State'),
+      Scene = require('model.Scene');
+
+  class SceneThumbnail extends Element {
+    constructor(scene, thumbnail, width, height) {
+      super('canvas', 'scene-thumbnail');
+
+      this._scene = scene;
+      this._thumbnail = thumbnail;
+      this._width = width;
+      this._height = height;
+    }
+
+    _createElement(doc, el) {
+      super.createElement(doc, el);
+      el.width = this._width * devicePixelRatio;
+      el.height = this._height * devicePixelRatio;
+      el.style.width = this._width + 'px';
+      el.style.height = this._height + 'px';
+      this._thumbnail.render(this._scene, el);
+    }
+  }
 
   class SceneView extends Container {
-    constructor(scene, player) {
+    constructor(scene, player, thumbnail) {
       super('div', 'app-scene');
 
       this._scene = scene;
 
       this._preview = this.add(new Container('div', 'app-scene-preview'));
+      this._thumb = this._preview.add(new SceneThumbnail(scene, thumbnail, 128, 72));
       this._control = this._preview.add(new Container('div', 'app-scene-control'));
       this._settings = this._control.add(new Button('div', 'mini btn edit-scene', Icon.str('settings')));
 
