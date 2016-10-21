@@ -20,12 +20,14 @@ np.define('np.DocValue', function(require, name) {
 
     serialize(serializer) {
       super.serialize(serializer);
-      serializer.write('value', this.getValue());
+      serializer.write('value', this._getSerializationValue());
     }
     deserialize(serializer) {
       super.deserialize(serializer);
-      this.setValue(serializer.read('value'));
+      this._setSerializationValue(serializer.read('value'));
     }
+    _getSerializationValue() { return this.getValue(); }
+    _setSerializationValue(value) { return this.setValue(value); }
   }
 
   np.require('np.Serializer').register(name, DocValue);

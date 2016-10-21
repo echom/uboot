@@ -1,12 +1,13 @@
 np.define('entities.BoxEntity', function(require, name) {
-  var Entity = require('model.Entity');
+  var Entity = require('model.Entity'),
+      Vector3Value = require('model.Vector3Value');
 
   class BoxEntity extends Entity {
     constructor() {
       super();
 
-      this.addInput('position', new THREE.Vector3(0, 0, 0));
-      this.addInput('rotation', new THREE.Vector3(0, 0, 0));
+      this.addInput('position', new Vector3Value(new THREE.Vector3()));
+      this.addInput('rotation', new Vector3Value(new THREE.Vector3()));
     }
 
     _createRenderState() {
