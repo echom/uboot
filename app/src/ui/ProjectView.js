@@ -2,16 +2,25 @@ np.define('ui.ProjectView', () => {
   var Container = np.require('ui.Container'),
       ScenesListView = np.require('ui.ScenesListView'),
       PlayerControls = np.require('ui.PlayerControls'),
-      RenderView = np.require('ui.RenderView');
+      RenderView = np.require('ui.RenderView'),
+      InputsView = np.require('ui.InputsView');
 
   class ProjectView extends Container {
-    constructor(project, player, renderer) {
+    constructor(application) {
+      var left,
+          center,
+          right;
+
       super('div', 'app-project');
 
-      this._scenesList = this.add(new ScenesListView(project.getScenes(), player, renderer));
-      this._rightCol = this.add(new Container('div', 'app-right'));
-      this._renderView = this._rightCol.add(new RenderView(project, player, renderer));
-      this._playerView = this._rightCol.add(new PlayerControls(player));
+      left = this.add(new Container('div', 'app-left'));
+      center = this.add(new Container('div', 'app-center'));
+      right = this.add(new Container('div', 'app-right'));
+
+      this._scenesList = left.add(new ScenesListView(application));
+      this._renderView = center.add(new RenderView(application));
+      this._playerView = center.add(new PlayerControls(application));
+      this._inputsView = right.add(new InputsView(application));
     }
   }
 

@@ -6,10 +6,10 @@ np.define('ui.PlayerControls', function() {
       Icon = np.require('ui.Icon');
 
   class PlayerControls extends Container {
-    constructor(player) {
+    constructor(application) {
       super('div', 'app-player ui');
 
-      this._player = player;
+      this._player = application.getPlayer();
 
       this.add(new Element('div'));
       this._center = this.add(new Container('div', 'app-player-center'));

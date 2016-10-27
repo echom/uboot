@@ -28,7 +28,9 @@ np.define('ui.SceneView', (require) => {
   }
 
   class SceneView extends Container {
-    constructor(scene, player, thumbnail) {
+    constructor(application, scene, thumbnail) {
+      var player = application.getPlayer();
+
       super('div', 'app-scene');
 
       this._scene = scene;
@@ -52,7 +54,7 @@ np.define('ui.SceneView', (require) => {
         project.removeScene(scene);
       });
 
-      this._statesList = this.add(new StatesListView(scene.getStates(), player));
+      this._statesList = this.add(new StatesListView(application, scene.getStates()));
 
       this.addState = this.add(new Button('div', 'round mini btn add-state', Icon.str('add')));
       this.addState.onActivate((evt) => {

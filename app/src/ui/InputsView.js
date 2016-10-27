@@ -18,10 +18,10 @@ np.define('ui.InputsView', (require, name) => {
   }
 
   class InputsView extends Container {
-    constructor(app) {
+    constructor(application) {
       super('div', 'app-inputs');
 
-      this._selection = app.getSelection().getEntityGroup();
+      this._selection = application.getSelection().getEntityGroup();
       this._selection.onChanged(evt => this._onSelectionChanged);
     }
 

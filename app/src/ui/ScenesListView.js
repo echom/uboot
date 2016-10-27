@@ -6,11 +6,12 @@ np.define('ui.ScenesListView', () => {
       Thumbnail = np.require('render.Thumbnail');
 
   class ScenesListItem extends List.Item {
-    constructor(scene, player, thumbnail) {
+    constructor(application, scene, thumbnail) {
+      var player = application.getPlayer();
       super('li', 'app-scenes-item');
 
       this._addBefore = this.add(new Button('div', 'add-scene-before', '+'));
-      this._sceneView = this.add(new SceneView(scene, player, thumbnail));
+      this._sceneView = this.add(new SceneView(application, scene, thumbnail));
       this._addAfter = this.add(new Button('div', 'add-scene-after', '+'));
 
       this._addBefore.onActivate(evt => {
@@ -37,15 +38,15 @@ np.define('ui.ScenesListView', () => {
   }
 
   class ScenesListView extends List {
-    constructor(scenes, player, renderer) {
+    constructor(application) {
       super('ul', List.multiSelection, 'ui app-scenes');
 
-      this._scenes = scenes;
-      this._player = player;
-      this._thumbnail = new Thumbnail(renderer);
+      this._application = application;
+      this._scenes = this._application.getProject().getScenes();
+      this._thumbnail = new Thumbnail(this._application.getRenderer());
 
-      scenes.forEach(scene => this.add(this._createItem(scene)));
-      scenes.onChanged(evt => {
+      this._scenes.forEach(scene => this.add(this._createItem(scene)));
+      this._scenes.onChanged(evt => {
         if (evt.removed) {
           this.removeAt(evt.index);
         }
@@ -56,7 +57,7 @@ np.define('ui.ScenesListView', () => {
     }
 
     _createItem(scene) {
-      var item = new ScenesListItem(scene, this._player, this._thumbnail);
+      var item = new ScenesListItem(this._application, scene, this._thumbnail);
 
       item.getStatesList().onSelectionChanged(evt => {
         if (evt.added.length) {
@@ -73,7 +74,7 @@ np.define('ui.ScenesListView', () => {
     }
 
     _modifySelection(index, type) {
-      var player = this._player,
+      var player = this._application.getPlayer(),
           scene = this._scenes.get(index);
 
       super._modifySelection(index, type);

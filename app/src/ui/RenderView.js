@@ -43,11 +43,11 @@ np.define('ui.RenderView', (require) => {
   }
 
   class RenderView extends Container {
-    constructor(project, player, renderer) {
+    constructor(application) {
       super('div', 'app-render');
 
-      this._player = player;
-      this._aspect = project.getSettings().getAspect();
+      this._player = application.getPlayer();
+      this._aspect = application.getProject().getSettings().getAspect();
       this._renderLoop = new RenderLoop(this, (dt) => {
         var // state = this._player.getState(),
             scene = this._player.getScene(),
@@ -56,7 +56,7 @@ np.define('ui.RenderView', (require) => {
         this._renderer.render(renderState.getScene(), renderState.getCamera());
       });
 
-      this._renderer = renderer;
+      this._renderer = application.getRenderer();
       this._renderer.setClearColor(0xffffff, 0);
 
       this._picker = new Picker(this._renderer, 0.5);

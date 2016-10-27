@@ -70,11 +70,11 @@ np.define('ui.StatesListView', () => {
   }
 
   class StatesListView extends List {
-    constructor(states, player) {
+    constructor(application, states) {
       super('ul', List.multiSelection, 'app-states');
 
       this._states = states;
-      this._player = player;
+      this._player = application.getPlayer();
 
       states.forEach(state => this.add(this._createItem(state)));
       states.onChanged(evt => {

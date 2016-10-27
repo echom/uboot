@@ -2,13 +2,15 @@ np.define('app.Application', () => {
   var Observable = np.require('np.Observable'),
       Serializer = np.require('np.Serializer'),
       Project = np.require('model.Project'),
-      Player = np.require('app.Player');
+      Player = np.require('app.Player'),
+      Selection = np.require('app.Selection');
 
   class Application {
     constructor(env, project) {
       this._env = env;
       this._project = new Observable(null, this);
       this._player = null;
+      this._selection = new Selection();
 
       this._renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       this._renderer.setClearColor(0xffffff, 0);
@@ -38,6 +40,8 @@ np.define('app.Application', () => {
     }
 
     getPlayer() { return this._player; }
+
+    getSelection() { return this._selection; }
 
     getRenderer() { return this._renderer; }
 
