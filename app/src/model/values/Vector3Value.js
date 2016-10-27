@@ -3,6 +3,13 @@ np.define('model.Vector3Value', (require, name) => {
       Serializer = require('np.Serializer');
 
   class Vector3Value extends DocValue {
+    setXYZ(x, y, z, force) {
+      var vec = this.getValue();
+      if (x !== vec.x || y !== vec.y || z !== vec.z || force) {
+        this.setValue(vec.set(x, y, z), true);
+      }
+    }
+
     _getSerializationValue() {
       var value = this.getValue();
       return [value.x, value.y, value.z];

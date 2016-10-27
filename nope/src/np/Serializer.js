@@ -10,11 +10,7 @@ np.define('np.Serializer', (require) => {
       var entry = Serializer.findByType(type);
 
       if (!entry) {
-        Serializer._entries.push({
-          name: name,
-          type: type,
-          init: init
-        });
+        Serializer._entries.push({ name: name, type: type });
       }
     }
 
@@ -48,8 +44,8 @@ np.define('np.Serializer', (require) => {
           instance;
       if (entry) {
         this._push(obj);
-        instance = entry.init ?
-          entry.init(this) :
+        instance = entry.type.deserialize ?
+          entry.type.deserialize(this) :
           new entry.type(); // eslint-disable-line new-cap
         instance.deserialize(this);
         this._pop();

@@ -6,8 +6,9 @@ np.define('entities.BoxEntity', function(require, name) {
     constructor() {
       super();
 
-      this.addInput('position', new Vector3Value(new THREE.Vector3()));
-      this.addInput('rotation', new Vector3Value(new THREE.Vector3()));
+      this.addInput('position', 'vec3', new Vector3Value(new THREE.Vector3()));
+      this.addInput('rotation', 'vec3', new Vector3Value(new THREE.Vector3()));
+      this.addInput('scale', 'vec3', new Vector3Value(new THREE.Vector3()));
     }
 
     _createRenderState() {
