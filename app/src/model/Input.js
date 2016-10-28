@@ -1,22 +1,23 @@
 np.define('model.Input', (require, name) => {
-  var DocElement = require('np.DocElement');
+  var DocElement = require('np.DocElement'),
+      DocValue = require('np.DocValue');
 
   class Input extends DocElement {
     constructor(type, group, name, value) {
       super();
-      this.setMember('name', name);
-      this.setMember('group', group || 'default');
+      this.setMember('name', new DocValue(name));
+      this.setMember('group', new DocValue(group || 'default'));
+      this.setMember('type', new DocValue(type));
       this.setMember('value', value);
-      this.setMember('type', type);
     }
 
-    getName() { return this.getMember('name'); }
+    getName() { return this.getMember('name').getValue(); }
 
-    getGroup() { return this.getMember('group'); }
+    getGroup() { return this.getMember('group').getValue(); }
 
-    getEditor() { return this.getMember('editor'); }
+    getType() { return this.getMember('type').getValue(); }
 
-    getValue(state) { return this.getMember('value').getValue(); }
+    getValue(state) { return this.getMember('value'); }
 
     setValue(state, value, force) {
       this.getMember('value').setValue(value, force);

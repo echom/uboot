@@ -44,6 +44,8 @@ np.define('np.DocElement', (require, name) => {
 
     getMember(name) { return this._members[name]; }
 
+    getMemberList() { return Object.keys(this._members).map(key => this._members[key]); }
+
     onChanged(handler, ctx) { return this._changed.on(handler, ctx); }
 
     forEach(fn, ctx) {

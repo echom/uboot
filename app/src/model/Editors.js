@@ -9,7 +9,7 @@ np.define('model.Editors', (require, name) => {
     }
 
     forInput(input) {
-      var request = input.getEditor(),
+      var request = input.getType(),
           Editor = this._editors[request];
       if (!Editor) {
         throw new Error(name + '.forInput: Cannot find editor for request: ' + request);

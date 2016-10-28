@@ -1,6 +1,5 @@
 - implement inputs on entities
-- implement preview renderer
-- improve serialization (generalize)
+	- editors need proper loading mechanism
 
 - implement Envs
 

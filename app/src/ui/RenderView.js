@@ -47,7 +47,8 @@ np.define('ui.RenderView', (require) => {
       super('div', 'app-render');
 
       this._player = application.getPlayer();
-      this._aspect = application.getProject().getSettings().getAspect();
+      this._project = application.getProject();
+      this._aspect = this._project.getSettings().getAspect();
       this._renderLoop = new RenderLoop(this, (dt) => {
         var // state = this._player.getState(),
             scene = this._player.getScene(),
@@ -75,8 +76,12 @@ np.define('ui.RenderView', (require) => {
       this._activation = new Activation(this, (evt) => {
         var rect = evt.target.getBoundingClientRect(),
             offsetX = evt.clientX - rect.left,
-            offsetY = evt.clientY - rect.top;
-        console.log(this._picker.pick(this._player.getScene(), offsetX, offsetY));
+            offsetY = evt.clientY - rect.top,
+            pickId = this._picker.pick(this._player.getScene(), offsetX, offsetY),
+            pickTarget = pickId ? this._project.getNodeById(pickId) : null;
+        if (pickTarget) {
+          application.getSelection().set(pickTarget);
+        }
       });
 
       this._player.onStateChanged(evt => this._renderLoop.trigger());

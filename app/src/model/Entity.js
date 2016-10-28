@@ -9,8 +9,11 @@ np.define('model.Entity', function(require, name) {
     }
 
     getInputs() { return this.getMember('inputs'); }
+    getInputList() {
+      return this.getInputs().getMemberList();
+    }
     addInput(name, type, value, group) {
-      this.getInputs().setMember(new Input(type, group || 'default', name, value));
+      this.getInputs().setMember(name, new Input(type, group || 'default', name, value));
     }
 
     getScene() { return this.getParent().getParent(); }

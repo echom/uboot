@@ -3,6 +3,9 @@ np.define('ui.InputsView', (require, name) => {
       Container = require('ui.Container'),
       Editors = require('model.Editors');
 
+  // TODO: Needs loading mechanism
+  require('ui.Vector3Editor');
+
   class InputEntry extends Element {
     constructor(input) {
       super('div', 'input-entry');
@@ -22,7 +25,7 @@ np.define('ui.InputsView', (require, name) => {
       super('div', 'app-inputs');
 
       this._selection = application.getSelection().getEntityGroup();
-      this._selection.onChanged(evt => this._onSelectionChanged);
+      this._selection.onChanged(evt => this._onSelectionChanged(evt));
     }
 
     _onSelectionChanged(evt) {
@@ -31,7 +34,7 @@ np.define('ui.InputsView', (require, name) => {
 
     _update() {
       this._children.clear();
-      this._inputs = this._selection.getInputs();
+      this._inputs = this._selection.getInputList();
       this._inputs.forEach((input) => {
         this.add(new InputEntry(input));
       });

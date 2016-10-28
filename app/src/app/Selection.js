@@ -71,7 +71,7 @@ np.define('app.Selection', (require, name) => {
       super('entities', (o) => np.isA(o, Entity));
     }
 
-    getInputs() { return this._items[0].getInputs(); }
+    getInputList() { return this._items[0].getInputList(); }
   }
 
   class Selection {
@@ -110,7 +110,7 @@ np.define('app.Selection', (require, name) => {
 
     set(selected) {
       var group = this.findGroupForObject(selected);
-      this._group.setSingle(selected);
+      group.setSingle(selected);
       this._currentGroup = group;
     }
   }

@@ -59,11 +59,27 @@ ul { margin: 0; padding: 0; list-style: none; }
   align-items: stretch;
 }
 
-.app-right {
+.app-left {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: 0 0 auto;
+  margin-top: 0.6rem;
+}
+
+.app-center {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   flex: 1 1 auto;
+  margin-top: 0.6rem;
+}
+
+.app-right {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: 0 0 auto;
   margin-top: 0.6rem;
 }
 
