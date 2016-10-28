@@ -51,6 +51,12 @@ np.define('ui.Container', () => {
       return child;
     }
 
+    clear() {
+      while (this._children.length) {
+        this.removeAt(0);
+      }
+    }
+
     _createElement(doc, el) {
       super._createElement(doc, el);
       this._children.forEach(child => el.appendChild(child.createElement(doc)));

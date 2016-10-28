@@ -71,7 +71,9 @@ np.define('app.Selection', (require, name) => {
       super('entities', (o) => np.isA(o, Entity));
     }
 
-    getInputList() { return this._items[0].getInputList(); }
+    getInputList() {
+      return this._items[0].getInputList();
+    }
   }
 
   class Selection {

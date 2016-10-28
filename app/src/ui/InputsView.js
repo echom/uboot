@@ -33,11 +33,14 @@ np.define('ui.InputsView', (require, name) => {
     }
 
     _update() {
-      this._children.clear();
-      this._inputs = this._selection.getInputList();
-      this._inputs.forEach((input) => {
-        this.add(new InputEntry(input));
-      });
+      this._children.forEach(child => child.dispose());
+
+      if (!this._selection.isEmpty()) {
+        this._inputs = this._selection.getInputList();
+        this._inputs.forEach((input) => {
+          this.add(new InputEntry(input));
+        });
+      }
     }
   }
 

@@ -81,6 +81,8 @@ np.define('ui.RenderView', (require) => {
             pickTarget = pickId ? this._project.getNodeById(pickId) : null;
         if (pickTarget) {
           application.getSelection().set(pickTarget);
+        } else {
+          application.getSelection().getEntityGroup().clear();
         }
       });
 

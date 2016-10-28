@@ -9,7 +9,7 @@ np.define('np.Disposable', () => {
     _dispose() {}
 
     dispose() {
-      if (this._isDisposed) {
+      if (!this._isDisposed) {
         this._dispose();
         this._isDisposed = true;
       }

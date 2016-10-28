@@ -79,7 +79,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  flex: 0 0 auto;
+  flex: 0 0 20rem;
   margin-top: 0.6rem;
 }
 
@@ -120,12 +120,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   /*border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;*/
 }
-
-
-.app-editor {
-  flex: 0 0 160px;
-}
-
 
 .app-scenes {
   flex: 0 0 auto;
@@ -248,9 +242,18 @@ li.app-scenes-item:first-child .add-scene-before { display: block; }
   transform: translateX(0);
 }
 
-
 .app-state .app-state-duration {
   font-size: 0.8rem;
+}
+
+.editor {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+.editor input {
+  flex: 1 1 auto;
+  min-width: 3rem;
 }
 
 .dialog-bg {

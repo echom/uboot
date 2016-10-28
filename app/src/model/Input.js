@@ -17,7 +17,9 @@ np.define('model.Input', (require, name) => {
 
     getType() { return this.getMember('type').getValue(); }
 
-    getValue(state) { return this.getMember('value'); }
+    onValueChanged(handler, ctx) { this.getMember('value').onChanged(handler, ctx); }
+
+    getValue(state) { return this.getMember('value').getValue(); }
 
     setValue(state, value, force) {
       this.getMember('value').setValue(value, force);

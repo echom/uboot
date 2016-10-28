@@ -3,48 +3,91 @@ np.define('ui.Vector3Editor', (require, name) => {
       Editors = require('model.Editors');
 
   class Vector3Editor extends Element {
-    constructor(value) {
+    constructor(input) {
       super('div', 'editor');
 
-      this._value = value;
-      this._value.onChanged((evt) => this.setXYZ(evt.value));
+      this._input = input;
 
-      this._pendingValueUpdate = 0;
-      this._updateValue = this._updateValue.bind(this);
+      this._onInputValueChanged = this._onInputValueChanged.bind(this);
+      this._onHtmlValueChanged = this._onHtmlValueChanged.bind(this);
+      this._onHtmlValueBlur = this._onHtmlValueBlur.bind(this);
+      this._updateInputValue = this._updateInputValue.bind(this);
 
-      this._inputs = null;
+
+      this._offInputValueChanged = this._input.onValueChanged(this._onInputValueChanged);
+
+      this._pendingInputValueUpdate = 0;
     }
 
     _getX() { return parseFloat(this._x.value); }
     _getY() { return parseFloat(this._y.value); }
     _getZ() { return parseFloat(this._z.value); }
 
-    _setXYZ(x, y, z, force) {
+    _onInputValueChanged(value) {
+      this._updateHtmlValues(value);
+    }
+
+    _onHtmlValueChanged(evt) {
+      if (!this._pendingInputValueUpdate) {
+        this._pendingInputValueUpdate = setTimeout(() => this._updateInputValue(), 50);
+      }
+    }
+
+    _onHtmlValueBlur(evt) {
+      if (this._validateInputValues()) {
+        this._updateInputValue();
+      } else {
+        this._updateHtmlValues(this._input.getValue());
+      }
+    }
+
+    _updateHtmlValues(value, force) {
       if (this.getElement()) {
-        if (x != this._getX() || force) {
-          this._x.value = x;
+        if (value.x != this._getX() || force) {
+          this._x.value = value.x;
         }
-        if (y != this._getY() || force) {
-          this._y.value = y;
+        if (value.y != this._getY() || force) {
+          this._y.value = value.y;
         }
-        if (z != this._getZ() || force) {
-          this._z.value = z;
+        if (value.z != this._getZ() || force) {
+          this._z.value = value.z;
         }
       }
     }
+    _updateInputValue() {
+      var value = this._input.getValue(),
+          ix,
+          iy,
+          iz;
 
-    _onInputChanged(target) {
-      if (!this._pendingValueUpdate) {
-        this._pendingValueUpdate = setTimeout(() => this._updateValue(), 50);
+      if (this._validateInputValues()) {
+        ix = this._getX();
+        iy = this._getY();
+        iz = this._getZ();
+
+        if (value.x !== ix || value.y !== iy || value.z !== iz) {
+          value.x = ix;
+          value.y = iy;
+          value.z = iz;
+          this._input.setValue(null, value, true);
+        }
+      }
+
+      if (this._pendingInputValueUpdate) {
+        this._pendingInputValueUpdate = 0;
       }
     }
 
-    _updateValue() {
-      this._value.setXYZ(this._getX(), this._getY(), this._getZ());
+    _validateInputValues() {
+      var x = parseFloat(this._x.value),
+          y = parseFloat(this._y.value),
+          z = parseFloat(this._z.value);
 
-      if (this._pendingValueUpdate) {
-        this._pendingValueUpdate = 0;
-      }
+      return (
+        !isNaN(x) && isFinite(x) &&
+        !isNaN(y) && isFinite(y) &&
+        !isNaN(z) && isFinite(z)
+      );
     }
 
     _createElement(doc, el) {
@@ -52,16 +95,28 @@ np.define('ui.Vector3Editor', (require, name) => {
         var input = doc.createElement('input');
         input.type = 'number';
         input.className = 'editor-number';
-        input.value = this._value.getValue()[ordinate];
+        input.value = this._input.getValue()[ordinate];
 
-        input.addEventListener('change', (evt) => {
-          this._onInputChanged(ordinate, input, evt.target.value);
-        });
+        input.addEventListener('input', this._onHtmlValueChanged);
+        input.addEventListener('blur', this._onHtmlValueBlur);
 
         el.appendChild(input);
 
         this['_' + ordinate] = input;
       });
+    }
+
+    _dispose() {
+      super._dispose();
+
+      this._offInputValueChanged();
+
+      if (this.getElement()) {
+        [this._x, this._y, this._z].forEach((input) => {
+          input.removeEventListener('input', this._onHtmlValueChanged);
+          input.removeEventListener('blur', this._onHtmlValueBlur);
+        });
+      }
     }
   }
 

@@ -16,6 +16,7 @@ np.define('np.Observable', (require) => {
       this._changed = new ChangeEvent(owner || this);
       this._value = value;
     }
+
     onChanged(handler, ctx) { return this._changed.on(handler, ctx); }
 
     getValue() { return this._value; }
