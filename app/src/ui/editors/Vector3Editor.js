@@ -1,122 +1,52 @@
 np.define('ui.Vector3Editor', (require, name) => {
   var Element = require('ui.Element'),
+      TextField = require('ui.TextField'),
       Editors = require('model.Editors');
+
+  function validateNumber(v) { return !isNaN(parseFloat(v)) && isFinite(v); }
 
   class Vector3Editor extends Element {
     constructor(input) {
       super('div', 'editor');
 
       this._input = input;
+      this._x = new TextField('number', 'editor-number', input.getValue().x, validateNumber);
+      this._y = new TextField('number', 'editor-number', input.getValue().y, validateNumber);
+      this._z = new TextField('number', 'editor-number', input.getValue().z, validateNumber);
 
-      this._onInputValueChanged = this._onInputValueChanged.bind(this);
-      this._onHtmlValueChanged = this._onHtmlValueChanged.bind(this);
-      this._onHtmlValueBlur = this._onHtmlValueBlur.bind(this);
-      this._updateInputValue = this._updateInputValue.bind(this);
+      this._x.onValueChanged((evt) => this._propagateToInput('x', evt.value));
+      this._y.onValueChanged((evt) => this._propagateToInput('y', evt.value));
+      this._z.onValueChanged((evt) => this._propagateToInput('z', evt.value));
 
-
-      this._offInputValueChanged = this._input.onValueChanged(this._onInputValueChanged);
+      this._offInputValueChanged = this._input.onValueChanged((evt) => {
+        this._x.setValue(evt.value.x);
+        this._y.setValue(evt.value.y);
+        this._z.setValue(evt.value.z);
+      });
 
       this._pendingInputValueUpdate = 0;
     }
 
-    _getX() { return parseFloat(this._x.value); }
-    _getY() { return parseFloat(this._y.value); }
-    _getZ() { return parseFloat(this._z.value); }
-
-    _onInputValueChanged(value) {
-      this._updateHtmlValues(value);
-    }
-
-    _onHtmlValueChanged(evt) {
-      if (!this._pendingInputValueUpdate) {
-        this._pendingInputValueUpdate = setTimeout(() => this._updateInputValue(), 50);
-      }
-    }
-
-    _onHtmlValueBlur(evt) {
-      if (this._validateInputValues()) {
-        this._updateInputValue();
-      } else {
-        this._updateHtmlValues(this._input.getValue());
-      }
-    }
-
-    _updateHtmlValues(value, force) {
-      if (this.getElement()) {
-        if (value.x != this._getX() || force) {
-          this._x.value = value.x;
-        }
-        if (value.y != this._getY() || force) {
-          this._y.value = value.y;
-        }
-        if (value.z != this._getZ() || force) {
-          this._z.value = value.z;
-        }
-      }
-    }
-    _updateInputValue() {
-      var value = this._input.getValue(),
-          ix,
-          iy,
-          iz;
-
-      if (this._validateInputValues()) {
-        ix = this._getX();
-        iy = this._getY();
-        iz = this._getZ();
-
-        if (value.x !== ix || value.y !== iy || value.z !== iz) {
-          value.x = ix;
-          value.y = iy;
-          value.z = iz;
-          this._input.setValue(null, value, true);
-        }
-      }
-
-      if (this._pendingInputValueUpdate) {
-        this._pendingInputValueUpdate = 0;
-      }
-    }
-
-    _validateInputValues() {
-      var x = parseFloat(this._x.value),
-          y = parseFloat(this._y.value),
-          z = parseFloat(this._z.value);
-
-      return (
-        !isNaN(x) && isFinite(x) &&
-        !isNaN(y) && isFinite(y) &&
-        !isNaN(z) && isFinite(z)
-      );
+    _propagateToInput(ordinate, value) {
+      var v = this._input.getValue();
+      v[ordinate] = value;
+      this._input.setValue(null, value, true);
     }
 
     _createElement(doc, el) {
-      ['x', 'y', 'z'].forEach((ordinate) => {
-        var input = doc.createElement('input');
-        input.type = 'number';
-        input.className = 'editor-number';
-        input.value = this._input.getValue()[ordinate];
-
-        input.addEventListener('input', this._onHtmlValueChanged);
-        input.addEventListener('blur', this._onHtmlValueBlur);
-
-        el.appendChild(input);
-
-        this['_' + ordinate] = input;
-      });
+      el.appendChild(this._x.createElement(doc));
+      el.appendChild(this._y.createElement(doc));
+      el.appendChild(this._z.createElement(doc));
     }
 
     _dispose() {
       super._dispose();
 
-      this._offInputValueChanged();
+      this._x.dispose();
+      this._y.dispose();
+      this._z.dispose();
 
-      if (this.getElement()) {
-        [this._x, this._y, this._z].forEach((input) => {
-          input.removeEventListener('input', this._onHtmlValueChanged);
-          input.removeEventListener('blur', this._onHtmlValueBlur);
-        });
-      }
+      this._offInputValueChanged();
     }
   }
 
