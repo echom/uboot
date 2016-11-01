@@ -1,6 +1,8 @@
 np.define('ui.InputsView', (require, name) => {
   var Element = require('ui.Element'),
       Container = require('ui.Container'),
+      Button = require('ui.Button'),
+      Icon = require('ui.Icon'),
       Editors = require('model.Editors');
 
   // TODO: Needs loading mechanism
@@ -12,11 +14,20 @@ np.define('ui.InputsView', (require, name) => {
       this._input = input;
       this._label = new Element('span', 'input-entry-label', input.getName());
       this._editor = Editors.forInput(input);
+      this._key = new Button('span', 'mini btn input-entry-key ', Icon.str('vpn_key'));
     }
 
     _createElement(doc, el) {
       el.appendChild(this._label.createElement(doc));
       el.appendChild(this._editor.createElement(doc));
+      el.appendChild(this._key.createElement(doc));
+    }
+
+    _dispose() {
+      super._dispose();
+      this._label.dispose();
+      this._editor.dispose();
+      this._key.dispose();
     }
   }
 

@@ -1,16 +1,25 @@
 np.define('ui.TextField', (require, name) => {
   var Element = require('ui.Element'),
-      Observable = require('np.Observable'),
-      VALIDATE_ANY = () => true;
+      Observable = require('np.Observable');
+
+  class FieldType {
+    constructor(type, validateFn, convertFn) {
+      this._type = type;
+      this._validate = validateFn;
+      this._convert = convertFn;
+    }
+    getType() { return this._type; }
+    validate(v) { return this._validate(v); }
+    convert(v) { return this._convert(v); }
+  }
 
   class TextField extends Element {
-    constructor(type, classNames, value, validateFn) {
+    constructor(type, classNames, value) {
       super('input', classNames);
-      this._inputType = type || 'text';
+      this._fieldType = type || TextField.textType;
       this._value = new Observable(value, this);
-      this._validate = validateFn || VALIDATE_ANY;
 
-      this._onInput = this._onInput.bind(this);
+      // this._onInput = this._onInput.bind(this);
       this._onBlur = this._onBlur.bind(this);
     }
 
@@ -27,23 +36,24 @@ np.define('ui.TextField', (require, name) => {
 
     _createElement(doc, el) {
       super._createElement(doc, el);
-      el.type = this._inputType;
+      el.type = this._fieldType.getType();
       el.value = this._value.getValue();
 
-      el.addEventListener('input', this._onInput);
+      // el.addEventListener('input', this._onInput);
       el.addEventListener('blur', this._onBlur);
     }
 
-    _onInput(evt) {
-      var value = evt.target.value;
-      if (this._validate(value)) {
-        this.setValue(value);
-      }
-    }
+    // _onInput(evt) {
+    //   var value = evt.target.value;
+    //   if (this._validate(value)) {
+    //     this.setValue(value);
+    //   }
+    // }
+
     _onBlur(evt) {
       var value = evt.target.value;
-      if (this._validate(value)) {
-        this.setValue(value);
+      if (this._fieldType.validate(value)) {
+        this.setValue(this._fieldType.convert(value));
       } else {
         evt.target.value = this.getValue();
       }
@@ -54,11 +64,23 @@ np.define('ui.TextField', (require, name) => {
       this._value.dispose();
 
       if (this._element) {
-        this._element.removeEventListener('input', this._onInput);
+        // this._element.removeEventListener('input', this._onInput);
         this._element.removeEventListener('blur', this._onBlur);
       }
     }
   }
+
+  TextField.FieldType = FieldType;
+  TextField.text = new FieldType(
+    'text',
+    (v) => true,
+    (v) => v
+  );
+  TextField.number = new FieldType(
+    'number',
+    (v) => !isNaN(parseFloat(v)) && isFinite(v),
+    (v) => parseFloat(v)
+  );
 
   return TextField;
 });

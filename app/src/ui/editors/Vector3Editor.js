@@ -3,16 +3,14 @@ np.define('ui.Vector3Editor', (require, name) => {
       TextField = require('ui.TextField'),
       Editors = require('model.Editors');
 
-  function validateNumber(v) { return !isNaN(parseFloat(v)) && isFinite(v); }
-
   class Vector3Editor extends Element {
     constructor(input) {
       super('div', 'editor');
 
       this._input = input;
-      this._x = new TextField('number', 'editor-number', input.getValue().x, validateNumber);
-      this._y = new TextField('number', 'editor-number', input.getValue().y, validateNumber);
-      this._z = new TextField('number', 'editor-number', input.getValue().z, validateNumber);
+      this._x = new TextField(TextField.number, 'editor-number', input.getValue().x);
+      this._y = new TextField(TextField.number, 'editor-number', input.getValue().y);
+      this._z = new TextField(TextField.number, 'editor-number', input.getValue().z);
 
       this._x.onValueChanged((evt) => this._propagateToInput('x', evt.value));
       this._y.onValueChanged((evt) => this._propagateToInput('y', evt.value));
@@ -28,9 +26,9 @@ np.define('ui.Vector3Editor', (require, name) => {
     }
 
     _propagateToInput(ordinate, value) {
-      var v = this._input.getValue();
-      v[ordinate] = value;
-      this._input.setValue(null, value, true);
+      var vec3 = this._input.getValue();
+      vec3[ordinate] = value;
+      this._input.setValue(null, vec3, true);
     }
 
     _createElement(doc, el) {
