@@ -1,4 +1,4 @@
-np.define('model.Editors', (require, name) => {
+np.define('app.Editors', (require, name) => {
   class EditorFactory {
     constructor() {
       this._editors = {};

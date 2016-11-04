@@ -5,19 +5,8 @@ np.define('app.Selection', (require, name) => {
       Event = require('np.Event'),
       ACCEPT_ANY = (() => true),
       ACTION_SETSINGLE = 'single',
+      ACTION_SETMULTI = 'multi',
       ACTION_CLEAR = 'empty';
-
-  class SelectionChangedEvent {
-    static get actionClear() { return ACTION_CLEAR; }
-    static get actionSetSingle() { return ACTION_SETSINGLE; }
-
-    raise(action, operand) {
-      super.raise({
-        action: action,
-        operand: operand
-      });
-    }
-  }
 
   class SelectionGroup {
     static get acceptAny() { return ACCEPT_ANY; }
@@ -52,17 +41,35 @@ np.define('app.Selection', (require, name) => {
       }
     }
 
-    isEmpty() { return this._items.length === 0; }
-    isSingle() { return this._items.length === 1; }
+    isEmpty() { return this._items.size === 0; }
+    isSingle() { return this._items.size === 1; }
+    isMulti() { return this._items.size > 1; }
+
+    getSingle() { return this._items.values().next().value; }
 
     setSingle(obj) {
       this._validateAccepts(obj);
-      this._items = [obj];
-      this._raiseChanged(ACTION_SETSINGLE, obj);
+
+      if (!this.isSingle() || this.getSingle() !== obj) {
+        this._items.length = 0;
+        this._items.push(obj);
+        this._raiseChanged(ACTION_SETSINGLE, obj);
+      }
     }
+
+    setMulti(objs) {
+      if (!this.isEmpty()) {
+        this._items.length = 0;
+        objs.forEach((obj) => this._items.push(objs));
+        this._raiseChanged()
+      }
+    }
+
     clear() {
-      this._items = [];
-      this._raiseChanged(ACTION_CLEAR);
+      if (this._items.length !== 0) {
+        this._items.length = 0;
+        this._raiseChanged(ACTION_CLEAR);
+      }
     }
   }
 
@@ -77,7 +84,6 @@ np.define('app.Selection', (require, name) => {
   }
 
   class Selection {
-    static get SelectionChangedEvent() { return SelectionChangedEvent; }
     static get SelectionGroup() { return SelectionGroup; }
 
     constructor() {

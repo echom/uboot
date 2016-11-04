@@ -2,9 +2,41 @@ np.define('np.Event', (require) => {
   var Disposable = require('np.Disposable'),
       EMPTY = Object.freeze({});
 
-  class Event extends Disposable {
-    static get EMPTY() { return EMPTY; }
+  /**
+   * An event listener function which will be invoked every time this event is
+   * raised.
+   * @callback np.Event~Listener
+   * @param {object} evt - the event arguments
+   * @param {object} src - the event's source
+   */
+  /**
+   * An event remover function - when invoked - removes a previously registered
+   * listener from the event. Note that each addition of a listener creates a
+   * corresponding remover function.
+   * @callback np.Event~Remover
+   */
 
+
+  /**
+   * This class represents a single event (callback list).
+   * @extends np.Disposable
+   * @memberof np
+   */
+  class Event extends Disposable {
+
+    /**
+     * Returns the default empty event arguments which can be re-used in favor
+     * of creating many empty objects. The empty event arguments cannot be
+     * modified.
+     * @type {object}
+     */
+    static get empty() { return EMPTY; }
+
+    /**
+     * Creates a new event which belongs to the provided owner object.
+     * @param {*} owner - The owner object which will act as event source for
+     *    this event
+     */
     constructor(owner) {
       super();
 
@@ -15,14 +47,30 @@ np.define('np.Event', (require) => {
       this._length = 0;
     }
 
+    /**
+     * Returns the number of currently registered listeners on this event.
+     * @type {number}
+     */
     get length() { return this._length; }
 
+    /**
+     * Adds a listener function to this event. An optional context may be
+     * provided to which the listener function will be bound.
+     * @param {np.Event~Listener} listener - the listener function
+     * @param {object} [ctx] - an optional context object to bind the listener
+     *    to
+     * @return {np.Event~Remover} a function which removes the added listener
+     *    from this event
+     */
     on(listener, ctx) {
-      var _listener = ctx ? listener.bind(ctx) : listener;
-      this._addListener(_listener);
+      var _listener = this._addListener(ctx ? listener.bind(ctx) : listener);
       return () => this._removeListener(_listener);
     }
 
+    /**
+     * Raises this event with the specified event arguments.
+     * @param {object} evt - the event arguments
+     */
     raise(evt) {
       var i = 2,
           _evt = evt || EMPTY,
@@ -41,6 +89,12 @@ np.define('np.Event', (require) => {
       }
     }
 
+    /**
+     * Adds a listener function to this event.
+     * @protected
+     * @param {np.Event~Listener} listener - the listener function to add
+     * @return {np.Event~Listener} the listener function
+     */
     _addListener(listener) {
       if (this._length === 0) {
         this._listener0 = listener;
@@ -53,6 +107,11 @@ np.define('np.Event', (require) => {
       return listener;
     }
 
+    /**
+     * Removes a listener function from this event.
+     * @protected
+     * @param {np.Event~Listener} - listener - the listener function to remove
+     */
     _removeListener(listener) {
       var index;
 
@@ -70,6 +129,9 @@ np.define('np.Event', (require) => {
       this._length = this._listeners.length;
     }
 
+    /**
+     * @inheritdoc
+     */
     _dispose() {
       super._dispose();
       this._listeners.length = 0;

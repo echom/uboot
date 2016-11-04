@@ -1,3 +1,4 @@
+/** @namespace np */
 (np => {
   var typeOf = np.typeOf = obj => {
     var str = Object.prototype.toString.call(obj);
@@ -41,24 +42,6 @@
   };
 
   /**
-   * Establishes prototypical inheritance between two constructor functions.
-   * @method np.inherits
-   * @param {function} ctor - the constructor function
-   * @param {function} base - the base class constructor function
-   * @return {function} the constructor function now inheriting from the base
-   *  constructor
-   * @private
-   * @deprecated
-   */
-  np.inherits = (ctor, base) => {
-    var f = function() {};
-    f.prototype = base.prototype;
-    ctor.prototype = new f(); // eslint-disable-line new-cap
-    ctor.prototype.constructor = ctor;
-    return ctor;
-  };
-
-  /**
    * Checks whether the object passed as first argument is either of the type
    * (if type is a string) or an instance of the type (if type is a function).
    * @method np.isA
@@ -66,7 +49,6 @@
    * @param {string|function} type - the type string or constructor function to
    *  check against
    * @return {boolean} true if the type check passes, false otherwise.
-   * @private
    */
   np.isA = (obj, type) => {
     return ((typeof type) == 'string') ?

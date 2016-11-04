@@ -1,17 +1,20 @@
 /* eslint-env node */
 /* eslint-disable camelcase */
 
-var del = require('del'),
-    karma = require('karma'),
+var fs = require('fs'),
+    del = require('del'),
+    exec = require('child_process').exec,
     gulp = require('gulp'),
     gzip = require('gulp-gzip'),
+    karma = require('karma'),
     gutil = require('gulp-util'),
     concat = require('gulp-concat'),
     rename = require('gulp-rename'),
     eslint = require('gulp-eslint'),
     uglify = require('uglify-js'),
     minify = require('gulp-uglify/minifier'),
-    karmaConfigure = require('../tools/karma-configure');
+    karmaConfigure = require('../tools/karma-configure'),
+    jsdocConfigure = require('../tools/jsdoc-configure');
 
 var paths = {
   src: [
@@ -91,5 +94,22 @@ gulp.task('unit:debug', done => {
   }), done).start();
 });
 
+gulp.task('document', function(done) {
+  var conf = jsdocConfigure({
+    src: paths.src.concat(['package.json']),
+    destination: 'dist/docs',
+    template: {
+      path: '../tools/jsdoc'
+    },
+    opts: { mode: 'public' }
+  });
 
-gulp.task('default', ['build', 'unit:dist']);
+  exec('../node_modules/.bin/jsdoc -c ' + conf, function(err, stdout, stderr) {
+    stdout && console.log(stdout);  // eslint-disable-line
+    stderr && console.log(stderr);  // eslint-disable-line
+    fs.unlink(conf);
+    done(err);
+  });
+});
+
+gulp.task('default', ['build', 'unit:dist', 'document']);

@@ -1,7 +1,7 @@
 {
-  "name": "presenter",
+  "name": "nope",
   "version": "0.0.1",
-  "description": "a web based presentation editor",
+  "description": "a simple base library for apps",
   "author": "Joerg Hoesel <echom@gmx.net>",
   "license": "ISC",
   "main": "index.js",
