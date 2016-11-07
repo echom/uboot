@@ -38,8 +38,6 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.0.2",
-    "karma-phantomjs-launcher": "^1.0.1",
-    "phantomjs": "^2.1.7",
     "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
     "xmlbuilder": "^8.2.2"
   },

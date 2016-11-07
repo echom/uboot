@@ -1,32 +1,49 @@
 describe('np.Serializer', () => {
   var Serializer,
-      MockType = function() {};
+      MockType;
 
   beforeEach(() => {
     Serializer = np.require('np.Serializer');
+    MockType = function() {};
   });
 
   describe('.register', () => {
     it('should add an entry', () => {
-      var init = function() {},
-          entry;
-      Serializer.register('MockType', MockType, init);
+      var entry;
+
+      Serializer.register('MockType', MockType);
       entry = Serializer.findByName('MockType');
 
       expect(entry.name).toEqual('MockType');
       expect(entry.type).toEqual(MockType);
-      expect(entry.init).toEqual(init);
+    });
+    it('should throw an error when registering the same type mutliple times', () => {
+      var willThrow = () => Serializer.register('MockType2', MockType);
+      Serializer.register('MockType2', MockType);
+
+      expect(willThrow).toThrowError(/already registered/);
     });
   });
   describe('.findByName', () => {
     it('should return the entry', () => {
-      Serializer.register
+      var entry;
+
+      Serializer.register('MockType3', MockType);
+      entry = Serializer.findByName('MockType3');
+
+      expect(entry.name).toEqual('MockType3');
+      expect(entry.type).toEqual(MockType);
+    });
+    it('should return undefined', () => {
+      var entry = Serializer.findByName('[Non-Existent]]');
+
+      expect(entry).toBeUndefined();
     });
   });
 
   describe('.ctor', () => {
     it('creates a new Serializer instance', () => {
-      expect(new Serializer()).toBeInstanceOf(Serializer);
+      expect((new Serializer()) instanceof Serializer).toBe(true);
     });
   });
 });

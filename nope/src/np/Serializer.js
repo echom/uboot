@@ -1,4 +1,4 @@
-np.define('np.Serializer', (require) => {
+np.define('np.Serializer', (require, className) => {
   class Serializer {
     static findByType(type) {
       return Serializer._entries.find(e => e.type === type);
@@ -6,11 +6,15 @@ np.define('np.Serializer', (require) => {
     static findByName(name) {
       return Serializer._entries.find(e => e.name === name);
     }
-    static register(name, type, init) {
+    static register(name, type) {
       var entry = Serializer.findByType(type);
 
       if (!entry) {
         Serializer._entries.push({ name: name, type: type });
+      } else {
+        throw new Error(
+          className + '.register: Type "' + name + '" was already registered.'
+        );
       }
     }
 
