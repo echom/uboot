@@ -5,7 +5,7 @@ np.define('np.Event', (require) => {
   /**
    * An event listener function which will be invoked every time this event is
    * raised.
-   * @callback np.Event~Listener
+   * @callback np.Event~IListener
    * @param {object} evt - the event arguments
    * @param {object} src - the event's source
    */
@@ -13,7 +13,7 @@ np.define('np.Event', (require) => {
    * An event remover function - when invoked - removes a previously registered
    * listener from the event. Note that each addition of a listener creates a
    * corresponding remover function.
-   * @callback np.Event~Remover
+   * @callback np.Event~IRemover
    */
 
 
@@ -56,10 +56,10 @@ np.define('np.Event', (require) => {
     /**
      * Adds a listener function to this event. An optional context may be
      * provided to which the listener function will be bound.
-     * @param {np.Event~Listener} listener - the listener function
+     * @param {np.Event~IListener} listener - the listener function
      * @param {object} [ctx] - an optional context object to bind the listener
      *    to
-     * @return {np.Event~Remover} a function which removes the added listener
+     * @return {np.Event~IRemover} a function which removes the added listener
      *    from this event
      */
     on(listener, ctx) {
@@ -92,8 +92,8 @@ np.define('np.Event', (require) => {
     /**
      * Adds a listener function to this event.
      * @protected
-     * @param {np.Event~Listener} listener - the listener function to add
-     * @return {np.Event~Listener} the listener function
+     * @param {np.Event~IListener} listener - the listener function to add
+     * @return {np.Event~IListener} the listener function
      */
     _addListener(listener) {
       if (this._length === 0) {
@@ -110,7 +110,7 @@ np.define('np.Event', (require) => {
     /**
      * Removes a listener function from this event.
      * @protected
-     * @param {np.Event~Listener} - listener - the listener function to remove
+     * @param {np.Event~IListener} - listener - the listener function to remove
      */
     _removeListener(listener) {
       var index;

@@ -1,41 +1,79 @@
 /* eslint-disable no-extend-native */
-var Symbol = function(symbol) {
-  this.symbol_ = symbol;
-};
-
-[
-  'kind', 'name', 'longname', 'memberof',
-  'scope', 'description', 'meta', 'comment',
-  'params', 'returns', 'exceptions', 'readonly',
-  'classdesc', 'type', 'inherited', 'inherits'
-].forEach(function(prop) {
-  Object.defineProperty(Symbol.prototype, prop, {
-    get: function() { return this.symbol_[prop]; }
-  });
-});
-
-Object.defineProperty(Symbol.prototype, 'toplevel', {
-  get: function() {
-    return this.kind === 'namespace' ||
-           this.kind === 'class' ||
-           this.kind === 'enum';
+class JSDocSymbol {
+  constructor(symbol) {
+    this._symbol = symbol;
   }
-});
 
-Object.defineProperty(Symbol.prototype, 'member', {
-  get: function() {
-    return (this.kind === 'member' || this.kind === 'function' || this.kind === 'event' || this.kind === 'property');
+  get kind() { return this._symbol.kind; }
+  get name() { return this._symbol.name; }
+  get longname() { return this._symbol.longname; }
+  get memberof() { return this._symbol.memberof; }
+  get scope() { return this._symbol.scope; }
+  get description() { return this._symbol.description; }
+  get meta() { return this._symbol.meta; }
+  get comment() { return this._symbol.comment; }
+  get readonly() { return this._symbol.readonly; }
+  get classdesc() { return this._symbol.classdesc; }
+  get type() { return this._symbol.type; }
+  get inherited() { return this._symbol.inherited; }
+  get inherits() { return this._symbol.inherits; }
+
+  get access() { return this._symbol.access || 'public'; }
+
+  get augments() {
+    return (this._symbol.augments && this._symbol.augments.length) ?
+      this._symbol.augments :
+      undefined;
   }
-});
-
-Object.defineProperty(Symbol.prototype, 'prefix', {
-  get: function() {
-    return this.longname.substr(0, (this.longname.length - this.name.length));
+  get params() {
+    return (this._symbol.params && this._symbol.params.length) ?
+      this._symbol.params :
+      undefined;
   }
-});
+  get returns() {
+    return (this._symbol.returns && this._symbol.returns.length) ?
+      this._symbol.returns :
+      undefined;
+  }
+  get exceptions() {
+    return (this._symbol.exceptions && this._symbol.exceptions.length) ?
+      this._symbol.exceptions :
+      undefined;
+  }
+  get properties() {
+    return (this._symbol.properties && this._symbol.properties.length) ?
+      this._symbol.properties :
+      undefined;
+  }
 
-Object.defineProperty(Symbol.prototype, 'modifiers', {
-  get: function() {
+  get toplevel() {
+    var kind = this.kind;
+    return (
+      kind === 'namespace' ||
+      kind === 'class' ||
+      kind === 'interface' ||
+      kind === 'enum'
+    ) && this.scope !== 'inner';
+  }
+  get callable() {
+    var kind = this.kind;
+    return (
+      kind === 'class' ||
+      kind === 'function' ||
+      (kind === 'typedef' && (this.type && this.type.names[0] === 'function'))
+    );
+  }
+
+  get member() {
+    return (
+      this.kind === 'member' ||
+      this.kind === 'function' ||
+      this.kind === 'event' ||
+      this.kind === 'property'
+    );
+  }
+
+  get modifiers() {
     var modifiers = this.access + ' ';
     if (this.member) {
       modifiers += this.scope === 'static' ? 'static ' : '';
@@ -44,78 +82,77 @@ Object.defineProperty(Symbol.prototype, 'modifiers', {
     }
     return modifiers;
   }
-});
 
-Object.defineProperty(Symbol.prototype, 'signature', {
-  get: function() {
+  get prefix() {
+    return this.longname.substr(0, (this.longname.length - this.name.length));
+  }
+
+  get signature() {
     var signature;
-    if (this.kind == 'function' || this.kind == 'class') {
-      if (!this.signature_) {
+    if (this.callable) {
+      if (!this._signature) {
         signature = '(';
         if (this.params) {
           signature += this.params.map(function(p) {
             return p.name;
           }).join(', ');
         }
-        this.signature_ = signature + ')';
+        this._signature = signature + ')';
       }
 
-      return this.signature_;
+      return this._signature;
     } else {
       return ' ';
     }
   }
-});
 
-Object.defineProperty(Symbol.prototype, 'longsignature', {
-  get: function() {
+  get longsignature() {
     var signature;
-    if (this.kind == 'function' || this.kind == 'class') {
-      if (!this.longsignature_) {
+    if (this.callable) {
+      if (!this._longsignature) {
         signature = '(';
         if (this.params) {
           signature += this.params.map(function(p) {
-            return p.name + (p.optional ? '=' : '') + ':' + (p.type ? p.type.names.join('|') : '*');
+            return (
+              (p.optional ? '[' : '') +
+              p.name +
+              ':' + (p.type ? p.type.names.join('|') : '*') +
+              (p.optional ? ']' : '')
+            );
           }).join(', ');
         }
         signature += ')';
 
         if (this.returns && this.returns[0].type) {
           signature += ' : ' + this.returns[0].type.names.join('|');
-        } else if (this.kind == 'function') {
+        } else if (this.kind === 'function' || this.kind === 'typedef') {
           signature += ' : void';
         }
 
-        this.longsignature_ = signature;
+        this._longsignature = signature;
       }
 
-      return this.longsignature_;
+      return this._longsignature;
     } else if (this.kind === 'member') {
       return ': ' + (this.type && this.type.names ? this.type.names.join('|') : '*');
     } else {
       return ' ';
     }
   }
-});
 
-Object.defineProperty(Symbol.prototype, 'id', {
-  get: function() {
-    if (!this.id_) {
-      this.id_ = this.longname
+  get id() {
+    if (!this._id) {
+      this._id = this.longname
               .replace(/#/g, ':')
-              .replace(/[^a-zA-Z\d\.:-]/g, '_');
+              .replace(/[^a-zA-Z\d:-]/g, '_');
     }
-    return this.id_;
+    return this._id;
   }
-});
-
-Object.defineProperty(Symbol.prototype, 'access', {
-  get: function() { return this.symbol_.access || 'public'; }
-});
+}
 
 
 function process(symbolData, data, onEnterSymbol, onExitSymbol) {
-  var symbol = new Symbol(symbolData),
+  var symbol = new JSDocSymbol(symbolData),
       recurse = function(s) { process(s, data, onEnterSymbol, onExitSymbol); };
 
   if (onEnterSymbol) {
@@ -128,6 +165,8 @@ function process(symbolData, data, onEnterSymbol, onExitSymbol) {
   data({ memberof: symbol.longname, kind: 'namespace' }).each(recurse);
   data({ memberof: symbol.longname, kind: 'enum' }).each(recurse);
   data({ memberof: symbol.longname, kind: 'class' }).each(recurse);
+  data({ memberof: symbol.longname, kind: 'interface' }).each(recurse);
+  data({ memberof: symbol.longname, kind: 'typedef' }).each(recurse);
 
   if (onExitSymbol) {
     onExitSymbol(symbol);
@@ -144,6 +183,7 @@ module.exports = function(data, onSymbol, opts) {
   if (!_opts.undocumented) { data({ undocumented: true }).remove(); }
   if (!_opts.ignored) { data({ ignore: true }).remove(); }
   if (!_opts.private) { data({ access: 'private' }).remove(); }
+  if (!_opts.protected) { data({ access: 'protected' }).remove(); }
 
   // transform @enum to kind:enum
   data({ kind: 'member', isEnum: true }).each(function(symbol) { symbol.kind = 'enum'; });

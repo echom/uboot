@@ -3,15 +3,15 @@ np.define('np.Observable', (require) => {
       Event = require('np.Event');
 
   /**
-   * @typedef np.Observable~ChangedEventArgs
+   * @typedef np.Observable~IChangedEventArgs
    * @property {*} value - the new value
    */
 
   /**
    * An event listener function which will be invoked every time this event is
    * raised.
-   * @callback np.Observable~ChangedEventListener
-   * @param {ChangeEventArgs} evt - the event arguments
+   * @callback np.Observable~IChangedEventListener
+   * @param {np.Observable~IChangeEventArgs} evt - the event arguments
    * @param {object} src - the event's source
    */
 
@@ -39,7 +39,7 @@ np.define('np.Observable', (require) => {
     /**
      * Adds an event listener to the 'changed' event and returns a remover
      * function.
-     * @param {np.Observable~ChangedEventListener} listener - the listener
+     * @param {np.Observable~IChangedEventListener} listener - the listener
      *    function to be added
      * @param {object} [ctx] - an optional context object to bind the listener
      *    to

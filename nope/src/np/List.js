@@ -29,13 +29,13 @@ np.define('np.List', () => {
 
     /**
      * Return the first item from this list.
-     * @return the first item or undefined if this list is empty
+     * @return {*} the first item or undefined if this list is empty
      */
     first() { return this._items[0]; }
 
     /**
      * Return the last item from this list.
-     * @return the last item or undefined if this list is empty
+     * @return {*} the last item or undefined if this list is empty
      */
     last() { return this._items[this._items.length - 1]; }
 
@@ -51,6 +51,8 @@ np.define('np.List', () => {
      * Returns a boolean indicating whether the provided item is contained
      * within this list.
      * @param {*} item - the item to check
+     * @return {boolean} a boolean value indicating whether the provided item
+     *    is included in this list
      */
     includes(item) { return this.indexOf(item) >= 0; }
 
@@ -69,6 +71,8 @@ np.define('np.List', () => {
      * object may be passed as a second argument.
      * @param {np.List~FindCallback} fn the callback to invoke for every item
      * @param {object} [ctx] - an optional context object to use as 'this'
+     * @return {*} the matching item or undefined if no item matches the
+     *    predicate function
      */
     find(fn, ctx) { return this._items.find(fn, ctx); }
 
@@ -127,6 +131,7 @@ np.define('np.List', () => {
      * index is out of bounds the action is ignored.
      * @param {*} item - the item to place into the list
      * @param {number} index - the index at which to replace the item
+     * @return {*} the removed item
      */
     replaceAt(item, index) {
       var removed;
