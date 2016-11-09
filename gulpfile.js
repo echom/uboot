@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 
 
 gulp.task('build:nope', done => {
-  exec('./node_modules/.bin/gulp build --gulpfile nope/gulpfile.js --cwd nope', function(err, stdout, stderr) {
+  exec('./node_modules/.bin/gulp build --gulpfile nope/gulpfile.js', function(err, stdout, stderr) {
     stdout && console.log(stdout); // eslint-disable-line no-unused-expressions, no-console
     stderr && console.log(stderr); // eslint-disable-line no-unused-expressions, no-console
     done(err);

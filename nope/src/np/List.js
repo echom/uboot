@@ -1,7 +1,7 @@
 np.define('np.List', () => {
 
   /**
-   * The List class represents an ordered collection. It behaves as a mix of Array and Set.
+   * The List class represents an ordered collection.
    * @memberof np
    */
   class List {

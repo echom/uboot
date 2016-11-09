@@ -66,7 +66,11 @@ gulp.task('unit:coverage', done => {
   new karma.Server(karmaConfigure({
     browsers: ['Chrome'],
     reporters: ['coverage'],
-    coverageReporter: { type: 'html', dir: 'dist/coverage' },
+    coverageReporter: {
+      type: 'html',
+      dir: 'dist/coverage',
+      subdir: browser => browser.toLowerCase().split(/[ /-]/)[0]
+    },
     src: paths.src,
     mocks: paths.mocks,
     specs: paths.specs,
@@ -77,7 +81,7 @@ gulp.task('unit:coverage', done => {
 gulp.task('unit:live', done => {
   new karma.Server(karmaConfigure({
     browsers: ['Chrome'],
-    reporters: ['dots', 'coverage'],
+    reporters: ['coverage'],
     coverageReporter: { type: 'text' },
     src: paths.src,
     mocks: paths.mocks,

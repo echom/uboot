@@ -1,9 +1,8 @@
 describe('np.Serializer', () => {
-  var Serializer,
+  var Serializer = np.require('np.Serializer'),
       MockType;
 
   beforeEach(() => {
-    Serializer = np.require('np.Serializer');
     MockType = function() {};
   });
 
@@ -25,7 +24,7 @@ describe('np.Serializer', () => {
     });
   });
   describe('.findByName', () => {
-    it('should return the entry', () => {
+    it('should return the entry with the name', () => {
       var entry;
 
       Serializer.register('MockType3', MockType);
@@ -34,14 +33,14 @@ describe('np.Serializer', () => {
       expect(entry.name).toEqual('MockType3');
       expect(entry.type).toEqual(MockType);
     });
-    it('should return undefined', () => {
+    it('should return undefined if the name is not registered', () => {
       var entry = Serializer.findByName('[Non-Existent]]');
 
       expect(entry).toBeUndefined();
     });
   });
 
-  describe('.ctor', () => {
+  describe('ctor', () => {
     it('creates a new Serializer instance', () => {
       expect((new Serializer()) instanceof Serializer).toBe(true);
     });
