@@ -41,16 +41,29 @@ np.define('np.Serializer', (require, className) => {
      * @param {string} name - the full name path of the serializable type to
      *    register
      * @param {function} type - the constructor function to register
+     * @throws {Error} Throws an error if the type does not implement the
+     *    np.ISerializable interface, if the type was already registered or
+     *    if the name path was already used for a different type.
      */
     static register(name, type) {
-      var entry = Serializer.findByType(type);
+      var typeEntry = Serializer.findByType(type),
+          nameEntry = Serializer.findByName(name),
+          isSerializable = (
+            np.isA(type.prototype.serialize, 'function') &&
+            np.isA(type.prototype.deserialize, 'function')
+          ),
+          path = `${className}.register`;
 
-      if (!entry) {
+      if (!typeEntry && !nameEntry && isSerializable) {
         Serializer._entries.push({ name: name, type: type });
+      } else if (!isSerializable) {
+        throw new Error(`${path}: The type is not serializable.`);
+      } else if (typeEntry && !nameEntry) {
+        throw new Error(`${path}: The type "${name}" was already as "${typeEntry.name}".`);
+      } else if (nameEntry && !typeEntry) {
+        throw new Error(`${path}: The name "${name}" was already registered for a different type.`);
       } else {
-        throw new Error(
-          className + '.register: Type "' + name + '" was already registered.'
-        );
+        throw new Error(`${path}: .register: Name and type are already registered.`);
       }
     }
 
@@ -100,7 +113,7 @@ np.define('np.Serializer', (require, className) => {
         return this._pop();
       } else {
         throw new Error(
-          name + '.serialize: Could not find type entry for the current serialization target.'
+          `${className}.serialize: Could not find type entry for the current serialization target.`
         );
       }
     }
@@ -123,7 +136,7 @@ np.define('np.Serializer', (require, className) => {
         this._pop();
       } else {
         throw new Error(
-          name + '.deserialize: Could not find type entry for the current deserialization target.'
+          `${className}.deserialize: Could not find type entry for the current deserialization target.`
         );
       }
       return instance;

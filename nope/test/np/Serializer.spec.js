@@ -3,11 +3,14 @@ describe('np.Serializer', () => {
       MockType;
 
   beforeEach(() => {
-    MockType = function() {};
+    MockType = class {
+      serialize() {}
+      deserialize() {}
+    };
   });
 
   describe('.register', () => {
-    it('should add an entry', () => {
+    it('adds an entry', () => {
       var entry;
 
       Serializer.register('MockType', MockType);
@@ -16,15 +19,21 @@ describe('np.Serializer', () => {
       expect(entry.name).toEqual('MockType');
       expect(entry.type).toEqual(MockType);
     });
-    it('should throw an error when registering the same type mutliple times', () => {
-      var willThrow = () => Serializer.register('MockType2', MockType);
-      Serializer.register('MockType2', MockType);
+    it('throws an error when registering the same type mutliple times', () => {
+      var willThrow = () => Serializer.register('MockType20', MockType);
+      Serializer.register('MockType21', MockType);
+
+      expect(willThrow).toThrowError(/already registered/);
+    });
+    it('throws an error when registering the same name multiple times', () => {
+      var willThrow = () => Serializer.register('MockType20', MockType);
+      Serializer.register('MockType20', function() { });
 
       expect(willThrow).toThrowError(/already registered/);
     });
   });
   describe('.findByName', () => {
-    it('should return the entry with the name', () => {
+    it('returns the entry with the name', () => {
       var entry;
 
       Serializer.register('MockType3', MockType);
@@ -39,10 +48,17 @@ describe('np.Serializer', () => {
       expect(entry).toBeUndefined();
     });
   });
+  describe('.finByType', () => {
+
+  });
 
   describe('ctor', () => {
     it('creates a new Serializer instance', () => {
       expect((new Serializer()) instanceof Serializer).toBe(true);
     });
+  });
+
+  describe('#serialize', () => {
+
   });
 });

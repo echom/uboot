@@ -6,7 +6,8 @@
   };
 
   var registry = {},
-      cache = {};
+      cache = {},
+      identity = arg => arg;
 
   /**
    * Defines a module with the given name.
@@ -57,6 +58,11 @@
   };
 
   np.now = Date.now ? () => Date.now() : () => new Date().getTime();
+
+  np.pif = (value, test, consequent, alternative) => {
+    let _pif = (result) => test(result) ? consequent(result) : alternative(result);
+    return (value instanceof Promise) ? value.then(_pif) : _pif();
+  };
 
   np.noop = () => {};
 })(this.np || (this.np = {}));
